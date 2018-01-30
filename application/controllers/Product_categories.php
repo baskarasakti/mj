@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Material_categories extends MY_Controller {
+class Product_categories extends MY_Controller {
 
 	function  __construct() {
 		parent::__construct();
 			$this->load->helper('tablefield');
-			$this->load->model('material_cat_model', 'mcm');
+			$this->load->model('product_cat_model', 'pcm');
 	}
 	
 	private function get_column_attr(){
@@ -19,12 +19,12 @@ class Material_categories extends MY_Controller {
 	
 	public function index()
 	{
-		$data['title'] = "ERP | Material Categories";
-		$data['page_title'] = "Material Categories";
+		$data['title'] = "ERP | Product Categories";
+		$data['page_title'] = "Product Categories";
 		$data['table_title'] = "List Item";		
-		$data['breadcumb']  = array("Master", "Material Categories");
-		$data['page_view']  = "master/material_categories";		
-		$data['js_asset']   = "material-categories";	
+		$data['breadcumb']  = array("Master", "Product Categories");
+		$data['page_view']  = "master/product_categories";		
+		$data['js_asset']   = "product-categories";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;						
 		$this->load->view('layouts/master', $data);

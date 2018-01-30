@@ -1,11 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Material_cat_model extends MY_Model {
+class Product_cat_model extends MY_Model {
 
-	protected $_t = 'material_categories';
+	protected $_t = 'product_categories';
 		
-	var $table = 'material_categories';
+	var $table = 'product_categories';
 	var $column = array('id','name'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	

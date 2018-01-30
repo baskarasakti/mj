@@ -67,6 +67,11 @@
                         <div class="col-xs-12">
                             <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit"><?=$this->lang->line('login');?></button>
                         </div>
+					</div>
+					<div class="form-group m-b-0">
+                        <div class="col-sm-12 text-center">
+                            <p>Don't have an account? <a href="<?=site_url('registration');?>" class="text-primary m-l-5"><b>Sign Up</b></a></p>
+                        </div>
                     </div>
                 </form>
                 <form class="form-horizontal" id="recoverform" action="index.html">
@@ -85,7 +90,7 @@
                         <div class="col-xs-12">
                             <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Reset</button>
                         </div>
-                    </div>
+					</div>
                 </form>
             </div>
         </div>

@@ -84,6 +84,15 @@ class MY_Model extends CI_Model {
 		return $output;
 	}
 
+	public function get_all_data(){
+		return $this->db->get($this->_t)->result();
+	}
+
+	public function count_all_data(){
+		$this->db->from($this->_t);
+		return $this->db->count_all_results();
+	}
+
 	function add($data){
         $inserted = $this->db->insert($this->_t, $data);     
         return $inserted;

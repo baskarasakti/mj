@@ -1,11 +1,11 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Material_cat_model extends MY_Model {
+class Roles_model extends MY_Model {
 
-	protected $_t = 'material_categories';
+	protected $_t = 'roles';
 		
-	var $table = 'material_categories';
+	var $table = 'roles';
 	var $column = array('id','name'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
@@ -47,5 +47,6 @@ class Material_cat_model extends MY_Model {
 			$this->db->order_by(key($order), $order[key($order)]);
 		}
 	}
+
 
 }

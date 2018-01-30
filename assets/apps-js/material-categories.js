@@ -31,7 +31,8 @@ $(document).ready(function() {
         },
         columns: columns,
         columnDefs: [ 
-            { className: "dt-body-right", targets: right_align } 
+			{ className: "dt-body-right", targets: right_align },
+			{ "orderable": false, targets : [-1]  } 
         ]
 	});
 	
