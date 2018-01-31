@@ -22,7 +22,7 @@ $(document).ready(function() {
         deferRender: true,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         ajax: {
-            url: site_url+'material_categories/view_data',
+            url: site_url+'vendors/view_data',
             type: "POST",
             dataSrc : 'data',
             data: function ( d ) {
@@ -78,9 +78,9 @@ function reload_table(){
 function save_data(){
 	var url;
 	if(action == "Add"){
-		url = site_url+"material_categories/add";
+		url = site_url+"vendors/add";
 	}else{
-		url = site_url+"material_categories/update";
+		url = site_url+"vendors/update";
 	}
    
 	var data = $("#form").serializeArray();
@@ -121,12 +121,15 @@ function edit(id){
 	action = "Edit";
 	$('[name="change_id"]').val(id);
 	$.ajax({
-			url : site_url+"material_categories/get_by_id/"+id,
+			url : site_url+"vendors/get_by_id/"+id,
 			type: "GET",
 			dataType: "JSON",
 			success: function(data)
 			{
 				$('#name').val(data.name);
+				$('#description').val(data.description);
+				$('#address').val(data.address);
+				$('#telp').val(data.telp);
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				show_hide_form(true);
@@ -147,7 +150,7 @@ function remove(id){
 		},
 		function(){
 			$.ajax({
-				url : site_url+"material_categories/delete/"+id,
+				url : site_url+"vendors/delete/"+id,
 				type: "GET",
 				dataType: "JSON",
 				success: function(data)

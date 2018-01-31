@@ -1,37 +1,37 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Material_categories extends MY_Controller {
+class Processes extends MY_Controller {
 
 	function  __construct() {
 		parent::__construct();
 			$this->load->helper('tablefield');
-			$this->load->model('material_cat_model', 'mcm');
+			$this->load->model('processes_model', 'pm');
 	}
 	
 	private function get_column_attr(){
         $table = new TableField();
         $table->addColumn('id', '', 'ID');
-        $table->addColumn('name', '', 'Category');        
+        $table->addColumn('name', '', 'Process');        
         $table->addColumn('actions', '', 'Actions');        
         return $table->getColumns();
     }
 	
 	public function index()
 	{
-		$data['title'] = "ERP | Material Categories";
-		$data['page_title'] = "Material Categories";
+		$data['title'] = "ERP | Processes";
+		$data['page_title'] = "Processes";
 		$data['table_title'] = "List Item";		
-		$data['breadcumb']  = array("Master", "Material Categories");
-		$data['page_view']  = "master/material_categories";		
-		$data['js_asset']   = "material-categories";	
+		$data['breadcumb']  = array("Master", "Processes");
+		$data['page_view']  = "master/processes";		
+		$data['js_asset']   = "processes";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;						
 		$this->load->view('layouts/master', $data);
 	}
 
 	public function view_data(){
-		$result = $this->mcm->get_output_data();
+		$result = $this->pm->get_output_data();
         $data = array();
         $count = 0;
         foreach($result['data'] as $value){
@@ -51,27 +51,29 @@ class Material_categories extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name'))
+			'name' => $this->normalize_text($this->input->post('name')),
+			'created_at' => date("Y-m-d H:m:s")
 		);
-		$inserted = $this->mcm->add($data);
+		$inserted = $this->pm->add($data);
 		echo json_encode(array('status' => $inserted));
 	}
 
 	function get_by_id($id){
-		$detail = $this->mcm->get_by_id('id', $id);
+		$detail = $this->pm->get_by_id('id', $id);
 		echo json_encode($detail);
 	}
 
 	function update(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name'))
+			'name' => $this->normalize_text($this->input->post('name')),
+			'updated_at' => date("Y-m-d H:m:s")
 		);
-		$status = $this->mcm->update('id', $this->input->post('change_id'), $data);
+		$status = $this->pm->update('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('status' => $status));
    }
 
 	function delete($id){        
-		$status = $this->mcm->delete('id', $id);
+		$status = $this->pm->delete('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 

@@ -1,17 +1,17 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Users_model extends MY_Model {
+class Processes_model extends MY_Model {
 
-	protected $_t = 'users';
+	protected $_t = 'processes';
 		
-	var $table = 'users';
-	var $column = array('id','name', 'username', 'email', 'address', 'telp'); //set column field database for order and search
+	var $table = 'processes';
+	var $column = array('id','name'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('id, name, username, email, address, telp');
+		$this->db->select('id, name');
 		$this->db->from($this->table);
  
 		$i = 0;
@@ -46,13 +46,6 @@ class Users_model extends MY_Model {
 			$order = $this->order;
 			$this->db->order_by(key($order), $order[key($order)]);
 		}
-	}
-
-	public function get_substr_password($user_id){
-		$this->db->select('SUBSTRING(password, 1, 8) as password');
-		$this->db->where('id', $user_id);
-		$row = $this->db->get($this->_t)->row();
-		return $row->password;
 	}
 
 }

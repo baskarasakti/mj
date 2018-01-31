@@ -22,7 +22,7 @@ $(document).ready(function() {
         deferRender: true,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         ajax: {
-            url: site_url+'material_categories/view_data',
+            url: site_url+'roles/view_data',
             type: "POST",
             dataSrc : 'data',
             data: function ( d ) {
@@ -78,9 +78,9 @@ function reload_table(){
 function save_data(){
 	var url;
 	if(action == "Add"){
-		url = site_url+"material_categories/add";
+		url = site_url+"roles/add";
 	}else{
-		url = site_url+"material_categories/update";
+		url = site_url+"roles/update";
 	}
    
 	var data = $("#form").serializeArray();
@@ -121,7 +121,7 @@ function edit(id){
 	action = "Edit";
 	$('[name="change_id"]').val(id);
 	$.ajax({
-			url : site_url+"material_categories/get_by_id/"+id,
+			url : site_url+"roles/get_by_id/"+id,
 			type: "GET",
 			dataType: "JSON",
 			success: function(data)
@@ -147,7 +147,7 @@ function remove(id){
 		},
 		function(){
 			$.ajax({
-				url : site_url+"material_categories/delete/"+id,
+				url : site_url+"roles/delete/"+id,
 				type: "GET",
 				dataType: "JSON",
 				success: function(data)

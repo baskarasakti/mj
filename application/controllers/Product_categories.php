@@ -31,7 +31,7 @@ class Product_categories extends MY_Controller {
 	}
 
 	public function view_data(){
-		$result = $this->mcm->get_output_data();
+		$result = $this->pcm->get_output_data();
         $data = array();
         $count = 0;
         foreach($result['data'] as $value){
@@ -51,27 +51,27 @@ class Product_categories extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('category'))
+			'name' => $this->normalize_text($this->input->post('name'))
 		);
-		$inserted = $this->mcm->add($data);
+		$inserted = $this->pcm->add($data);
 		echo json_encode(array('status' => $inserted));
 	}
 
 	function get_by_id($id){
-		$detail = $this->mcm->get_by_id('id', $id);
+		$detail = $this->pcm->get_by_id('id', $id);
 		echo json_encode($detail);
 	}
 
 	function update(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('category'))
+			'name' => $this->normalize_text($this->input->post('name'))
 		);
-		$status = $this->mcm->update('id', $this->input->post('change_id'), $data);
+		$status = $this->pcm->update('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('status' => $status));
    }
 
 	function delete($id){        
-		$status = $this->mcm->delete('id', $id);
+		$status = $this->pcm->delete('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 

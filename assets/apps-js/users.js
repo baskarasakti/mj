@@ -22,7 +22,7 @@ $(document).ready(function() {
         deferRender: true,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         ajax: {
-            url: site_url+'material_categories/view_data',
+            url: site_url+'users/view_data',
             type: "POST",
             dataSrc : 'data',
             data: function ( d ) {
@@ -40,6 +40,7 @@ $(document).ready(function() {
 
 	$('#add-btn').click(function(){
 		action = "Add";
+		$('#username').removeAttr('readonly');
 		$('#form-title').text('Add Form');
 		$("#form").validator();
 		show_hide_form(true);
@@ -78,9 +79,9 @@ function reload_table(){
 function save_data(){
 	var url;
 	if(action == "Add"){
-		url = site_url+"material_categories/add";
+		url = site_url+"users/add";
 	}else{
-		url = site_url+"material_categories/update";
+		url = site_url+"users/update";
 	}
    
 	var data = $("#form").serializeArray();
@@ -121,12 +122,20 @@ function edit(id){
 	action = "Edit";
 	$('[name="change_id"]').val(id);
 	$.ajax({
-			url : site_url+"material_categories/get_by_id/"+id,
+			url : site_url+"users/get_by_id/"+id,
 			type: "GET",
 			dataType: "JSON",
 			success: function(data)
 			{
+				$('#username').val(data.username);
+				$('#username').attr('readonly', 'readonly');
+				$('#password').val(data.password.substr(0,8));
+				$('#password-confirm').val(data.password.substr(0,8));
 				$('#name').val(data.name);
+				$('#email').val(data.email);
+				$('#address').val(data.address);
+				$('#telp').val(data.telp);
+				$('#roles_id').val(data.roles_id);
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				show_hide_form(true);
@@ -147,7 +156,7 @@ function remove(id){
 		},
 		function(){
 			$.ajax({
-				url : site_url+"material_categories/delete/"+id,
+				url : site_url+"users/delete/"+id,
 				type: "GET",
 				dataType: "JSON",
 				success: function(data)

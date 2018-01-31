@@ -38,6 +38,8 @@
     <script src="<?= asset_url('plugins/bower_components/sweetalert/jquery.sweet-alert.custom.js');?>"></script>
     <!-- Custom Theme JavaScript -->
 	<script src="<?= asset_url('js/custom.min.js');?>"></script>
+	<!-- Extra JavaScript -->
+	 <script src="<?= asset_url('apps-js/extra.js');?>"></script>
 	<script>
 		var base_url = "<?=base_url();?>";
 		var site_url = "<?=site_url('/');?>";

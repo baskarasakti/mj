@@ -40,8 +40,8 @@
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
-							<label for="category" class="control-label">Category</label>
-							<input type="text" class="form-control" id="name" name="name" placeholder="Category" required>
+							<label for="category" class="control-label">Role</label>
+							<input type="text" class="form-control" id="name" name="name" placeholder="Role" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<input type="hidden" name="change_id">

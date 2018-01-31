@@ -40,8 +40,23 @@
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
-							<label for="category" class="control-label">Category</label>
-							<input type="text" class="form-control" id="name" name="name" placeholder="Category" required>
+							<label for="name" class="control-label">Name</label>
+							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="description" class="control-label">Description</label>
+							<textarea id="description" name="description" class="form-control"></textarea>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="address" class="control-label">Address</label>
+							<input type="text" class="form-control" id="address" name="address" placeholder="Address" required>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="telp" class="control-label">Telp</label>
+							<input type="text" class="form-control" id="telp" name="telp" placeholder="Telp" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<input type="hidden" name="change_id">

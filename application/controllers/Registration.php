@@ -43,8 +43,7 @@ class Registration extends CI_Controller {
 			'password' => password_hash($this->input->post('password'), PASSWORD_BCRYPT),
 			'name' => $this->input->post('name'),
 			'roles_id' => $this->input->post('roles'),
-			'created_at' => date("Y-m-d H:m:s"),
-			'updated_at' =>  date("Y-m-d H:m:s")
+			'created_at' => date("Y-m-d H:m:s")
 		);
 		$inserted = $this->um->add($data);
 		if($inserted){

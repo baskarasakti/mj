@@ -16,11 +16,12 @@
                         <ul class="nav nav-second-level">
 							<li> <a href="<?=site_url('material_categories');?>" class="waves-effect">Materials Category</a></li>
 							<li> <a href="<?=site_url('materials');?>" class="waves-effect">Materials</a></li>
-							<li> <a href="map-vector.html" class="waves-effect">Products Category</a> </li>							
-							<li> <a href="map-vector.html" class="waves-effect">Products</a> </li>
-							<li> <a href="calendar.html" class="waves-effect">Processes</a></li>	
-							<li><a href="chat.html">Customers</a></li>
-                            <li> <a href="map-google.html" class="waves-effect">Vendors</a> </li>						
+							<li> <a href="<?=site_url('product_categories');?>" class="waves-effect">Products Category</a> </li>							
+							<li> <a href="<?=site_url('products');?>" class="waves-effect">Products</a> </li>
+							<li> <a href="<?=site_url('usage_categories');?>" class="waves-effect">Usage Categories</a></li>
+							<li> <a href="<?=site_url('processes');?>" class="waves-effect">Processes</a></li>	
+							<li> <a href="<?=site_url('customers');?>">Customers</a></li>
+                            <li> <a href="<?=site_url('vendors');?>" class="waves-effect">Vendors</a> </li>						
                         </ul>
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Sales <span class="fa arrow"></span></span></a>
@@ -57,9 +58,8 @@
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Settings <span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
-                            <li><a href="chat.html">Customers</a></li>
-                            <li> <a href="map-google.html" class="waves-effect">Roles</a> </li>
-                            <li> <a href="map-vector.html" class="waves-effect">Users</a> </li>
+                            <li> <a href="<?=site_url('roles');?>" class="waves-effect">Roles</a> </li>
+                            <li> <a href="<?=site_url('users');?>" class="waves-effect">Users</a> </li>
 							<li> <a href="calendar.html" class="waves-effect">Previllages</a></li>
                             <li> <a href="calendar.html" class="waves-effect">Application</a></li>							
                         </ul>
