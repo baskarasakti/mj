@@ -9,6 +9,7 @@ class Purchasing extends MY_Controller {
 		$this->load->model('purchase_model', 'prc');
 		$this->load->model('purchase_det_model', 'prd');
 		$this->load->model('materials_model', 'mm');
+		$this->load->model('vendors_model', 'vd');
 	}
 	
 	private function get_column_attr(){
@@ -44,8 +45,8 @@ class Purchasing extends MY_Controller {
 		$data['page_view']  = "master/purchasing";		
 		$data['js_asset']   = "purchasing";	
 		$data['columns']    = $this->get_column_attr();	
-		// $data['materials']    = $this->get_materials();	
 		$data['csrf'] = $this->csrf;						
+		$data['vendors'] = $this->vd->get_all_data();	
 		$this->load->view('layouts/master', $data);
 	}
 
@@ -71,7 +72,8 @@ class Purchasing extends MY_Controller {
 	function add(){
 		$data = array(
 			'code' => $this->normalize_text($this->input->post('code')),
-			'delivery_date' => $this->normalize_text($this->input->post('date'))
+			'delivery_date' => $this->normalize_text($this->input->post('date')),
+			'vendors_id' => $this->normalize_text($this->input->post('vendor')),
 		);
 		$inserted = $this->prc->add_id($data);
 		echo json_encode(array('id' => $inserted));
@@ -85,7 +87,8 @@ class Purchasing extends MY_Controller {
 	function update(){
 		$data = array(
 			'code' => $this->normalize_text($this->input->post('code')),
-			'delivery_date' => $this->normalize_text($this->input->post('date'))
+			'delivery_date' => $this->normalize_text($this->input->post('date')),
+			'vendors_id' => $this->normalize_text($this->input->post('vendor'))
 		);
 		$status = $this->prc->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));

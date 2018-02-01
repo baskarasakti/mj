@@ -49,6 +49,18 @@
 							<input type="text" class="form-control" id="date" name="date" placeholder="Delivery Date" required>
 							<div class="help-block with-errors"></div>
 						</div>
+						<div class="form-group">
+							<label for="vendor" class="control-label">Vendor</label>
+							<select class="custom-select col-sm-12" id="vendor" name="vendor" required>
+								<option selected="">Choose...</option>
+								<?php
+									foreach($vendors as $vendor){
+										echo '<option value="'.$vendor->id.'">'.$vendor->name.'</option>';
+									}
+								?>
+							</select>
+							<div class="help-block with-errors"></div>
+						</div>
 						<div class="form-group text-right">
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
