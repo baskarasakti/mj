@@ -44,18 +44,6 @@
 							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
 							<div class="help-block with-errors"></div>
 						</div>
-						<div class="form-group">
-							<label for="category" class="control-label">Category</label>
-							<select class="custom-select col-sm-12" id="product_categories_id" name="product_categories_id" required>
-								<option selected="">Choose...</option>
-								<?php
-									foreach($p_categories as $item){
-										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
-									}
-								?>
-							</select>
-							<div class="help-block with-errors"></div>
-						</div>
 						<div class="form-group text-right">
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
@@ -63,17 +51,11 @@
 						<input type="hidden" name="asd" value="">
 						<input type="hidden" name="change_id">
 					</form>
-					<h3 class="box-title">Product Materials</h3>
+					<h3 class="box-title">Product List</h3>
                     <hr>
 					<div class="table-responsive"> 
 						<div id="jsGrid"></div> 
 					</div> 
-					<h3 class="box-title">Product Process</h3>
-                    <hr>
-					<div class="table-responsive"> 
-						<div id="jsGrid2"></div> 
-					</div> 
-					</div>
 				</div>
 			</div>
 		</div>

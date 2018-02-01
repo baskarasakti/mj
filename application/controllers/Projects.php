@@ -1,62 +1,48 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Products extends MY_Controller {
+class Projects extends MY_Controller {
 
 	function  __construct() {
 		parent::__construct();
 		$this->load->helper('tablefield');
-		$this->load->model('products_model', 'pm');
-		$this->load->model('product_cat_model', 'pcm');
-		$this->load->model('product_materials_model', 'pmm');
-		$this->load->model('product_process_model', 'ppm');
+		$this->load->model('projects_model', 'pm');
+		$this->load->model('project_details_model', 'pdm');
+		$this->load->model('customers_model', 'cm');
 	}
 	
 	private function get_column_attr(){
 		$table = new TableField();
-		$table->addColumn('id', '', 'Code');
+		$table->addColumn('id', '', 'ID');
+		$table->addColumn('code', '', 'Code');        
 		$table->addColumn('name', '', 'Name');        
+		$table->addColumn('description', '', 'Description');        
+		$table->addColumn('customer', '', 'Customer');        
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
-	}
-
-	public function get_materials(){
-		$result = $this->mm->get_all_data();
-		$data = array();
-		$count = 0;
-		foreach($result as $value){
-			$row = array();
-			$row['Name'] = $value->name;
-			$row['Id'] = $value->id;
-			$data[] = $row;
-			$count++;
-		}
-
-		$result = $data;
-		echo json_encode($result);
 	}
 	
 	public function index()
 	{
-		$data['title'] = "ERP | Products";
-		$data['page_title'] = "Products";
+		$data['title'] = "ERP | Sales Order";
+		$data['page_title'] = "Sales Order";
 		$data['table_title'] = "List Item";		
-		$data['breadcumb']  = array("Master", "Products");
-		$data['page_view']  = "master/products";		
-		$data['js_asset']   = "products";	
+		$data['breadcumb']  = array("Sales", "Sales Order");
+		$data['page_view']  = "sales/projects";		
+		$data['js_asset']   = "projects";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['p_categories'] = $this->pcm->get_all_data();	
+		$data['customers'] = $this->cm->get_all_data();	
 		$data['csrf'] = $this->csrf;						
 		$this->load->view('layouts/master', $data);
 	}
 
-	public function populate_select(){
-		$result = $this->pm->get_all_data();
+	public function populate_product_select($id=-1){
+		$result = $this->pdm->populate_product_select($id);
 		$data = array();
 		$count = 0;
 		foreach($result as $value){
 			$row = array();
-			$row['Name'] = $value->name;
+			$row['Name'] = $value->value;
 			$row['Id'] = $value->id;
 			$data[] = $row;
 			$count++;
@@ -73,9 +59,12 @@ class Products extends MY_Controller {
 		foreach($result['data'] as $value){
 			$row = array();
 			$row['id'] = $value->id;
+			$row['code'] = $value->code;
 			$row['name'] = $value->name;
+			$row['description'] = $value->description;
+			$row['customer'] = $value->customer;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
-			.<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
+							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
 			$count++;
 		}
@@ -87,8 +76,10 @@ class Products extends MY_Controller {
 
 	function add(){
 		$data = array(
+			'code' => $this->input->post('code'),			
 			'name' => $this->normalize_text($this->input->post('name')),
-			'product_categories_id' =>$this->input->post('product_categories_id')
+			'description' => $this->normalize_text($this->input->post('description')),
+			'customers_id' =>$this->input->post('customers_id')
 		);
 		$inserted = $this->pm->add_id($data);
 		echo json_encode(array('id' => $inserted));
@@ -116,14 +107,16 @@ class Products extends MY_Controller {
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->pmm->get_product_materials($id);
+			$result = $this->pdm->get_project_details($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['materials_id'] = $value->materials_id;
+				$row['products_id'] = $value->products_id;
 				$row['qty'] = $value->qty;
+				$row['unit_price'] = $value->total_price;
+				$row['total_price'] = $value->total_price;
 				$data[] = $row;
 				$count++;
 			}
@@ -134,66 +127,29 @@ class Products extends MY_Controller {
 
 			case "POST":
 			$data = array(
-				'materials_id' => $this->input->post('materials_id'),
 				'qty' => $this->input->post('qty'),
-				'products_id' => $id
+				'unit_price' =>$this->input->post('unit_price'),
+				'total_price' => $this->input->post('total_price'),
+				'products_id' => $this->input->post('products_id'),
+				'projects_id' => $id
 			);
-			$result = $this->pmm->add($data);
+			$result = $this->pdm->add($data);
 			break;
 
 			case "PUT":
 			$this->input->raw_input_stream;
 			$data = array(
-				'materials_id' => $this->input->input_stream('materials_id'),
 				'qty' => $this->input->input_stream('qty'),
+				'unit_price' =>$this->input->input_stream('unit_price'),
+				'total_price' => $this->input->input_stream('total_price'),
+				'products_id' => $this->input->input_stream('products_id')
 			);
-			$result = $this->pmm->update('id',$this->input->input_stream('id'),$data);
+			$result = $this->pdm->update('id',$this->input->input_stream('id'),$data);
 			break;
 
 			case "DELETE":
 			$this->input->raw_input_stream;
-			$status = $this->pmm->delete('id', $this->input->input_stream('id'));
-			break;
-		}
-	}
-
-	function jsgrid_functions2($id = -1){
-		switch($_SERVER["REQUEST_METHOD"]) {
-			case "GET":
-			$result = $this->ppm->get_product_process($id);
-			$data = array();
-			$count = 0;
-			foreach($result as $value){
-				$row = array();
-				$row['id'] = $value->id;
-				$row['processes_id'] = $value->processes_id;
-				$data[] = $row;
-				$count++;
-			}
-
-			$result = $data;
-			echo json_encode($result);
-			break;
-
-			case "POST":
-			$data = array(
-				'processes_id' => $this->input->post('processes_id'),
-				'products_id' => $id
-			);
-			$result = $this->ppm->add($data);
-			break;
-
-			case "PUT":
-			$this->input->raw_input_stream;
-			$data = array(
-				'processes_id' => $this->input->input_stream('processes_id')
-			);
-			$result = $this->ppm->update('id',$this->input->input_stream('id'),$data);
-			break;
-
-			case "DELETE":
-			$this->input->raw_input_stream;
-			$status = $this->ppm->delete('id', $this->input->input_stream('id'));
+			$status = $this->pdm->delete('id', $this->input->input_stream('id'));
 			break;
 		}
 	}

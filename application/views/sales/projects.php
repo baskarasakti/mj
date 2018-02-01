@@ -40,20 +40,30 @@
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
+							<label for="name" class="control-label">Code</label>
+							<input type="text" class="form-control" id="code" name="code" placeholder="Code" required>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
 							<label for="name" class="control-label">Name</label>
 							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="category" class="control-label">Category</label>
-							<select class="custom-select col-sm-12" id="product_categories_id" name="product_categories_id" required>
+							<label for="customers_id" class="control-label">Category</label>
+							<select class="custom-select col-sm-12" id="customers_id" name="customers_id" required>
 								<option selected="">Choose...</option>
 								<?php
-									foreach($p_categories as $item){
+									foreach($customers as $item){
 										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
 									}
 								?>
 							</select>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="description" class="control-label">Description</label>
+							<input type="text" class="form-control" id="description" name="description" placeholder="Description">
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group text-right">
@@ -63,17 +73,11 @@
 						<input type="hidden" name="asd" value="">
 						<input type="hidden" name="change_id">
 					</form>
-					<h3 class="box-title">Product Materials</h3>
+					<h3 class="box-title">Product List</h3>
                     <hr>
 					<div class="table-responsive"> 
 						<div id="jsGrid"></div> 
 					</div> 
-					<h3 class="box-title">Product Process</h3>
-                    <hr>
-					<div class="table-responsive"> 
-						<div id="jsGrid2"></div> 
-					</div> 
-					</div>
 				</div>
 			</div>
 		</div>

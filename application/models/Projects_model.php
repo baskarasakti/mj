@@ -1,19 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Products_model extends MY_Model {
+class Projects_model extends MY_Model {
 
-	protected $_t = 'products';
+	protected $_t = 'projects';
 		
-	var $table = 'products';
-	var $column = array('p.id','p.name', 'pc.name'); //set column field database for order and search
+	var $table = 'projects';
+	var $column = array('p.id', 'p.code', 'p.name', 'p.description', 'c.name'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('p.id as id, p.name as name, pc.name as category');
+		$this->db->select('p.id as id, p.code as code, p.name as name, p.description, c.name as customer');
 		$this->db->from($this->table.' p');
-		$this->db->join('product_categories pc', 'p.product_categories_id = pc.id', 'left');
+		$this->db->join('customers c', 'p.customers_id = c.id', 'left');
  
 		$i = 0;
 	 

@@ -30,6 +30,22 @@ class Processes extends MY_Controller {
 		$this->load->view('layouts/master', $data);
 	}
 
+	public function populate_select(){
+		$result = $this->pm->get_all_data();
+		$data = array();
+		$count = 0;
+		foreach($result as $value){
+			$row = array();
+			$row['Name'] = $value->name;
+			$row['Id'] = $value->id;
+			$data[] = $row;
+			$count++;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
 	public function view_data(){
 		$result = $this->pm->get_output_data();
         $data = array();
