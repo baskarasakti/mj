@@ -53,4 +53,13 @@ class Material_usage_det_model extends MY_Model {
 		return $this->db->get('roles')->result();
 	}
 
+	public function get_material_usage_details($id)
+	{
+		$this->db->select(array('mud.id as id','m.id as id_materials','qty','note','materials_id'));
+        $this->db->where('material_usage_id', $id);
+        $this->db->join('materials m', 'm.id = mud.materials_id', 'LEFT');
+        $result = $this->db->get('material_usage_details mud');
+        return $result->result();
+	}
+
 }

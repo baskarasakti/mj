@@ -139,7 +139,7 @@ class Purchasing extends MY_Controller {
 			break;
 
 			case "DELETE":
-			$status = $this->prc->delete('id', $this->input->post('id'));
+			$status = $this->prd->delete('id', $this->input->post('id'));
 			break;
 		}
 	}

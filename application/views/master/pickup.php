@@ -40,23 +40,14 @@
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
-							<label for="category" class="control-label">Name</label>
-							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
-							<div class="help-block with-errors"></div>
-						</div>
-						<div class="form-group">
-							<label for="category" class="control-label">Category</label>
-							<select class="custom-select col-sm-12" id="material_categories_id" name="material_categories_id" required>
-								<option selected="">Choose...</option>
-								<?php
-									foreach($m_categories as $item){
-										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
-									}
-								?>
-							</select>
+							<label for="category" class="control-label">Usage Date</label>
+							<input type="text" class="form-control" id="date" name="date" placeholder="Name" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<input type="hidden" name="change_id">
+						<div class="table-responsive"> 
+			              <div id="jsGrid"></div> 
+			            </div> 
 						<div class="form-group text-right">
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>

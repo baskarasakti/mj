@@ -61,6 +61,70 @@ $(document).ready(function() {
             save_data();
          }
 	 });
+
+    var materials;
+    $.ajax({
+    	url: site_url+'purchasing/get_materials',
+    	type: "GET",
+    	async: false,
+    	success : function(text)
+    	{
+    		materials = JSON.parse(text);
+    	}
+    });
+
+    $("#jsGrid").jsGrid({ 
+    	width: "100%", 
+    	height: "400px", 
+
+    	inserting: true, 
+    	editing: true, 
+    	sorting: true, 
+    	paging: true, 
+
+        // data: lists, 
+        controller: {
+        	loadData: function(filter) {
+        		return $.ajax({
+        			type: "GET",
+        			url: "pickup/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: filter,
+        			dataType:"JSON"
+        		});
+        	},
+        	insertItem: function(item) {
+        		item["csrf_token"] = $("[name='csrf_token']").val();
+        		console.log(item)
+        		return $.ajax({
+        			type: "POST",
+        			url: "pickup/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: item
+        		});
+        	},
+        	updateItem: function(item) {
+        		return $.ajax({
+        			type: "PUT",
+        			url: "pickup/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: item
+        		});
+        	},
+        	deleteItem: function(item) {
+        		return $.ajax({
+        			type: "DELETE",
+        			url: "pickup/jsgrid_functions",
+        			data: item
+        		});
+        	}
+        },
+
+        fields: [ 
+        { name: "id", visible:false }, 
+        { name: "name", title:"Item Name", type: "select", items: materials, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
+        { name: "qty", title:"Qty", type: "number", width: 50 }, 
+        { name: "note", title:"Note", type: "textarea", width: 200 },  
+        { type: "control" } 
+        ] 
+    }); 
 	
 });
 
@@ -129,10 +193,10 @@ function edit(id){
 			dataType: "JSON",
 			success: function(data)
 			{
-				$('#name').val(data.name);
-				$('#material_categories_id').val(data.material_categories_id);				
+				$('#date').val(data.usage_date);				
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
+				$('#jsGrid').jsGrid('loadData');
 				show_hide_form(true);
 			}
 		});
