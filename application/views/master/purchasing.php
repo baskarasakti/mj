@@ -53,7 +53,7 @@
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
 						</div>
-						<input type="hidden" name="asd" value="">
+						<input type="hidden" name="asd">
 						<div class="table-responsive"> 
 			              <div id="jsGrid"></div> 
 			            </div> 
