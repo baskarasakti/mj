@@ -41,11 +41,9 @@
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Production <span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
-                            <li> <a href="map-google.html" class="waves-effect">Vendors</a> </li>
-                            <li> <a href="map-vector.html" class="waves-effect">Products</a> </li>
-							<li> <a href="calendar.html" class="waves-effect">Materials</a></li>
-                            <li> <a href="calendar.html" class="waves-effect">Materials</a></li>
-                            <li> <a href="calendar.html" class="waves-effect">Processes</a></li>							
+                            <li> <a href="<?=site_url('pickup_material')?>" class="waves-effect">Pickup Materials</a> </li>
+                            <li> <a href="<?=site_url('return_material')?>" class="waves-effect">Return Materials</a> </li>      
+                            <li> <a href="<?=site_url('product_receiving')?>" class="waves-effect">Product Receiving</a> </li>		
                         </ul>
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Inventory <span class="fa arrow"></span></span></a>
