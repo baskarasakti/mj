@@ -125,7 +125,7 @@ $(document).ready(function() {
         },
 
         fields: [ 
-        { name: "id" }, 
+        { name: "id", visible:false }, 
         { name: "name", title:"Item Name", type: "select", items: materials, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
         { name: "price", title:"Price", type: "number", width: 200 },  
