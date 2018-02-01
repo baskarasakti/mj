@@ -1,5 +1,7 @@
 	<!-- jQuery -->
 	<script src="<?= asset_url('plugins/bower_components/jquery/dist/jquery.min.js');?>"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="<?= asset_url('plugins/bower_components/jquery-validation/dist/jquery.validate.min.js');?>"></script>	
     <!-- Bootstrap Core JavaScript -->
     <script src="<?= asset_url('bootstrap/dist/js/tether.min.js');?>"></script>
     <script src="<?= asset_url('bootstrap/dist/js/bootstrap.min.js');?>"></script>
@@ -38,6 +40,9 @@
     <script src="<?= asset_url('plugins/bower_components/sweetalert/jquery.sweet-alert.custom.js');?>"></script>
     <!-- Custom Theme JavaScript -->
 	<script src="<?= asset_url('js/custom.min.js');?>"></script>
+	<!-- Typehead Plugin JavaScript -->
+	<script src="<?= asset_url('plugins/bower_components/typeahead.js-master/dist/typeahead.bundle.min.js');?>"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 	<!-- Extra JavaScript -->
 	 <script src="<?= asset_url('apps-js/extra.js');?>"></script>
 	<script>

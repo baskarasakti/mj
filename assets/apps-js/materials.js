@@ -1,39 +1,164 @@
+var table;
+var action;
+
 $(document).ready(function() {
 
-	var clients = [
-        { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
-        { "Name": "Connor Johnston", "Age": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
-        { "Name": "Lacey Hess", "Age": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
-        { "Name": "Timothy Henson", "Age": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true },
-        { "Name": "Ramona Benton", "Age": 32, "Country": 3, "Address": "Ap #614-689 Vehicula Street", "Married": false }
-    ];
- 
-    var countries = [
-        { Name: "", Id: 0 },
-        { Name: "United States", Id: 1 },
-        { Name: "Canada", Id: 2 },
-        { Name: "United Kingdom", Id: 3 }
-    ];
- 
-    $("#jsGrid").jsGrid({
-        width: "100%",
-        height: "400px",
- 
-        inserting: true,
-        editing: true,
-        sorting: true,
-        paging: true,
- 
-        data: clients,
- 
-        fields: [
-            { name: "Name", type: "text", width: 150, validate: "required" },
-            { name: "Age", type: "number", width: 50 },
-            { name: "Address", type: "text", width: 200 },
-            { name: "Country", type: "select", items: countries, valueField: "Id", textField: "Name" },
-            { name: "Married", type: "checkbox", title: "Is Married", sorting: false },
-            { type: "control" }
-        ]
+	$('#inlineFormCustomSelect').select2({
+	});
+
+	var columns = [];
+    var right_align = [];
+    $("#datatable").find('th').each(function(i, th){
+        var field = $(th).attr('data-field');
+        var align = $(th).attr('data-align');
+        columns.push({data: field, name: field});
+        if(align == "right")
+            right_align.push(i);
     });
+
+	table = $('#datatable').DataTable({
+        dom: 'lrftip',
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        pageLength: 10,
+        deferRender: true,
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        ajax: {
+            url: site_url+'materials/view_data',
+            type: "POST",
+            dataSrc : 'data',
+            data: function ( d ) {
+                d.csrf_token = $("[name='csrf_token']").val();
+            }
+        },
+        columns: columns,
+        columnDefs: [ 
+			{ className: "dt-body-right", targets: right_align },
+			{ "orderable": false, targets : [-1]  } 
+        ]
+	});
+	
+	$('#form-panel').hide();
+
+	$('#add-btn').click(function(){
+		action = "Add";
+		$('#form-title').text('Add Form');
+		$("#form").validator();
+		show_hide_form(true);
+	});
+
+	$('#cancelBtn').click(function(){
+		$("#form").validator('destroy');
+		show_hide_form(false);
+		$('#form')[0].reset();
+	});
+
+    $("#saveBtn").click(function (e) {
+         var validator = $("#form").data("bs.validator");
+         validator.validate();
+         if (!validator.hasErrors()){
+            save_data();
+         }
+	 });
 	
 });
+
+function show_hide_form(bShow){
+	if(bShow==true){
+		$('#form-panel').show();
+		$('#table-panel').hide();
+	}else{
+		$('#form-panel').hide();
+		$('#table-panel').show();
+	}
+}
+
+function reload_table(){
+	table.ajax.reload(null,false); //reload datatable ajax 
+} 
+
+function save_data(){
+	var url;
+	if(action == "Add"){
+		url = site_url+"materials/add";
+	}else{
+		url = site_url+"materials/update";
+	}
+   
+	var data = $("#form").serializeArray();
+	data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
+
+	$.ajax({
+		   url : url,
+		   type: "POST",
+		   data: $.param(data),
+		   dataType: "JSON",
+		   beforeSend: function() { 
+			   $("#saveBtn").text("Saving...");
+			   $("#saveBtn").prop('disabled', true); // disable button
+			   $('div.block-div').block({
+					message: '<h4><img src="'+base_url+'assets/plugins/images/busy.gif" /> Just a moment...</h4>',
+					css: {
+						border: '1px solid #fff'
+					}
+				});
+		   },
+		   success: function(data)
+		   {
+			   if(data.status){
+				   reload_table();
+				   $("#saveBtn").text("Save");
+				   $("#saveBtn").prop('disabled', false);
+				   $('div.block-div').unblock();
+				   show_hide_form(false);
+				   $('#form')[0].reset();
+			   }else{
+				   alert('Fail');
+			   }
+		   }
+	   });
+   }
+
+function edit(id){
+	action = "Edit";
+	$('[name="change_id"]').val(id);
+	$.ajax({
+			url : site_url+"materials/get_by_id/"+id,
+			type: "GET",
+			dataType: "JSON",
+			success: function(data)
+			{
+				$('#name').val(data.name);
+				$('#material_categories_id').val(data.material_categories_id);				
+				$("#form").validator();
+				$('#form-title').text('Edit Form');
+				show_hide_form(true);
+			}
+		});
+}
+
+function remove(id){
+	swal({
+		title: "Are you sure?",
+		text: "Your will not be able to recover this data!",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonClass: "btn-danger",
+		confirmButtonText: "Yes, delete it!",
+		closeOnConfirm: false,
+		showLoaderOnConfirm: true
+		},
+		function(){
+			$.ajax({
+				url : site_url+"materials/delete/"+id,
+				type: "GET",
+				dataType: "JSON",
+				success: function(data)
+				{
+					reload_table();
+					swal("Deleted!", "Your data has been deleted.", "success");
+				}
+			});	
+	});
+}
