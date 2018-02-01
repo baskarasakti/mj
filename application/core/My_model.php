@@ -97,6 +97,12 @@ class MY_Model extends CI_Model {
         $inserted = $this->db->insert($this->_t, $data);     
         return $inserted;
 	}
+
+	function add_id($data){
+        $this->db->insert($this->_t, $data);     
+        $inserted = $this->db->insert_id();     
+        return $inserted;
+	}
 	
 	function get_by_id($column, $id){
         $this->db->where($column, $id);
@@ -119,6 +125,17 @@ class MY_Model extends CI_Model {
         }
     }
 
+    function update_id($column, $id, $data){
+        $this->db->where($column, $id);
+        $this->db->update($this->_t, $data);
+        $num_removed = $this->db->affected_rows();
+        if($num_removed == 1){
+            return $id;
+        }else{
+            return $id;
+        }
+    }
+
 	function delete($column, $id){
         $this->db->delete($this->_t, array($column => $id));
         $num_removed = $this->db->affected_rows();
@@ -127,5 +144,11 @@ class MY_Model extends CI_Model {
         }
         return FALSE;
     }
+
+    function get_by_id_by_table($column, $id, $table){
+        $this->db->where($column, $id);
+        $result = $this->db->get($table);
+        return $result->result();
+	}
 
 }
