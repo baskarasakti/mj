@@ -35,11 +35,8 @@
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Purchasing <span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
-                            <li> <a href="<?=site_url('purchasing')?>" class="waves-effect">Purchase List</a> </li>
-                            <li> <a href="map-vector.html" class="waves-effect">Products</a> </li>
-							<li> <a href="calendar.html" class="waves-effect">Materials</a></li>
-                            <li> <a href="calendar.html" class="waves-effect">Materials</a></li>
-                            <li> <a href="calendar.html" class="waves-effect">Processes</a></li>							
+                            <li> <a href="<?=site_url('purchasing')?>" class="waves-effect">Purchase Lists</a> </li>
+                            <li> <a href="<?=site_url('receiving')?>" class="waves-effect">Receive Items</a> </li>			
                         </ul>
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Production <span class="fa arrow"></span></span></a>

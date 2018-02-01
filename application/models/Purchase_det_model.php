@@ -6,12 +6,12 @@ class Purchase_det_model extends MY_Model {
 	protected $_t = 'purchase_details';
 		
 	var $table = 'purchase_details';
-	var $column = array('id','qty', 'unit_price', 'total_price'); //set column field database for order and search
+	var $column = array('id','qty', 'unit_price', 'total_price', 'materials_id'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('id, qty, unit_price, total_price');
+		$this->db->select('id, qty, unit_price, total_price, materials_id');
 		$this->db->from($this->table);
  
 		$i = 0;
@@ -49,7 +49,7 @@ class Purchase_det_model extends MY_Model {
 	}
 
 	function get_purchase_details($id){
-        $this->db->select(array('purchase_details.id as id','materials.id as id_material','qty','unit_price','materials_id'));
+        $this->db->select(array('purchase_details.id as id','materials.id as id_materials','qty','unit_price','total_price','materials_id'));
         $this->db->where('purchasing_id', $id);
         $this->db->join('materials', 'materials.id = purchase_details.materials_id', 'LEFT');
         $result = $this->db->get('purchase_details');
