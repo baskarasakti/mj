@@ -21,4 +21,12 @@ class Project_details_model extends MY_Model {
 		return $result->result();
 	}
 
+	function populate_project_details($id){
+		$this->db->select('p.id as id, p.name as name');
+		$this->db->where('projects_id', $id);	
+		$this->db->join('products p', 'pd.products_id = p.id', 'left');
+		$result = $this->db->get($this->_t.' pd');
+		return $result->result();
+	}
+
 }

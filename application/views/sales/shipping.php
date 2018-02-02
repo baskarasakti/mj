@@ -40,8 +40,30 @@
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
-							<label for="production_date" class="control-label">Production Data</label>
-							<input type="text" class="form-control" id="production_date" name="production_date" placeholder="Production Date" required>
+							<label for="name" class="control-label">Code</label>
+							<input type="text" class="form-control" id="code" name="code" placeholder="Code" required>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="shipping_date" class="control-label">Shipping Date</label>
+							<input type="text" class="form-control" id="shipping_date" name="shipping_date" placeholder="Shipping Date" required>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="projects_id" class="control-label">Projects</label>
+							<select class="custom-select col-sm-12" id="projects_id" name="projects_id" required>
+								<option selected="">Choose...</option>
+								<?php
+									foreach($projects as $item){
+										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
+									}
+								?>
+							</select>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="note" class="control-label">Note</label>
+							<textarea id="note" name="note" class="form-control"></textarea>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group text-right">
@@ -51,7 +73,7 @@
 						<input type="hidden" name="asd" value="">
 						<input type="hidden" name="change_id">
 					</form>
-					<h3 class="box-title">Production Details</h3>
+					<h3 class="box-title">Product List</h3>
                     <hr>
 					<div class="table-responsive"> 
 						<div id="jsGrid"></div> 

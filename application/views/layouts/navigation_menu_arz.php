@@ -27,7 +27,7 @@
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Sales <span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
                             <li> <a href="<?=site_url('projects');?>" class="waves-effect">Sales Order</a> </li>
-                            <li> <a href="<?=site_url('shipping');?>" class="waves-effect">Shipping</a> </li>							
+                            <li> <a href="<?=site_url('product_shipping');?>" class="waves-effect">Shipping</a> </li>							
                         </ul>
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Purchasing <span class="fa arrow"></span></span></a>
@@ -40,9 +40,24 @@
                         <ul class="nav nav-second-level">
                             <li> <a href="<?=site_url('work_orders');?>" class="waves-effect">Work Order</a> </li>
                             <li> <a href="<?=site_url('productions');?>" class="waves-effect">Production</a> </li>
+<<<<<<< HEAD
+<<<<<<< HEAD
+							<li> <a href="<?=site_url('material_usage');?>" class="waves-effect">Materials Usage</a></li>
+                            <li> <a href="<?=site_url('material_return');?>" class="waves-effect">Materials Return</a></li>
+                            <li> <a href="<?=site_url('product_receiving');?>" class="waves-effect">Product Receiving</a></li>							
+                            <li> <a href="<?=site_url('pickup_material')?>" class="waves-effect">Pickup Materials</a> </li>
+                            <li> <a href="<?=site_url('return_material')?>" class="waves-effect">Return Materials</a> </li>      
+                            <li> <a href="<?=site_url('product_receiving')?>" class="waves-effect">Product Receiving</a> </li>		
+=======
 							<li> <a href="<?=site_url('pickup_material')?>" class="waves-effect">Pickup Materials</a> </li>
                             <li> <a href="<?=site_url('return_material')?>" class="waves-effect">Return Materials</a> </li>
                             <li> <a href="<?=site_url('product_receiving')?>" class="waves-effect">Product Receiving</a> </li>
+>>>>>>> cc3384ac013695ea42748fa80144705520076724
+=======
+							<li> <a href="<?=site_url('pickup_material')?>" class="waves-effect">Pickup Materials</a> </li>
+                            <li> <a href="<?=site_url('return_material')?>" class="waves-effect">Return Materials</a> </li>
+                            <li> <a href="<?=site_url('product_receiving')?>" class="waves-effect">Product Receiving</a> </li>
+>>>>>>> cc3384ac013695ea42748fa80144705520076724
                         </ul>
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Inventory <span class="fa arrow"></span></span></a>

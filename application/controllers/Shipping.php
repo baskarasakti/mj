@@ -1,43 +1,43 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Projects extends MY_Controller {
+class Shipping extends MY_Controller {
 
 	function  __construct() {
 		parent::__construct();
 		$this->load->helper('tablefield');
+		$this->load->model('Shipping_model', 'sm');
 		$this->load->model('projects_model', 'pm');
-		$this->load->model('project_details_model', 'pdm');
-		$this->load->model('customers_model', 'cm');
+		$this->load->model('projects_model', 'prm');
 	}
 	
 	private function get_column_attr(){
 		$table = new TableField();
 		$table->addColumn('id', '', 'ID');
-		$table->addColumn('code', '', 'Code');        
-		$table->addColumn('name', '', 'Name');        
-		$table->addColumn('description', '', 'Description');        
-		$table->addColumn('customer', '', 'Customer');        
+		$table->addColumn('code', '', 'Code');  
+		$table->addColumn('projects_id', '', 'Projects Code');       
+		$table->addColumn('shipping_date', '', 'Shipping Date');        
+		$table->addColumn('note', '', 'Note');               
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
 	}
 	
 	public function index()
 	{
-		$data['title'] = "ERP | Sales Order";
-		$data['page_title'] = "Sales Order";
+		$data['title'] = "ERP | Shipping";
+		$data['page_title'] = "Shipping";
 		$data['table_title'] = "List Item";		
-		$data['breadcumb']  = array("Sales", "Sales Order");
-		$data['page_view']  = "sales/projects";		
-		$data['js_asset']   = "projects";	
+		$data['breadcumb']  = array("Sales", "Shipping");
+		$data['page_view']  = "sales/shipping";		
+		$data['js_asset']   = "shipping";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['customers'] = $this->cm->get_all_data();	
+		$data['projects'] = $this->prm->get_all_data();	
 		$data['csrf'] = $this->csrf;						
 		$this->load->view('layouts/master', $data);
 	}
 
 	public function populate_product_select($id=-1){
-		$result = $this->pdm->populate_product_select($id);
+		$result = $this->sm->populate_product_select($id);
 		$data = array();
 		$count = 0;
 		foreach($result as $value){
@@ -52,33 +52,17 @@ class Projects extends MY_Controller {
 		echo json_encode($result);
 	}
 
-	public function populate_project_details($id){
-		$result = $this->pdm->populate_project_details($id);
-		$data = array();
-		$count = 0;
-		foreach($result as $value){
-			$row = array();
-			$row['Name'] = $value->name;
-			$row['Id'] = $value->id;
-			$data[] = $row;
-			$count++;
-		}
-
-		$result = $data;
-		echo json_encode($result);
-	}
-
 	public function view_data(){
-		$result = $this->pm->get_output_data();
+		$result = $this->sm->get_output_data();
 		$data = array();
 		$count = 0;
 		foreach($result['data'] as $value){
 			$row = array();
 			$row['id'] = $value->id;
 			$row['code'] = $value->code;
-			$row['name'] = $value->name;
-			$row['description'] = $value->description;
-			$row['customer'] = $value->customer;
+			$row['projects_id'] = $value->p_code;
+			$row['shipping_date'] = $value->shipping_date;
+			$row['note'] = $value->note;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
@@ -93,16 +77,17 @@ class Projects extends MY_Controller {
 	function add(){
 		$data = array(
 			'code' => $this->input->post('code'),			
-			'name' => $this->normalize_text($this->input->post('name')),
-			'description' => $this->normalize_text($this->input->post('description')),
-			'customers_id' =>$this->input->post('customers_id')
+			'shipping_date' => $this->to_mysql_date($this->input->post('shipping_date')),
+			'note' => $this->normalize_text($this->input->post('note')),
+			'projects_id' =>$this->input->post('projects_id'),
+			'created_at' => $this->mysql_time_now()
 		);
-		$inserted = $this->pm->add_id($data);
+		$inserted = $this->sm->add_id($data);
 		echo json_encode(array('id' => $inserted));
 	}
 
 	function get_by_id($id){
-		$detail = $this->pm->get_by_id('id', $id);
+		$detail = $this->sm->get_by_id('id', $id);
 		echo json_encode($detail);
 	}
 
@@ -111,12 +96,12 @@ class Projects extends MY_Controller {
 			'name' => $this->normalize_text($this->input->post('name')),
 			'product_categories_id' => $this->input->post('product_categories_id')
 		);
-		$status = $this->pm->update_id('id', $this->input->post('change_id'), $data);
+		$status = $this->sm->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));
 	}
 
 	function delete($id){        
-		$status = $this->pm->delete('id', $id);
+		$status = $this->sm->delete('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 

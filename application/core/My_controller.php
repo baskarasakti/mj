@@ -20,6 +20,14 @@ class MY_controller extends CI_Controller {
 
 	function normalize_text($input){
         return ucwords(strtolower($input));
-    }
+	}
+	
+	function to_mysql_date($date){
+		return date("Y-m-d H:m:s", strtotime($date));
+	}
+
+	function mysql_time_now(){
+		return date("Y-m-d H:m:s");
+	}
 
 }
