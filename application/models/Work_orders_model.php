@@ -14,6 +14,14 @@ class Work_orders_model extends MY_Model {
         return $result->result();
 	}
 
+	function populate_wo_select(){
+		$this->db->select('wo.id as id, wo.code as wo_code, p.code as p_code');
+		$this->db->join('project_details pd', 'wo.project_details_id = pd.id', 'left');
+		$this->db->join('projects p', 'pd.projects_id = p.id', 'left');	
+		$result = $this->db->get($this->_t.' wo');
+        return $result->result();
+	}
+
 	
 
 }

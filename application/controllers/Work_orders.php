@@ -9,7 +9,7 @@ class Work_orders extends MY_Controller {
 		$this->load->model('projects_model', 'pm');
 		$this->load->model('work_orders_model', 'wom');		
 		$this->load->model('project_details_model', 'pdm');
-		$this->load->model('customers_model', 'cm');
+		$this->load->model('work_orders_model', 'wom');
 	}
 	
 	private function get_column_attr(){
@@ -35,6 +35,23 @@ class Work_orders extends MY_Controller {
 		$data['csrf'] = $this->csrf;						
 		$this->load->view('layouts/master', $data);
 	}
+
+	public function populate_wo_select(){
+		$result = $this->wom->populate_wo_select();
+		$data = array();
+		$count = 0;
+		foreach($result as $value){
+			$row = array();
+			$row['Name'] = $value->wo_code;
+			$row['Id'] = $value->id;
+			$data[] = $row;
+			$count++;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
 
 	public function view_data(){
 		$result = $this->pm->get_output_data();

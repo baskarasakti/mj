@@ -7,7 +7,7 @@ class Productions extends MY_Controller {
 		parent::__construct();
 		$this->load->helper('tablefield');
 		$this->load->model('productions_model', 'pm');
-		$this->load->model('project_details_model', 'pdm');
+		$this->load->model('production_details_model', 'pdm');
 		$this->load->model('customers_model', 'cm');
 	}
 	
@@ -26,7 +26,7 @@ class Productions extends MY_Controller {
 		$data['table_title'] = "List Item";		
 		$data['breadcumb']  = array("Production", "Productions");
 		$data['page_view']  = "production/productions";		
-		$data['js_asset']   = "production";	
+		$data['js_asset']   = "productions";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;						
 		$this->load->view('layouts/master', $data);
@@ -55,10 +55,7 @@ class Productions extends MY_Controller {
 		foreach($result['data'] as $value){
 			$row = array();
 			$row['id'] = $value->id;
-			$row['code'] = $value->code;
-			$row['name'] = $value->name;
-			$row['description'] = $value->description;
-			$row['customer'] = $value->customer;
+			$row['production_date'] = $value->production_date;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
@@ -72,10 +69,8 @@ class Productions extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'code' => $this->input->post('code'),			
-			'name' => $this->normalize_text($this->input->post('name')),
-			'description' => $this->normalize_text($this->input->post('description')),
-			'customers_id' =>$this->input->post('customers_id')
+			'production_date' => date("Y-m-d H:i:s", strtotime($this->input->post('production_date'))),
+			'created_at' => date("Y-m-d H:i:s")
 		);
 		$inserted = $this->pm->add_id($data);
 		echo json_encode(array('id' => $inserted));
@@ -103,16 +98,15 @@ class Productions extends MY_Controller {
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->pdm->get_project_details($id);
+			$result = $this->pdm->get_production_details($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['products_id'] = $value->products_id;
-				$row['qty'] = $value->qty;
-				$row['unit_price'] = $value->total_price;
-				$row['total_price'] = $value->total_price;
+				$row['production_date'] = $value->production_date;
+				$row['project_code'] = $value->project_code;
+				$row['wo_id'] = $value->wo_id;
 				$data[] = $row;
 				$count++;
 			}
@@ -123,11 +117,8 @@ class Productions extends MY_Controller {
 
 			case "POST":
 			$data = array(
-				'qty' => $this->input->post('qty'),
-				'unit_price' =>$this->input->post('unit_price'),
-				'total_price' => $this->input->post('total_price'),
-				'products_id' => $this->input->post('products_id'),
-				'projects_id' => $id
+				'work_orders_id' => $this->input->post('wo_id'),
+				'productions_id' => $id
 			);
 			$result = $this->pdm->add($data);
 			break;
@@ -135,10 +126,7 @@ class Productions extends MY_Controller {
 			case "PUT":
 			$this->input->raw_input_stream;
 			$data = array(
-				'qty' => $this->input->input_stream('qty'),
-				'unit_price' =>$this->input->input_stream('unit_price'),
-				'total_price' => $this->input->input_stream('total_price'),
-				'products_id' => $this->input->input_stream('products_id')
+				'work_orders_id' => $this->input->input_stream('wo_id')
 			);
 			$result = $this->pdm->update('id',$this->input->input_stream('id'),$data);
 			break;

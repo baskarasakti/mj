@@ -33,6 +33,10 @@
     <script src="<?= asset_url('plugins/bower_components/jsgrid/dist/jsgrid.min.js');?>"></script>
 	<!--BlockUI Script -->
 	<script src="<?= asset_url('plugins/bower_components/blockUI/jquery.blockUI.js');?>"></script>
+	<!-- Plugin JavaScript -->
+    <script src="<?= asset_url('plugins/bower_components/moment/moment.js');?>"></script>
+	 <!-- Date Picker Plugin JavaScript -->
+	 <script src="<?= asset_url('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js');?>"></script>
 	<!-- Form Validation -->
 	<script src="<?= asset_url('js/validator.js');?>"></script>
 	<!-- Sweet-Alert  -->
