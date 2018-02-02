@@ -89,7 +89,7 @@ function show_hide_form(bShow){
 function form_datagrid(id){
 	var products;
     $.ajax({
-    	url: site_url+'projects/populate_project_details'+id,
+    	url: site_url+'projects/populate_project_details/'+id,
     	type: "GET",
     	async: false,
     	success : function(text)
@@ -143,11 +143,11 @@ function form_datagrid(id){
         },
 
         fields: [ 
-        { name: "id", title:"ID" }, 
+		{ name: "id", title:"ID" }, 
+		{ name: "products_id", title:"Product", type: "select", items: products, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
         { name: "unit_price", title:"Unit Price", type: "number", width: 50 }, 
         { name: "total_price", title:"Total Price", type: "number", width: 50 }, 
-        { name: "products_id", title:"Product", type: "select", items: products, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { type: "control" } 
         ] 
 	}); 

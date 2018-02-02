@@ -5,85 +5,158 @@ class Product_receiving extends MY_Controller {
 
 	function  __construct() {
 		parent::__construct();
-			$this->load->helper('tablefield');
-			$this->load->model('products_model', 'pm');
-			$this->load->model('product_cat_model', 'pcm');
-			$this->load->model('processes_model', 'psm');
-			$this->load->model('materialss_model', 'mm');
+		$this->load->helper('tablefield');
+		$this->load->model('product_receiving_model', 'prm');
+		$this->load->model('product_receiving_detail_model', 'prdm');
+		$this->load->model('projects_model', 'prm');
 	}
 	
 	private function get_column_attr(){
-        $table = new TableField();
-        $table->addColumn('id', '', 'ID');
-        $table->addColumn('name', '', 'Name');        
-        $table->addColumn('category', '', 'Category');        
-        $table->addColumn('actions', '', 'Actions');        
-        return $table->getColumns();
-    }
+		$table = new TableField();
+		$table->addColumn('id', '', 'ID');
+		$table->addColumn('code', '', 'Work Order ID');  
+		$table->addColumn('projects_id', '', 'Projects Code');       
+		$table->addColumn('shipping_date', '', 'Shipping Date');        
+		$table->addColumn('note', '', 'Note');               
+		$table->addColumn('actions', '', 'Actions');        
+		return $table->getColumns();
+	}
 	
 	public function index()
 	{
-		$data['title'] = "ERP | Product Receiving";
-		$data['page_title'] = "Product Receiving";
+		$data['title'] = "ERP | Shipping";
+		$data['page_title'] = "Shipping";
 		$data['table_title'] = "List Item";		
-		$data['breadcumb']  = array("Master", "Product Receiving");
-		$data['page_view']  = "master/product_receiving";		
-		$data['js_asset']   = "product-receiving";	
+		$data['breadcumb']  = array("Sales", "Shipping");
+		$data['page_view']  = "sales/shipping";		
+		$data['js_asset']   = "shipping";	
 		$data['columns']    = $this->get_column_attr();	
+		$data['projects'] = $this->prm->get_all_data();	
 		$data['csrf'] = $this->csrf;						
-		$data['p_categories'] = $this->pcm->get_all_data();							
 		$this->load->view('layouts/master', $data);
 	}
 
+	public function populate_product_select($id=-1){
+		$result = $this->sm->populate_product_select($id);
+		$data = array();
+		$count = 0;
+		foreach($result as $value){
+			$row = array();
+			$row['Name'] = $value->value;
+			$row['Id'] = $value->id;
+			$data[] = $row;
+			$count++;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
 	public function view_data(){
-		$result = $this->pm->get_output_data();
-        $data = array();
-        $count = 0;
-        foreach($result['data'] as $value){
-            $row = array();
-            $row['id'] = $value->id;
-			$row['name'] = $value->name;
-			$row['category'] = $value->category;
-			$row['actions'] = '<a class="btn btn-sm btn-info" href="'.site_url('products/detail_index/'.$value->id).'" type="button"><i class="fa  fa-info-circle"></i></a>
-							   <button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
+		$result = $this->sm->get_output_data();
+		$data = array();
+		$count = 0;
+		foreach($result['data'] as $value){
+			$row = array();
+			$row['id'] = $value->id;
+			$row['code'] = $value->code;
+			$row['projects_id'] = $value->p_code;
+			$row['shipping_date'] = $value->shipping_date;
+			$row['note'] = $value->note;
+			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
-            $data[] = $row;
-            $count++;
-        }
+			$data[] = $row;
+			$count++;
+		}
 
-        $result['data'] = $data;
+		$result['data'] = $data;
 
-        echo json_encode($result);
+		echo json_encode($result);
 	}
 
 	function add(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
-			'product_categories_id' => $this->input->post('product_categories_id'),
-			'created_at' => date("Y-m-d H:m:s")
+			'code' => $this->input->post('code'),			
+			'shipping_date' => $this->to_mysql_date($this->input->post('shipping_date')),
+			'note' => $this->normalize_text($this->input->post('note')),
+			'projects_id' =>$this->input->post('projects_id'),
+			'created_at' => $this->mysql_time_now()
 		);
-		$inserted = $this->pm->add($data);
-		echo json_encode(array('status' => $inserted));
+		$inserted = $this->sm->add_id($data);
+		echo json_encode(array('id' => $inserted));
 	}
 
 	function get_by_id($id){
-		$detail = $this->pm->get_by_id('id', $id);
+		$detail = $this->sm->get_by_id('id', $id);
 		echo json_encode($detail);
 	}
 
 	function update(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
-			'product_categories_id' => $this->input->post('product_categories_id'),
-			'updated_at' => date("Y-m-d H:m:s")
+			'code' => $this->input->post('code'),			
+			'shipping_date' => $this->to_mysql_date($this->input->post('shipping_date')),
+			'note' => $this->normalize_text($this->input->post('note')),
+			'projects_id' =>$this->input->post('projects_id'),
+			'updated_at' => $this->mysql_time_now()
 		);
-		$status = $this->pm->update('id', $this->input->post('change_id'), $data);
-		echo json_encode(array('status' => $status));
-   }
+		$status = $this->sm->update_id('id', $this->input->post('change_id'), $data);
+		echo json_encode(array('id' => $status));
+	}
 
 	function delete($id){        
-		$status = $this->pm->delete('id', $id);
+		$status = $this->sm->delete('id', $id);
 		echo json_encode(array('status' => $status));
 	}
+
+	function jsgrid_functions($id = -1){
+		switch($_SERVER["REQUEST_METHOD"]) {
+			case "GET":
+			$result = $this->sdm->get_shipping_details($id);
+			$data = array();
+			$count = 0;
+			foreach($result as $value){
+				$row = array();
+				$row['id'] = $value->id;
+				$row['products_id'] = $value->product_id;
+				$row['qty'] = $value->qty;
+				$row['unit_price'] = $value->total_price;
+				$row['total_price'] = $value->total_price;
+				$data[] = $row;
+				$count++;
+			}
+
+			$result = $data;
+			echo json_encode($result);
+			break;
+
+			case "POST":
+			$data = array(
+				'products_id' => $this->input->post('products_id'),
+				'qty' => $this->input->post('qty'),
+				'unit_price' =>$this->input->post('unit_price'),
+				'total_price' => $this->input->post('total_price'),
+				'product_shipping_id' => $id
+			);
+			$result = $this->sdm->add($data);
+			break;
+
+			case "PUT":
+			$this->input->raw_input_stream;
+			$data = array(
+				'qty' => $this->input->input_stream('qty'),
+				'unit_price' =>$this->input->input_stream('unit_price'),
+				'total_price' => $this->input->input_stream('total_price'),
+				'products_id' => $this->input->input_stream('products_id')
+			);
+			$result = $this->sdm->update('id',$this->input->input_stream('id'),$data);
+			break;
+
+			case "DELETE":
+			$this->input->raw_input_stream;
+			$status = $this->sdm->delete('id', $this->input->input_stream('id'));
+			break;
+		}
+	}
+
 
 }

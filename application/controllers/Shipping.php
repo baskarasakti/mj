@@ -6,8 +6,8 @@ class Shipping extends MY_Controller {
 	function  __construct() {
 		parent::__construct();
 		$this->load->helper('tablefield');
-		$this->load->model('Shipping_model', 'sm');
-		$this->load->model('projects_model', 'pm');
+		$this->load->model('shipping_model', 'sm');
+		$this->load->model('shipping_details_model', 'sdm');
 		$this->load->model('projects_model', 'prm');
 	}
 	
@@ -93,8 +93,11 @@ class Shipping extends MY_Controller {
 
 	function update(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
-			'product_categories_id' => $this->input->post('product_categories_id')
+			'code' => $this->input->post('code'),			
+			'shipping_date' => $this->to_mysql_date($this->input->post('shipping_date')),
+			'note' => $this->normalize_text($this->input->post('note')),
+			'projects_id' =>$this->input->post('projects_id'),
+			'updated_at' => $this->mysql_time_now()
 		);
 		$status = $this->sm->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));
@@ -108,13 +111,13 @@ class Shipping extends MY_Controller {
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->pdm->get_project_details($id);
+			$result = $this->sdm->get_shipping_details($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['products_id'] = $value->products_id;
+				$row['products_id'] = $value->product_id;
 				$row['qty'] = $value->qty;
 				$row['unit_price'] = $value->total_price;
 				$row['total_price'] = $value->total_price;
@@ -128,13 +131,13 @@ class Shipping extends MY_Controller {
 
 			case "POST":
 			$data = array(
+				'products_id' => $this->input->post('products_id'),
 				'qty' => $this->input->post('qty'),
 				'unit_price' =>$this->input->post('unit_price'),
 				'total_price' => $this->input->post('total_price'),
-				'products_id' => $this->input->post('products_id'),
-				'projects_id' => $id
+				'product_shipping_id' => $id
 			);
-			$result = $this->pdm->add($data);
+			$result = $this->sdm->add($data);
 			break;
 
 			case "PUT":
@@ -145,12 +148,12 @@ class Shipping extends MY_Controller {
 				'total_price' => $this->input->input_stream('total_price'),
 				'products_id' => $this->input->input_stream('products_id')
 			);
-			$result = $this->pdm->update('id',$this->input->input_stream('id'),$data);
+			$result = $this->sdm->update('id',$this->input->input_stream('id'),$data);
 			break;
 
 			case "DELETE":
 			$this->input->raw_input_stream;
-			$status = $this->pdm->delete('id', $this->input->input_stream('id'));
+			$status = $this->sdm->delete('id', $this->input->input_stream('id'));
 			break;
 		}
 	}
