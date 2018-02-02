@@ -10,7 +10,7 @@ class Pickup_material extends MY_Controller {
 			$this->load->model('product_cat_model', 'pcm');
 			$this->load->model('processes_model', 'psm');
 			$this->load->model('materials_model', 'mm');
-			$this->load->model('productions_det_model', 'ppd');
+			$this->load->model('productions_detail_model', 'ppd');
 			$this->load->model('material_usage_model', 'mu');
 			$this->load->model('material_usage_det_model', 'mud');
 	}

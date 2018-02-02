@@ -38,17 +38,11 @@
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Production <span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
-<<<<<<< HEAD
                             <li> <a href="<?=site_url('work_orders');?>" class="waves-effect">Work Order</a> </li>
                             <li> <a href="<?=site_url('productions');?>" class="waves-effect">Production</a> </li>
-							<li> <a href="<?=site_url('material_usage');?>" class="waves-effect">Materials Usage</a></li>
-                            <li> <a href="<?=site_url('material_return');?>" class="waves-effect">Materials Return</a></li>
-                            <li> <a href="<?=site_url('product_receiving');?>" class="waves-effect">Product Receiving</a></li>							
-=======
-                            <li> <a href="<?=site_url('pickup_material')?>" class="waves-effect">Pickup Materials</a> </li>
-                            <li> <a href="<?=site_url('return_material')?>" class="waves-effect">Return Materials</a> </li>      
-                            <li> <a href="<?=site_url('product_receiving')?>" class="waves-effect">Product Receiving</a> </li>		
->>>>>>> 61387a7731bf9e7919b7fd3ed4630cabaf2fd437
+							<li> <a href="<?=site_url('pickup_material')?>" class="waves-effect">Pickup Materials</a> </li>
+                            <li> <a href="<?=site_url('return_material')?>" class="waves-effect">Return Materials</a> </li>
+                            <li> <a href="<?=site_url('product_receiving')?>" class="waves-effect">Product Receiving</a> </li>
                         </ul>
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Inventory <span class="fa arrow"></span></span></a>

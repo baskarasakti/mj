@@ -9,7 +9,7 @@ class Product_receiving extends MY_Controller {
 			$this->load->model('products_model', 'pm');
 			$this->load->model('product_cat_model', 'pcm');
 			$this->load->model('processes_model', 'psm');
-			$this->load->model('materials_model', 'mm');
+			$this->load->model('materialss_model', 'mm');
 	}
 	
 	private function get_column_attr(){
