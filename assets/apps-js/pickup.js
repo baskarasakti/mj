@@ -3,6 +3,10 @@ var action;
 
 $(document).ready(function() {
 
+	$('#usage_date').datepicker({
+		format: 'yyyy-mm-dd' 
+	});
+
 	$('#inlineFormCustomSelect').select2({
 	});
 
@@ -171,18 +175,38 @@ function save_data(){
 		   success: function(data)
 		   {
 			   if(data.status){
-				   reload_table();
-				   $("#saveBtn").text("Save");
-				   $("#saveBtn").prop('disabled', false);
-				   $('div.block-div').unblock();
-				   show_hide_form(false);
-				   $('#form')[0].reset();
+				   	reload_table();
+					$("#saveBtn").text("Saved");
+					$("#saveBtn").prop('disabled', true);
+					$('div.block-div').unblock();
+					$('[name="asd"]').val(data.id);
+					show_hide_form(true);
+					// $('#form')[0].reset();
 			   }else{
 				   alert('Fail');
 			   }
 		   }
 	   });
    }
+
+function add(id){
+	action = "Add";
+	$('[name="change_id"]').val(id);
+	$.ajax({
+			url : site_url+"pickup_material/get_by_id/"+id,
+			type: "GET",
+			dataType: "JSON",
+			success: function(data)
+			{
+				// $('#date').val(data.usage_date);				
+				$("#form").validator();
+				$('#form-title').text('Edit Form');
+				$('[name="asd"]').val(id);
+				// $('#jsGrid').jsGrid('loadData');
+				show_hide_form(true);
+			}
+		});
+}
 
 function edit(id){
 	action = "Edit";
@@ -196,6 +220,7 @@ function edit(id){
 				$('#date').val(data.usage_date);				
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
+				$('[name="asd"]').val(id);
 				$('#jsGrid').jsGrid('loadData');
 				show_hide_form(true);
 			}

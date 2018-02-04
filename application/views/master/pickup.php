@@ -6,7 +6,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading"> <?=$table_title;?>         
 					<div class="pull-right">
-						<a href="javascript:void(0);" id="add-btn"><i class="ti-plus"></i> Add Data</a> 
+						<!-- <a href="javascript:void(0);" id="add-btn"><i class="ti-plus"></i> Add Data</a>  -->
 					</div>
 				</div>
 				<div class="panel-wrapper collapse in" aria-expanded="true">
@@ -41,17 +41,18 @@
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
 							<label for="category" class="control-label">Usage Date</label>
-							<input type="text" class="form-control" id="date" name="date" placeholder="Name" required>
+							<input type="text" class="form-control" id="usage_date" name="date" placeholder="Name" required>
 							<div class="help-block with-errors"></div>
 						</div>
-						<input type="hidden" name="change_id">
-						<div class="table-responsive"> 
-			              <div id="jsGrid"></div> 
-			            </div> 
 						<div class="form-group text-right">
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
 						</div>
+						<input type="hidden" name="change_id">
+						<input type="hidden" name="asd" value="">
+						<div class="table-responsive"> 
+			              <div id="jsGrid"></div> 
+			            </div> 
 					</form>
 					</div>
 				</div>

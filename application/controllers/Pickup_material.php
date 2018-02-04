@@ -6,11 +6,8 @@ class Pickup_material extends MY_Controller {
 	function  __construct() {
 		parent::__construct();
 			$this->load->helper('tablefield');
-			$this->load->model('products_model', 'pm');
-			$this->load->model('product_cat_model', 'pcm');
-			$this->load->model('processes_model', 'psm');
-			$this->load->model('materials_model', 'mm');
-			$this->load->model('productions_detail_model', 'ppd');
+			$this->load->model('productions_model', 'pm');
+			$this->load->model('production_details_model', 'pdm');
 			$this->load->model('material_usage_model', 'mu');
 			$this->load->model('material_usage_det_model', 'mud');
 	}
@@ -18,7 +15,8 @@ class Pickup_material extends MY_Controller {
 	private function get_column_attr(){
         $table = new TableField();
         $table->addColumn('id', '', 'ID');
-        $table->addColumn('production_date', '', 'Date');       
+		$table->addColumn('production_date', '', 'Production Date');            
+		$table->addColumn('actions', '', 'Actions');       
         return $table->getColumns();
     }
 	
@@ -32,33 +30,31 @@ class Pickup_material extends MY_Controller {
 		$data['js_asset']   = "pickup";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;						
-		$data['p_categories'] = $this->pcm->get_all_data();							
 		$this->load->view('layouts/master', $data);
 	}
 
 	public function view_data(){
 		$result = $this->pm->get_output_data();
-        $data = array();
-        $count = 0;
-        foreach($result['data'] as $value){
-            $row = array();
-            $row['id'] = $value->id;
-			$row['date'] = $value->production_date;
-			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa  fa-info-circle"></i></button>';
-            $data[] = $row;
-            $count++;
-        }
+		$data = array();
+		$count = 0;
+		foreach($result['data'] as $value){
+			$row = array();
+			$row['id'] = $value->id;
+			$row['production_date'] = $value->production_date;
+			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="add('.$value->id.')" type="button">Pick Materials</button>';
+			$data[] = $row;
+			$count++;
+		}
 
-        $result['data'] = $data;
+		$result['data'] = $data;
 
-        echo json_encode($result);
+		echo json_encode($result);
 	}
 
 	function add(){
 		$data = array(
-			'date' => $this->normalize_text($this->input->post('date')),
-			'production_details_id' => $this->input->post('id'),
-			'created_at' => date("Y-m-d H:m:s")
+			'usage_date' => $this->normalize_text($this->input->post('date')),
+			'production_details_id' => $this->input->post('asd')
 		);
 		$inserted = $this->mu->add($data);
 		echo json_encode(array('status' => $inserted));
