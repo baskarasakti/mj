@@ -61,6 +61,70 @@ $(document).ready(function() {
             save_data();
          }
 	 });
+
+    var materials;
+    $.ajax({
+    	url: site_url+'purchasing/get_materials',
+    	type: "GET",
+    	async: false,
+    	success : function(text)
+    	{
+    		materials = JSON.parse(text);
+    	}
+    });
+
+    $("#jsGrid").jsGrid({ 
+    	width: "100%", 
+    	height: "400px", 
+
+    	inserting: true, 
+    	editing: true, 
+    	sorting: true, 
+    	paging: true, 
+
+        // data: lists, 
+        controller: {
+        	loadData: function(filter) {
+        		return $.ajax({
+        			type: "GET",
+        			url: "return_material/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: filter,
+        			dataType:"JSON"
+        		});
+        	},
+        	insertItem: function(item) {
+        		item["csrf_token"] = $("[name='csrf_token']").val();
+        		console.log(item)
+        		return $.ajax({
+        			type: "POST",
+        			url: "return_material/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: item
+        		});
+        	},
+        	updateItem: function(item) {
+        		return $.ajax({
+        			type: "PUT",
+        			url: "return_material/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: item
+        		});
+        	},
+        	deleteItem: function(item) {
+        		return $.ajax({
+        			type: "DELETE",
+        			url: "return_material/jsgrid_functions",
+        			data: item
+        		});
+        	}
+        },
+
+        fields: [ 
+        { name: "id", visible:false }, 
+        { name: "name", title:"Item Name", type: "select", items: materials, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
+        { name: "qty", title:"Qty", type: "number", width: 50 }, 
+        { name: "note", title:"Note", type: "textarea", width: 200 },  
+        { type: "control" } 
+        ] 
+    }); 
 	
 });
 
@@ -111,8 +175,9 @@ function save_data(){
 				   $("#saveBtn").text("Save");
 				   $("#saveBtn").prop('disabled', false);
 				   $('div.block-div').unblock();
-				   show_hide_form(false);
-				   $('#form')[0].reset();
+				   $('[name="asd"]').val(data.id);
+				   show_hide_form(true);
+				   // $('#form')[0].reset();
 			   }else{
 				   alert('Fail');
 			   }
@@ -129,10 +194,12 @@ function edit(id){
 			dataType: "JSON",
 			success: function(data)
 			{
-				$('#name').val(data.name);
-				$('#material_categories_id').val(data.material_categories_id);				
+				$('#usage_date').val(data.usage_date);	
+				$('#usage_categories').val(data.usage_categories_id);			
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
+				$('[name="asd"]').val(id);
+				$('#jsGrid').jsGrid('loadData');
 				show_hide_form(true);
 			}
 		});

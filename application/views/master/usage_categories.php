@@ -45,9 +45,13 @@
 							<div class="help-block with-errors"></div>
 						</div>
 						<input type="hidden" name="change_id">
+						<input type="hidden" name="asd" value="">
 						<div class="form-group text-right">
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
+						</div>
+						<div class="table-responsive"> 
+							<div id="jsGrid"></div> 
 						</div>
 					</form>
 					</div>

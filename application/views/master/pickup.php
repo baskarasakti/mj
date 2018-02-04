@@ -44,6 +44,17 @@
 							<input type="text" class="form-control" id="usage_date" name="date" placeholder="Name" required>
 							<div class="help-block with-errors"></div>
 						</div>
+						<div class="form-group">
+							<label for="category" class="control-label">Usage Categories</label>
+							<select class="custom-select col-sm-12" id="usage_categories" name="usage_categories" required>
+								<option selected="">Choose...</option>
+								<?php
+									foreach($u_categories as $item){
+										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
+									}
+								?>
+							</select>
+						</div>
 						<div class="form-group text-right">
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>

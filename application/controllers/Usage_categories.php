@@ -7,6 +7,7 @@ class Usage_categories extends MY_Controller {
 		parent::__construct();
 			$this->load->helper('tablefield');
 			$this->load->model('usage_cat_model', 'ucm');
+			$this->load->model('material_usage_cat_model', 'muc');
 	}
 	
 	private function get_column_attr(){
@@ -73,6 +74,46 @@ class Usage_categories extends MY_Controller {
 	function delete($id){        
 		$status = $this->ucm->delete('id', $id);
 		echo json_encode(array('status' => $status));
+	}
+
+	function jsgrid_functions($id){
+		switch($_SERVER["REQUEST_METHOD"]) {
+			case "GET":
+			$result = $this->muc->get_material_usage_categories($id);
+			$data = array();
+			$count = 0;
+			foreach($result as $value){
+				$row = array();
+				$row['id'] = $value->id;
+				$row['name'] = $value->name;
+				$data[] = $row;
+				$count++;
+			}
+
+			$result = $data;
+			echo json_encode($result);
+			break;
+
+			case "POST":
+			$data = array(
+				'material_categories_id' => $this->normalize_text($this->input->post('name')),
+				'usage_categories_id' => $id
+			);
+			$result = $this->muc->add($data);
+			break;
+
+			case "PUT":
+			$data = array(
+				'material_categories_id' => $this->normalize_text($this->input->post('name')),
+				'usage_categories_id' => $id
+			);
+			$result = $this->muc->update('id',$this->input->post('id'),$data);
+			break;
+
+			case "DELETE":
+			$status = $this->muc->delete('id', $this->input->post('id'));
+			break;
+		}
 	}
 
 }

@@ -91,7 +91,7 @@ $(document).ready(function() {
         	loadData: function(filter) {
         		return $.ajax({
         			type: "GET",
-        			url: "pickup/jsgrid_functions/"+$('[name="asd"]').val(),
+        			url: "pickup_material/jsgrid_functions/"+$('[name="asd"]').val(),
         			data: filter,
         			dataType:"JSON"
         		});
@@ -101,21 +101,21 @@ $(document).ready(function() {
         		console.log(item)
         		return $.ajax({
         			type: "POST",
-        			url: "pickup/jsgrid_functions/"+$('[name="asd"]').val(),
+        			url: "pickup_material/jsgrid_functions/"+$('[name="asd"]').val(),
         			data: item
         		});
         	},
         	updateItem: function(item) {
         		return $.ajax({
         			type: "PUT",
-        			url: "pickup/jsgrid_functions/"+$('[name="asd"]').val(),
+        			url: "pickup_material/jsgrid_functions/"+$('[name="asd"]').val(),
         			data: item
         		});
         	},
         	deleteItem: function(item) {
         		return $.ajax({
         			type: "DELETE",
-        			url: "pickup/jsgrid_functions",
+        			url: "pickup_material/jsgrid_functions",
         			data: item
         		});
         	}
@@ -174,7 +174,7 @@ function save_data(){
 		   },
 		   success: function(data)
 		   {
-			   if(data.status){
+			   if(data.id){
 				   	reload_table();
 					$("#saveBtn").text("Saved");
 					$("#saveBtn").prop('disabled', true);
@@ -217,7 +217,8 @@ function edit(id){
 			dataType: "JSON",
 			success: function(data)
 			{
-				$('#date').val(data.usage_date);				
+				$('#date').val(data.usage_date);			
+				$('#usage_categories').val(data.usage_categories_id);			
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				$('[name="asd"]').val(id);

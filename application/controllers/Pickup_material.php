@@ -8,7 +8,9 @@ class Pickup_material extends MY_Controller {
 			$this->load->helper('tablefield');
 			$this->load->model('productions_model', 'pm');
 			$this->load->model('production_details_model', 'pdm');
+			$this->load->model('usage_cat_model', 'uc');
 			$this->load->model('material_usage_model', 'mu');
+			$this->load->model('material_usage_cat_model', 'muc');
 			$this->load->model('material_usage_det_model', 'mud');
 	}
 	
@@ -30,6 +32,7 @@ class Pickup_material extends MY_Controller {
 		$data['js_asset']   = "pickup";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;						
+		$data['u_categories']    = $this->uc->get_all_data();		
 		$this->load->view('layouts/master', $data);
 	}
 
@@ -54,10 +57,11 @@ class Pickup_material extends MY_Controller {
 	function add(){
 		$data = array(
 			'usage_date' => $this->normalize_text($this->input->post('date')),
-			'production_details_id' => $this->input->post('asd')
+			'production_details_id' => $this->input->post('asd'),
+			'usage_categories_id' => $this->input->post('usage_categories')
 		);
-		$inserted = $this->mu->add($data);
-		echo json_encode(array('status' => $inserted));
+		$inserted = $this->mu->add_id($data);
+		echo json_encode(array('id' => $inserted));
 	}
 
 	function get_by_id($id){
@@ -67,12 +71,12 @@ class Pickup_material extends MY_Controller {
 
 	function update(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
-			'product_categories_id' => $this->input->post('product_categories_id'),
-			'updated_at' => date("Y-m-d H:m:s")
+			'usage_date' => $this->normalize_text($this->input->post('date')),
+			'production_details_id' => $this->input->post('asd'),
+			'usage_categories_id' => $this->input->post('usage_categories')
 		);
-		$status = $this->pm->update('id', $this->input->post('change_id'), $data);
-		echo json_encode(array('status' => $status));
+		$status = $this->pm->update_id('id', $this->input->post('change_id'), $data);
+		echo json_encode(array('id' => $status));
    }
 
 	function delete($id){        

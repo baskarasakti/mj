@@ -58,6 +58,68 @@ $(document).ready(function() {
             save_data();
          }
 	 });
+
+    var categories;
+    $.ajax({
+    	url: site_url+'material_categories/get_material_categories',
+    	type: "GET",
+    	async: false,
+    	success : function(text)
+    	{
+    		categories = JSON.parse(text);
+    	}
+    });
+
+    $("#jsGrid").jsGrid({ 
+    	width: "100%", 
+    	height: "400px", 
+
+    	inserting: true, 
+    	editing: true, 
+    	sorting: true, 
+    	paging: true, 
+
+        // data: lists, 
+        controller: {
+        	loadData: function(filter) {
+        		return $.ajax({
+        			type: "GET",
+        			url: "usage_categories/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: filter,
+        			dataType:"JSON"
+        		});
+        	},
+        	insertItem: function(item) {
+        		item["csrf_token"] = $("[name='csrf_token']").val();
+        		console.log(item)
+        		return $.ajax({
+        			type: "POST",
+        			url: "usage_categories/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: item
+        		});
+        	},
+        	updateItem: function(item) {
+        		return $.ajax({
+        			type: "PUT",
+        			url: "usage_categories/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: item
+        		});
+        	},
+        	deleteItem: function(item) {
+        		return $.ajax({
+        			type: "DELETE",
+        			url: "usage_categories/jsgrid_functions",
+        			data: item
+        		});
+        	}
+        },
+
+        fields: [ 
+        { name: "id", visible:false }, 
+        { name: "name", title:"Item Name", type: "select", items: categories, valueField: "Id", textField: "Name", width: 150, validate: "required" },  
+        { type: "control" } 
+        ] 
+    }); 
 	
 });
 
@@ -108,7 +170,8 @@ function save_data(){
 				   $("#saveBtn").text("Save");
 				   $("#saveBtn").prop('disabled', false);
 				   $('div.block-div').unblock();
-				   show_hide_form(false);
+				   $('[name="asd"]').val(id);
+				   show_hide_form(true);
 				   $('#form')[0].reset();
 			   }else{
 				   alert('Fail');
@@ -129,6 +192,8 @@ function edit(id){
 				$('#name').val(data.name);
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
+				$('[name="asd"]').val(id);
+				$('#jsGrid').jsGrid('loadData');
 				show_hide_form(true);
 			}
 		});
