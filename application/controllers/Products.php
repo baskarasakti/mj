@@ -10,6 +10,7 @@ class Products extends MY_Controller {
 		$this->load->model('product_cat_model', 'pcm');
 		$this->load->model('product_materials_model', 'pmm');
 		$this->load->model('product_process_model', 'ppm');
+		$this->load->model('colours_model', 'cm');
 	}
 	
 	private function get_column_attr(){
