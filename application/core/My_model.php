@@ -103,6 +103,10 @@ class MY_Model extends CI_Model {
         $inserted = $this->db->insert_id();     
         return $inserted;
 	}
+
+	function add_batch($data){
+		$this->db->insert_batch($this->_t, $data);
+	}
 	
 	function get_by_id($column, $id){
         $this->db->where($column, $id);
