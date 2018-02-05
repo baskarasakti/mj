@@ -7,17 +7,16 @@ class Product_receiving extends MY_Controller {
 		parent::__construct();
 		$this->load->helper('tablefield');
 		$this->load->model('product_receiving_model', 'prm');
-		$this->load->model('product_receiving_detail_model', 'prdm');
-		$this->load->model('projects_model', 'prm');
+		$this->load->model('product_receiving_det_model', 'prdm');
+		$this->load->model('productions_model', 'pm');
+		$this->load->model('processes_model', 'prcm');
+		$this->load->model('production_details_model', 'pdm');
 	}
 	
 	private function get_column_attr(){
 		$table = new TableField();
 		$table->addColumn('id', '', 'ID');
-		$table->addColumn('code', '', 'Work Order ID');  
-		$table->addColumn('projects_id', '', 'Projects Code');       
-		$table->addColumn('shipping_date', '', 'Shipping Date');        
-		$table->addColumn('note', '', 'Note');               
+		$table->addColumn('receive_date', '', 'Receive Date');            
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
 	}
@@ -25,19 +24,19 @@ class Product_receiving extends MY_Controller {
 	public function index()
 	{
 		$data['title'] = "ERP | Shipping";
-		$data['page_title'] = "Shipping";
+		$data['page_title'] = "Product Receiving";
 		$data['table_title'] = "List Item";		
-		$data['breadcumb']  = array("Sales", "Shipping");
-		$data['page_view']  = "sales/shipping";		
-		$data['js_asset']   = "shipping";	
+		$data['breadcumb']  = array("Production", "Product Receiving");
+		$data['page_view']  = "master/product_receiving";		
+		$data['js_asset']   = "product-receiving";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['projects'] = $this->prm->get_all_data();	
+		$data['process'] = $this->prcm->get_all_data();	
 		$data['csrf'] = $this->csrf;						
 		$this->load->view('layouts/master', $data);
 	}
 
 	public function populate_product_select($id=-1){
-		$result = $this->sm->populate_product_select($id);
+		$result = $this->pdm->populate_product_select($id);
 		$data = array();
 		$count = 0;
 		foreach($result as $value){
@@ -53,16 +52,13 @@ class Product_receiving extends MY_Controller {
 	}
 
 	public function view_data(){
-		$result = $this->sm->get_output_data();
+		$result = $this->prm->get_output_data();
 		$data = array();
 		$count = 0;
 		foreach($result['data'] as $value){
 			$row = array();
 			$row['id'] = $value->id;
-			$row['code'] = $value->code;
-			$row['projects_id'] = $value->p_code;
-			$row['shipping_date'] = $value->shipping_date;
-			$row['note'] = $value->note;
+			$row['receive_date'] = $value->receive_date;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
@@ -76,28 +72,22 @@ class Product_receiving extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'code' => $this->input->post('code'),			
-			'shipping_date' => $this->to_mysql_date($this->input->post('shipping_date')),
-			'note' => $this->normalize_text($this->input->post('note')),
-			'projects_id' =>$this->input->post('projects_id'),
-			'created_at' => $this->mysql_time_now()
+			'receive_date' => $this->input->post('code'),
+			'processes_id' => $this->normalize_text($this->input->post('note'))
 		);
 		$inserted = $this->sm->add_id($data);
 		echo json_encode(array('id' => $inserted));
 	}
 
 	function get_by_id($id){
-		$detail = $this->sm->get_by_id('id', $id);
+		$detail = $this->pm->get_by_id('id', $id);
 		echo json_encode($detail);
 	}
 
 	function update(){
 		$data = array(
-			'code' => $this->input->post('code'),			
-			'shipping_date' => $this->to_mysql_date($this->input->post('shipping_date')),
-			'note' => $this->normalize_text($this->input->post('note')),
-			'projects_id' =>$this->input->post('projects_id'),
-			'updated_at' => $this->mysql_time_now()
+			'receive_date' => $this->input->post('code'),
+			'processes_id' => $this->normalize_text($this->input->post('note'))
 		);
 		$status = $this->sm->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));

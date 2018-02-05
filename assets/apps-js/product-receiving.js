@@ -3,6 +3,10 @@ var action;
 
 $(document).ready(function() {
 
+	$('#receive_date').datepicker({
+		format: 'yyyy-mm-dd' 
+	});
+
 	$('#inlineFormCustomSelect').select2({
 	});
 
@@ -61,6 +65,70 @@ $(document).ready(function() {
             save_data();
          }
 	 });
+
+    var products;
+    $.ajax({
+    	url: site_url+'product_receiving/populate_product_select',
+    	type: "GET",
+    	async: false,
+    	success : function(text)
+    	{
+    		products = JSON.parse(text);
+    	}
+    });
+
+    $("#jsGrid").jsGrid({ 
+    	width: "100%", 
+    	height: "400px", 
+
+    	inserting: true, 
+    	editing: true, 
+    	sorting: true, 
+    	paging: true, 
+
+        // data: lists, 
+        controller: {
+        	loadData: function(filter) {
+        		return $.ajax({
+        			type: "GET",
+        			url: "product_receiving/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: filter,
+        			dataType:"JSON"
+        		});
+        	},
+        	insertItem: function(item) {
+        		item["csrf_token"] = $("[name='csrf_token']").val();
+        		console.log(item)
+        		return $.ajax({
+        			type: "POST",
+        			url: "product_receiving/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: item
+        		});
+        	},
+        	updateItem: function(item) {
+        		return $.ajax({
+        			type: "PUT",
+        			url: "product_receiving/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: item
+        		});
+        	},
+        	deleteItem: function(item) {
+        		return $.ajax({
+        			type: "DELETE",
+        			url: "product_receiving/jsgrid_functions",
+        			data: item
+        		});
+        	}
+        },
+
+        fields: [ 
+        { name: "id", visible:false }, 
+        { name: "name", title:"Item Name", type: "select", items: products, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
+        { name: "qty", title:"Qty", type: "number", width: 50 }, 
+        { name: "note", title:"Note", type: "textarea", width: 200 },  
+        { type: "control" } 
+        ] 
+    });
 	
 });
 
@@ -111,8 +179,9 @@ function save_data(){
 				   $("#saveBtn").text("Save");
 				   $("#saveBtn").prop('disabled', false);
 				   $('div.block-div').unblock();
-				   show_hide_form(false);
-				   $('#form')[0].reset();
+				   $('[name="asd"]').val(data.id);
+				   show_hide_form(true);
+				   // $('#form')[0].reset();
 			   }else{
 				   alert('Fail');
 			   }

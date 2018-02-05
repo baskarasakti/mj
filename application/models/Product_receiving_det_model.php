@@ -53,4 +53,12 @@ class Product_receiving_det_model extends MY_Model {
 		return $this->db->get('roles')->result();
 	}
 
+	function populate_product_select($id){
+		$this->db->select('pd.id as id, p.name as value');
+		$this->db->where('product_', $id);	
+		$this->db->join('products p', 'pd.products_id = p.id', 'left');
+		$result = $this->db->get($this->_t.' pd');
+		return $result->result();
+	}
+
 }

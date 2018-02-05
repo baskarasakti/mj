@@ -40,16 +40,28 @@
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
-							<label for="category" class="control-label">Name</label>
-							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+							<label for="category" class="control-label">Receive Date</label>
+							<input type="text" class="form-control" id="receive_date" name="receive_date" placeholder="Name" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="category" class="control-label">Category</label>
-							<select class="custom-select col-sm-12" id="material_categories_id" name="material_categories_id" required>
+							<label for="category" class="control-label">Process</label>
+							<select class="custom-select col-sm-12" id="process_id" name="process_id" required>
 								<option selected="">Choose...</option>
 								<?php
-									foreach($m_categories as $item){
+									foreach($process as $item){
+										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
+									}
+								?>
+							</select>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="category" class="control-label">Process</label>
+							<select class="custom-select col-sm-12" id="process_id2" name="process_id2" required>
+								<option selected="">Choose...</option>
+								<?php
+									foreach($process as $item){
 										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
 									}
 								?>
@@ -57,10 +69,14 @@
 							<div class="help-block with-errors"></div>
 						</div>
 						<input type="hidden" name="change_id">
+						<input type="hidden" name="asd" value="">
 						<div class="form-group text-right">
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
 						</div>
+						<div class="table-responsive"> 
+			              <div id="jsGrid"></div> 
+			            </div> 
 					</form>
 					</div>
 				</div>
