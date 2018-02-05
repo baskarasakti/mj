@@ -52,4 +52,16 @@ class Product_receiving_model extends MY_Model {
 		return $this->db->get('roles')->result();
 	}
 
+	public function get_movement($id)
+	{
+		$sql = "SELECT processes_id, processes_id1, production_details_id, 
+		SUM(Select prd.qty group by pr.processes_id)-SUM(select prd.qty order_by pr.processes_id1) AS total
+		FROM product_receiving pr
+		LEFT JOIN product_receiving_details prd on prd.product_receiving_id = pr.id 
+		LEFT JOIN production_details pd on prd.production_details_id = pd.id 
+		LEFT JOIN production p on pd.production_id = p.id 
+		WHERE prd.production_details_id = ".$id;
+
+		return $this->db->query($sql)->result();
+	}
 }

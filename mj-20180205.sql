@@ -875,21 +875,6 @@ USE `megahjaya2` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `megahjaya2`.`product_stock` (`id` INT, `date` INT, `type` INT, `product_shipping_detail_id` INT, `s_return_details_id` INT, `product_receiving_details_id` INT, `qty` INT, `unit_price` INT, `total_price` INT, `product_shipping_id` INT, `products_id` INT);
 
--- -----------------------------------------------------
--- View `megahjaya2`.`product_stock`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `megahjaya2`.`product_stock`;
-USE `megahjaya2`;
-CREATE  OR REPLACE VIEW `product_stock` AS
-SELECT  *
-FROM product_inventory pi
-LEFT JOIN product_shipping_detail psd ON pi.product_shipping_id = psd.id
-LEFT JOIN s_return_detail srd ON pi.product_shipping_id = srd.id
-LEFT JOIN product_receiving_detail prd ON pi.product_shipping_id = prd.id;
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
 -- Data for table `megahjaya2`.`roles`
@@ -906,7 +891,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `megahjaya2`;
-INSERT INTO `megahjaya2`.`users` (`id`, `username`, `email`, `name`, `password`, `address`, `telp`, `created_at`, `updated_at`, `roles_id`) VALUES (1, 'admin', 'admin@mail.com', 'Admin Megahjaya', '$2y$10$jeczkYckxe90k3oSH9dmD.FAxAjamXH79unLVWkXdOQdd4CUOiBpm', 'Jl. Test No. 1', '123321123', DEFAULT, NULL, 1);
+INSERT INTO `megahjaya2`.`users` (`id`, `username`, `email`, `name`, `password`, `address`, `telp`, `created_at`, `updated_at`, `roles_id`) VALUES (1, 'admin', 'admin@mail.com', 'Admin Megahjaya', '$2y$10$jeczkYckxe90k3oSH9dmD.FAxAjamXH79unLVWkXdOQdd4CUOiBpm', 'Jl. Test No. 1', '123321123', CURDATE(), NULL, 1);
 
 COMMIT;
 
