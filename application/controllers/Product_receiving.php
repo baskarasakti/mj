@@ -16,7 +16,8 @@ class Product_receiving extends MY_Controller {
 	private function get_column_attr(){
 		$table = new TableField();
 		$table->addColumn('id', '', 'ID');
-		$table->addColumn('receive_date', '', 'Receive Date');            
+		$table->addColumn('receive_date', '', 'Receive Date');         
+		$table->addColumn('name', '', 'Process');         
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
 	}
@@ -35,22 +36,6 @@ class Product_receiving extends MY_Controller {
 		$this->load->view('layouts/master', $data);
 	}
 
-	public function populate_product_select($id=-1){
-		$result = $this->pdm->populate_product_select($id);
-		$data = array();
-		$count = 0;
-		foreach($result as $value){
-			$row = array();
-			$row['Name'] = $value->value;
-			$row['Id'] = $value->id;
-			$data[] = $row;
-			$count++;
-		}
-
-		$result = $data;
-		echo json_encode($result);
-	}
-
 	public function view_data(){
 		$result = $this->prm->get_output_data();
 		$data = array();
@@ -59,6 +44,7 @@ class Product_receiving extends MY_Controller {
 			$row = array();
 			$row['id'] = $value->id;
 			$row['receive_date'] = $value->receive_date;
+			$row['name'] = $value->name;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
@@ -72,29 +58,31 @@ class Product_receiving extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'receive_date' => $this->input->post('code'),
-			'processes_id' => $this->normalize_text($this->input->post('note'))
+			'receive_date' => $this->input->post('receive_date'),
+			'processes_id' => $this->input->post('processes_id'),
+			'processes_id1' => $this->input->post('processes_id1')
 		);
-		$inserted = $this->sm->add_id($data);
+		$inserted = $this->prm->add_id($data);
 		echo json_encode(array('id' => $inserted));
 	}
 
 	function get_by_id($id){
-		$detail = $this->pm->get_by_id('id', $id);
+		$detail = $this->prm->get_by_id('id', $id);
 		echo json_encode($detail);
 	}
 
 	function update(){
 		$data = array(
-			'receive_date' => $this->input->post('code'),
-			'processes_id' => $this->normalize_text($this->input->post('note'))
+			'receive_date' => $this->input->post('receive_date'),
+			'processes_id' => $this->input->post('processes_id'),
+			'processes_id1' => $this->input->post('processes_id1')
 		);
-		$status = $this->sm->update_id('id', $this->input->post('change_id'), $data);
+		$status = $this->prm->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));
 	}
 
 	function delete($id){        
-		$status = $this->sm->delete('id', $id);
+		$status = $this->prm->delete('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 

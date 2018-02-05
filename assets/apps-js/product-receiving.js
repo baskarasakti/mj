@@ -66,17 +66,6 @@ $(document).ready(function() {
          }
 	 });
 
-    var products;
-    $.ajax({
-    	url: site_url+'product_receiving/populate_product_select',
-    	type: "GET",
-    	async: false,
-    	success : function(text)
-    	{
-    		products = JSON.parse(text);
-    	}
-    });
-
     $("#jsGrid").jsGrid({ 
     	width: "100%", 
     	height: "400px", 
@@ -123,7 +112,6 @@ $(document).ready(function() {
 
         fields: [ 
         { name: "id", visible:false }, 
-        { name: "name", title:"Item Name", type: "select", items: products, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
         { name: "note", title:"Note", type: "textarea", width: 200 },  
         { type: "control" } 
@@ -174,7 +162,7 @@ function save_data(){
 		   },
 		   success: function(data)
 		   {
-			   if(data.status){
+			   if(data.id){
 				   reload_table();
 				   $("#saveBtn").text("Save");
 				   $("#saveBtn").prop('disabled', false);
@@ -198,8 +186,9 @@ function edit(id){
 			dataType: "JSON",
 			success: function(data)
 			{
-				$('#name').val(data.name);
-				$('#material_categories_id').val(data.material_categories_id);				
+				$('#receive_date').val(data.receive_date);
+				$('#processes_id').val(data.processes_id);
+				$('#processes_id1').val(data.processes_id1);				
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				show_hide_form(true);

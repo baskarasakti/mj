@@ -46,7 +46,7 @@
 						</div>
 						<div class="form-group">
 							<label for="category" class="control-label">Process</label>
-							<select class="custom-select col-sm-12" id="process_id" name="process_id" required>
+							<select class="custom-select col-sm-12" id="processes_id" name="processes_id" required>
 								<option selected="">Choose...</option>
 								<?php
 									foreach($process as $item){
@@ -58,7 +58,7 @@
 						</div>
 						<div class="form-group">
 							<label for="category" class="control-label">Process</label>
-							<select class="custom-select col-sm-12" id="process_id2" name="process_id2" required>
+							<select class="custom-select col-sm-12" id="processes_id1" name="processes_id1" required>
 								<option selected="">Choose...</option>
 								<?php
 									foreach($process as $item){

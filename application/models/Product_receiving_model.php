@@ -6,13 +6,14 @@ class Product_receiving_model extends MY_Model {
 	protected $_t = 'product_receiving';
 		
 	var $table = 'product_receiving';
-	var $column = array('id','receive_date', 'production_details_id'); //set column field database for order and search
+	var $column = array('id','receive_date', 'processes_id', 'processes_id1', 'production_details_id'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('id, receive_date, production_details_id');
-		$this->db->from($this->table);
+		$this->db->select('pr.id, pr.receive_date, pr.processes_id, pr.processes_id1, p.name as name');
+		$this->db->join('processes p', 'p.id = pr.processes_id1');
+		$this->db->from($this->table." pr");
  
 		$i = 0;
 	 
