@@ -47,7 +47,8 @@
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Inventory <span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
-                            <li> <a href="map-google.html" class="waves-effect">History</a> </li>							
+                            <li> <a href="<?=site_url('material_inventory');?>" class="waves-effect">Material Inventory</a> </li>                       
+                            <li> <a href="<?=site_url('product_inventory');?>" class="waves-effect">Product Inventory</a> </li>						
                         </ul>
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Settings <span class="fa arrow"></span></span></a>
