@@ -48,6 +48,23 @@ class Productions extends MY_Controller {
 		echo json_encode($result);
 	}
 
+	public function populate_production_det_select($id=-1)
+	{
+		$result = $this->pdm->populate_production_det_select($id);
+		$data = array();
+		$count = 0;
+		foreach($result as $value){
+			$row = array();
+			$row['Name'] = $value->value;
+			$row['Id'] = $value->production_details_id."-".$value->products_id;
+			$data[] = $row;
+			$count++;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
 	public function view_data(){
 		$result = $this->pm->get_output_data();
 		$data = array();

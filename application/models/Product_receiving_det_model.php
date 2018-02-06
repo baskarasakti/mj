@@ -3,15 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Product_receiving_det_model extends MY_Model {
 
-	protected $_t = 'product_receiving_det';
+	protected $_t = 'product_receiving_details';
 		
-	var $table = 'product_receiving_det';
-	var $column = array('id','qty','note','product_receiving_id','products_id'); //set column field database for order and search
+	var $table = 'product_receiving_details';
+	var $column = array('id','qty','note','product_receiving_id','products_id','production_details_id'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('prd.id as id, prd.qty, prd.note, prd.product_receiving_id, prd.products_id, p.name');
+		$this->db->select('prd.id as id, prd.qty, prd.note, prd.product_receiving_id, prd.products_id, p.name, prd.production_details_id');
 		$this->db->from($this->table. " prd");
 		$this->db->join("products p", "prd.products_id = p.id", "left");
  
@@ -53,9 +53,9 @@ class Product_receiving_det_model extends MY_Model {
 		return $this->db->get('roles')->result();
 	}
 
-	function populate_product_select($id){
+	function get_product_receiving_details($id){
 		$this->db->select('pd.id as id, p.name as value');
-		$this->db->where('product_', $id);	
+		$this->db->where('pd.products_id', $id);	
 		$this->db->join('products p', 'pd.products_id = p.id', 'left');
 		$result = $this->db->get($this->_t.' pd');
 		return $result->result();

@@ -89,7 +89,7 @@ class Product_receiving extends MY_Controller {
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->sdm->get_shipping_details($id);
+			$result = $this->prdm->get_product_receiving_details($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
@@ -97,8 +97,7 @@ class Product_receiving extends MY_Controller {
 				$row['id'] = $value->id;
 				$row['products_id'] = $value->product_id;
 				$row['qty'] = $value->qty;
-				$row['unit_price'] = $value->total_price;
-				$row['total_price'] = $value->total_price;
+				$row['note'] = $value->note;
 				$data[] = $row;
 				$count++;
 			}
@@ -108,30 +107,31 @@ class Product_receiving extends MY_Controller {
 			break;
 
 			case "POST":
+			$temp = explode("-", $this->input->post('products_id'));
+			$products_id = 
 			$data = array(
-				'products_id' => $this->input->post('products_id'),
+				'products_id' => $temp[1],
+				'production_details_id' => $temp[0],
 				'qty' => $this->input->post('qty'),
-				'unit_price' =>$this->input->post('unit_price'),
-				'total_price' => $this->input->post('total_price'),
-				'product_shipping_id' => $id
+				'note' =>$this->input->post('note'),
+				'product_receiving_id' => $id
 			);
-			$result = $this->sdm->add($data);
+			$result = $this->prdm->add($data);
 			break;
 
 			case "PUT":
 			$this->input->raw_input_stream;
 			$data = array(
+				'products_id' => $this->input->input_stream('products_id'),
 				'qty' => $this->input->input_stream('qty'),
-				'unit_price' =>$this->input->input_stream('unit_price'),
-				'total_price' => $this->input->input_stream('total_price'),
-				'products_id' => $this->input->input_stream('products_id')
+				'note' =>$this->input->input_stream('note')
 			);
-			$result = $this->sdm->update('id',$this->input->input_stream('id'),$data);
+			$result = $this->prdm->update('id',$this->input->input_stream('id'),$data);
 			break;
 
 			case "DELETE":
 			$this->input->raw_input_stream;
-			$status = $this->sdm->delete('id', $this->input->input_stream('id'));
+			$status = $this->prdm->delete('id', $this->input->input_stream('id'));
 			break;
 		}
 	}

@@ -66,6 +66,17 @@ $(document).ready(function() {
          }
 	 });
 
+    var products;
+    $.ajax({
+    	url: site_url+'productions/populate_production_det_select',
+    	type: "GET",
+    	async: false,
+    	success : function(text)
+    	{
+    		products = JSON.parse(text);
+    	}
+    });
+
     $("#jsGrid").jsGrid({ 
     	width: "100%", 
     	height: "400px", 
@@ -112,6 +123,7 @@ $(document).ready(function() {
 
         fields: [ 
         { name: "id", visible:false }, 
+        { name: "products_id", title:"Product", type: "select", items: products, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
         { name: "note", title:"Note", type: "textarea", width: 200 },  
         { type: "control" } 
@@ -191,6 +203,8 @@ function edit(id){
 				$('#processes_id1').val(data.processes_id1);				
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
+				$('[name="asd"]').val(id);
+				$('#jsGrid').jsGrid('loadData');
 				show_hide_form(true);
 			}
 		});

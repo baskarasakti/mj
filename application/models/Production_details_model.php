@@ -24,4 +24,15 @@ class Production_details_model extends MY_Model {
 		return $result->result();
 	}
 
+	public function populate_production_det_select($id)
+	{
+		$this->db->select('pd.id as production_details_id, p.id as products_id, p.name as value');
+		// $this->db->where('pd.id', $id);
+		$this->db->join('work_orders wo', 'pd.work_orders_id = wo.id', 'left');
+		$this->db->join('project_details prd', 'wo.project_details_id = prd.id', 'left');
+		$this->db->join('products p', 'prd.products_id = p.id', 'left');		
+		$result = $this->db->get($this->_t.' pd');
+		return $result->result();
+	}
+
 }
