@@ -137,6 +137,14 @@ class Purchasing extends MY_Controller {
 				'purchasing_id' => $id
 			);
 			$result = $this->prd->add($data);
+
+			$row = array();
+			$row['id'] = $result;
+			$row['name'] = $this->input->post('name');
+			$row['qty'] = $this->input->post('qty');
+			$row['price'] = $this->input->post('price');
+
+			echo json_encode($row);
 			break;
 
 			case "PUT":

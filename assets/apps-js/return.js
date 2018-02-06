@@ -3,7 +3,11 @@ var action;
 
 $(document).ready(function() {
 
-	$('#inlineFormCustomSelect').select2({
+	// $('#inlineFormCustomSelect').select2({
+	// });
+
+	$('#return_date').datepicker({
+		format: 'yyyy-mm-dd' 
 	});
 
 	var columns = [];
@@ -61,10 +65,13 @@ $(document).ready(function() {
             save_data();
          }
 	 });
+	
+});
 
-    var materials;
+function form_jsgrid(id){
+	var materials;
     $.ajax({
-    	url: site_url+'purchasing/get_materials',
+    	url: site_url+'pickup_material/get_material_usage_details/'+id,
     	type: "GET",
     	async: false,
     	success : function(text)
@@ -98,7 +105,8 @@ $(document).ready(function() {
         		return $.ajax({
         			type: "POST",
         			url: "return_material/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
+        			data: item,
+        			dataType:"JSON"
         		});
         	},
         	updateItem: function(item) {
@@ -125,8 +133,7 @@ $(document).ready(function() {
         { type: "control" } 
         ] 
     }); 
-	
-});
+}
 
 function show_hide_form(bShow){
 	if(bShow==true){
@@ -170,7 +177,7 @@ function save_data(){
 		   },
 		   success: function(data)
 		   {
-			   if(data.status){
+			   if(data.id){
 				   reload_table();
 				   $("#saveBtn").text("Save");
 				   $("#saveBtn").prop('disabled', false);
@@ -186,7 +193,7 @@ function save_data(){
    }
 
 function edit(id){
-	action = "Edit";
+	action = "Add";
 	$('[name="change_id"]').val(id);
 	$.ajax({
 			url : site_url+"return_material/get_by_id/"+id,
@@ -194,13 +201,22 @@ function edit(id){
 			dataType: "JSON",
 			success: function(data)
 			{
-				$('#usage_date').val(data.usage_date);	
-				$('#usage_categories').val(data.usage_categories_id);			
+				form_jsgrid(id);
+				if (data.status.id) {
+					$("#saveBtn").prop('disabled', true);
+					$('#return_date').val(data.status.return_date);	
+					$('#code').val(data.status.code);
+					show_hide_form(true);
+				} else {
+					$("#saveBtn").prop('disabled', false);
+					show_hide_form(true);
+				}
+				$('#usage_date').val(data.detail.usage_date);
+				$('#usage_categories').val(data.detail.usage_categories_id);			
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				$('[name="asd"]').val(id);
 				$('#jsGrid').jsGrid('loadData');
-				show_hide_form(true);
 			}
 		});
 }

@@ -22,7 +22,7 @@ $(document).ready(function() {
         deferRender: true,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         ajax: {
-            url: site_url+'material_categories/view_data',
+            url: site_url+'material_inventory/view_data',
             type: "POST",
             dataSrc : 'data',
             data: function ( d ) {
@@ -32,7 +32,8 @@ $(document).ready(function() {
         columns: columns,
         columnDefs: [ 
 			{ className: "dt-body-right", targets: right_align },
-			{ "orderable": false, targets : [-1]  } 
+			{ "orderable": false, targets : [-1]  },
+			{ "visible": false, targets : [0]  } 
         ]
 	});
 	
@@ -61,6 +62,40 @@ $(document).ready(function() {
 	
 });
 
+function form_jsgrid(id){
+    $("#jsGrid").jsGrid({ 
+    	width: "100%", 
+    	height: "400px", 
+
+    	// inserting: false, 
+    	// editing: false, 
+    	sorting: true, 
+    	paging: true, 
+
+        // data: lists, 
+        controller: {
+        	loadData: function(filter) {
+        		return $.ajax({
+        			type: "GET",
+        			url: "material_inventory/jsgrid_functions/"+id,
+        			data: filter,
+        			dataType:"JSON"
+        		});
+        	}
+        },
+
+        fields: [ 
+        { name: "id", visible:false }, 
+        { name: "name", title:"Name", type: "text", width: 200 }, 
+        { name: "date", title:"Date", type: "text", width: 200 }, 
+        { name: "qty", title:"Qty", type: "text", width: 200 }, 
+        { name: "type", title:"Type", type: "text", width: 200 },  
+        { name: "status", title:"Status", type: "text", width: 200 },  
+        { type: "control", deleteButton: false, editButton: false } 
+        ] 
+    }); 
+}
+
 function show_hide_form(bShow){
 	if(bShow==true){
 		$('#form-panel').show();
@@ -78,9 +113,9 @@ function reload_table(){
 function save_data(){
 	var url;
 	if(action == "Add"){
-		url = site_url+"material_categories/add";
+		url = site_url+"material_inventory/add";
 	}else{
-		url = site_url+"material_categories/update";
+		url = site_url+"material_inventory/update";
 	}
    
 	var data = $("#form").serializeArray();
@@ -119,17 +154,19 @@ function save_data(){
 
 function edit(id){
 	action = "Edit";
-	$('[name="change_id"]').val(id);
 	$.ajax({
-			url : site_url+"material_categories/get_by_id/"+id,
+			url : site_url+"material_inventory/get_by_id/"+id,
 			type: "GET",
 			dataType: "JSON",
 			success: function(data)
 			{
+				form_jsgrid(id);
+				$('#jsGrid').jsGrid('loadData');
 				$('#name').val(data.name);
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				show_hide_form(true);
+				
 			}
 		});
 }
@@ -147,7 +184,7 @@ function remove(id){
 		},
 		function(){
 			$.ajax({
-				url : site_url+"material_categories/delete/"+id,
+				url : site_url+"material_inventory/delete/"+id,
 				type: "GET",
 				dataType: "JSON",
 				success: function(data)

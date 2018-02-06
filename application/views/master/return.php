@@ -41,12 +41,12 @@
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
 							<label for="category" class="control-label">Usage Date</label>
-							<input type="text" class="form-control" id="usage_date" name="date" placeholder="Name" required>
+							<input type="text" class="form-control" id="usage_date" name="usage_date" placeholder="Usage Date" readonly>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
 							<label for="category" class="control-label">Usage Categories</label>
-							<select class="custom-select col-sm-12" id="usage_categories" name="usage_categories" required>
+							<select class="custom-select col-sm-12" id="usage_categories" name="usage_categories" readonly>
 								<option selected="">Choose...</option>
 								<?php
 									foreach($u_categories as $item){
@@ -54,6 +54,16 @@
 									}
 								?>
 							</select>
+						</div>
+						<div class="form-group">
+							<label for="category" class="control-label">Return Date</label>
+							<input type="text" class="form-control" id="return_date" name="return_date" placeholder="Return Date" required>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="category" class="control-label">Code</label>
+							<input type="text" class="form-control" id="code" name="code" placeholder="Code" required>
+							<div class="help-block with-errors"></div>
 						</div>
 						<input type="hidden" name="change_id">
 						<input type="hidden" name="asd" value="">

@@ -149,7 +149,14 @@ class Products extends MY_Controller {
 				'qty' => $this->input->post('qty'),
 				'products_id' => $id
 			);
-			$result = $this->pmm->add($data);
+			$result = $this->pmm->add_id($data);
+
+			$row = array();
+			$row['id'] = $result;
+			$row['materials_id'] = $this->input->post('materials_id');
+			$row['qty'] = $this->input->post('qty');
+
+			echo json_encode($row);
 			break;
 
 			case "PUT":
@@ -192,6 +199,12 @@ class Products extends MY_Controller {
 				'products_id' => $id
 			);
 			$result = $this->ppm->add($data);
+
+			$row = array();
+			$row['id'] = $result;
+			$row['processes_id'] = $this->input->post('processes_id');
+			
+			echo json_encode($row);
 			break;
 
 			case "PUT":

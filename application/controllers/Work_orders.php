@@ -137,6 +137,16 @@ class Work_orders extends MY_Controller {
 				'created_at' => date("Y-m-d H:m:s")
 			);
 			$result = $this->wom->add($data);
+
+			$row = array();
+			$row['id'] = $insert;
+			$row['pd_id'] = $this->input->post('pd_id');
+			$row['code'] = $this->input->post('code');
+			$row['start_date'] = $this->input->post('start_date');
+			$row['end_date'] = $this->input->post('end_date');
+			$row['qty'] = $this->input->post('qty');
+
+			echo json_encode($row);
 			break;
 
 			case "PUT":

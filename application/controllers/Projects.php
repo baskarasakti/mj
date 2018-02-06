@@ -154,7 +154,16 @@ class Projects extends MY_Controller {
 				'products_id' => $this->input->post('products_id'),
 				'projects_id' => $id
 			);
-			$result = $this->pdm->add($data);
+			$insert = $this->pdm->add($data);
+
+			$row = array();
+			$row['id'] = $insert;
+			$row['products_id'] = $this->input->post('products_id');
+			$row['qty'] = $this->input->post('qty');
+			$row['unit_price'] = $this->input->post('unit_price');
+			$row['total_price'] = $this->input->post('total_price');
+
+			echo json_encode($row);
 			break;
 
 			case "PUT":

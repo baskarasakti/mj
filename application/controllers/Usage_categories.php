@@ -100,6 +100,12 @@ class Usage_categories extends MY_Controller {
 				'usage_categories_id' => $id
 			);
 			$result = $this->muc->add($data);
+
+			$row = array();
+			$row['id'] = $insert;
+			$row['name'] = $this->input->post('name');
+
+			echo json_encode($row);
 			break;
 
 			case "PUT":

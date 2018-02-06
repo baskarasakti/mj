@@ -137,7 +137,15 @@ class Productions extends MY_Controller {
 				'work_orders_id' => $this->input->post('wo_id'),
 				'productions_id' => $id
 			);
-			$result = $this->pdm->add($data);
+			$result = $this->pdm->add_id($data);
+
+			$row = array();
+			$row['id'] = $result;
+			$row['production_date'] = "";
+			$row['project_code'] = "";
+			$row['wo_id'] = $this->input->post('wo_id');
+
+			echo json_encode($row);
 			break;
 
 			case "PUT":

@@ -28,8 +28,8 @@ class Users extends MY_Controller {
 		$data['page_title'] = "Users";
 		$data['table_title'] = "List Item";		
 		$data['breadcumb']  = array("Settings", "Users");
-		$data['page_view']  = "settings/users";		
-		$data['js_asset']   = "users";	
+		$data['page_view']  = "settings/users";
+		$data['js_asset']   = "users";
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;			
 		$data['roles'] = $this->rm->get_all_data();		

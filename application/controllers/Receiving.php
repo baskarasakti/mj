@@ -12,6 +12,7 @@ class Receiving extends MY_Controller {
 		$this->load->model('vendors_model', 'vd');
 		$this->load->model('receive_model', 'rcv');
 		$this->load->model('receive_det_model', 'rcvd');
+		$this->load->model('material_inventory_model', 'mi');
 	}
 	
 	private function get_column_attr(){
@@ -96,7 +97,17 @@ class Receiving extends MY_Controller {
 				'receiving_id' => $inserted,
 				'materials_id' => $value->materials_id,
 			);
-			$this->rcvd->add($data);
+			$insert = $this->rcvd->add_id($data);
+
+			$data2 = array(
+				'date' => $this->mysql_time_now(),
+				'type' => 'in',
+				'receive_details_id' => $insert,
+				'qty' => $value->qty,
+				'materials_id' => $value->materials_id 
+			);
+
+			$this->mi->add_id($data2);
 		}
 
 		echo json_encode(array('id' => $inserted));
@@ -150,6 +161,14 @@ class Receiving extends MY_Controller {
 				'purchasing_id' => $id
 			);
 			$result = $this->prd->add($data);
+
+			$row = array();
+			$row['id'] = $insert;
+			$row['name'] = $this->input->post('name');
+			$row['qty'] = $this->input->post('qty');
+			$row['price'] = $this->input->post('price');
+
+			echo json_encode($row);
 			break;
 
 			case "PUT":

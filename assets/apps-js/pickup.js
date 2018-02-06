@@ -102,7 +102,8 @@ $(document).ready(function() {
         		return $.ajax({
         			type: "POST",
         			url: "pickup_material/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
+        			data: item,
+        			dataType:"JSON"
         		});
         	},
         	updateItem: function(item) {
@@ -122,7 +123,7 @@ $(document).ready(function() {
         },
 
         fields: [ 
-        { name: "id", visible:false }, 
+        { name: "id" }, 
         { name: "name", title:"Item Name", type: "select", items: materials, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
         { name: "note", title:"Note", type: "textarea", width: 200 },  

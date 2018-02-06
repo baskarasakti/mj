@@ -12,6 +12,7 @@ class Pickup_material extends MY_Controller {
 			$this->load->model('material_usage_model', 'mu');
 			$this->load->model('material_usage_cat_model', 'muc');
 			$this->load->model('material_usage_det_model', 'mud');
+			$this->load->model('material_inventory_model', 'mi');
 	}
 	
 	private function get_column_attr(){
@@ -35,6 +36,23 @@ class Pickup_material extends MY_Controller {
 		$data['u_categories']    = $this->uc->get_all_data();		
 		$this->load->view('layouts/master', $data);
 	}
+
+	public function get_material_usage_details($id){
+		$result = $this->mud->get_material_usage_details($id);
+		$data = array();
+		$count = 0;
+		foreach($result as $value){
+			$row = array();
+			$row['Name'] = $value->name;
+			$row['Id'] = $value->id;
+			$data[] = $row;
+			$count++;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+	
 
 	public function view_data(){
 		$result = $this->pm->get_output_data();
@@ -65,7 +83,7 @@ class Pickup_material extends MY_Controller {
 	}
 
 	function get_by_id($id){
-		$detail = $this->pm->get_by_id('id', $id);
+		$detail = $this->mu->get_by_id('id', $id);
 		echo json_encode($detail);
 	}
 
@@ -111,20 +129,48 @@ class Pickup_material extends MY_Controller {
 				'note' => $this->normalize_text($this->input->post('note')),
 				'material_usage_id' => $id
 			);
-			$result = $this->mud->add($data);
+			$insert = $this->mud->add_id($data);
+
+			$data2 = array(
+				'date' => $this->mysql_time_now(),
+				'type' => 'out',
+				'material_usage_details_id' => $insert,
+				'qty' => $this->normalize_text($this->input->post('qty')),
+				'materials_id' => $this->normalize_text($this->input->post('name'))
+			);
+
+			$this->mi->add_id($data2);
+
+			$row = array();
+			$row['id'] = $insert;
+			$row['name'] = $this->normalize_text($this->input->post('name'));
+			$row['qty'] = $this->normalize_text($this->input->post('qty'));
+			$row['note'] = $this->normalize_text($this->input->post('note'));
+
+			echo json_encode($row);
 			break;
 
 			case "PUT":
+			$this->input->raw_input_stream;
 			$data = array(
-				'materials_id' => $this->normalize_text($this->input->post('name')),
-				'qty' => $this->normalize_text($this->input->post('qty')),
-				'note' => $this->normalize_text($this->input->post('note'))
+				'materials_id' => $this->normalize_text($this->input->input_stream('name')),
+				'qty' => $this->normalize_text($this->input->input_stream('qty')),
+				'note' => $this->normalize_text($this->input->input_stream('note'))
 			);
-			$result = $this->mud->update('id',$this->input->post('id'),$data);
+			$insert = $this->mud->update_id('id',$this->input->input_stream('id'),$data);
+
+			$data2 = array(
+				'date' => $this->mysql_time_now(),
+				'type' => 'out',
+				'qty' => $this->normalize_text($this->input->input_stream('qty')),
+				'materials_id' => $this->normalize_text($this->input->input_stream('name')) 
+			);
+
+			$this->mi->update_id('material_usage_details_id',$this->input->input_stream('id'),$data2);
 			break;
 
 			case "DELETE":
-			$status = $this->mud->delete('id', $this->input->post('id'));
+			$status = $this->mud->delete('id', $this->input->input_stream('id'));
 			break;
 		}
 	}

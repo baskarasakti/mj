@@ -136,7 +136,8 @@ function form_datagrid(id){
         		return $.ajax({
         			type: "POST",
         			url: "shipping/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
+        			data: item,
+        			dataType:"JSON"
         		});
         	},
         	updateItem: function(item) {

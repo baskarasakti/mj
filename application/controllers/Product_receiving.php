@@ -108,7 +108,6 @@ class Product_receiving extends MY_Controller {
 
 			case "POST":
 			$temp = explode("-", $this->input->post('products_id'));
-			$products_id = 
 			$data = array(
 				'products_id' => $temp[1],
 				'production_details_id' => $temp[0],
@@ -116,7 +115,15 @@ class Product_receiving extends MY_Controller {
 				'note' =>$this->input->post('note'),
 				'product_receiving_id' => $id
 			);
-			$result = $this->prdm->add($data);
+			$insert = $this->prdm->add_id($data);
+
+			$row = array();
+			$row['id'] = $insert;
+			$row['products_id'] = $this->input->post('products_id');
+			$row['qty'] = $this->input->post('qty');
+			$row['note'] = $this->input->post('note');
+
+			echo json_encode($row);
 			break;
 
 			case "PUT":

@@ -39,16 +39,12 @@
 				<div class="panel-wrapper collapse in block-div" aria-expanded="true">
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
-						<div class="form-group">
-							<label for="category" class="control-label">Category</label>
-							<input type="text" class="form-control" id="name" name="name" placeholder="Category" required>
-							<div class="help-block with-errors"></div>
-						</div>
-						<input type="hidden" name="change_id">
 						<div class="form-group text-right">
-							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
 						</div>
+						<div class="table-responsive"> 
+			              <div id="jsGrid"></div> 
+			            </div>
 					</form>
 					</div>
 				</div>

@@ -124,7 +124,7 @@ class Shipping extends MY_Controller {
 				$row['id'] = $value->id;
 				$row['products_id'] = $value->product_id;
 				$row['qty'] = $value->qty;
-				$row['unit_price'] = $value->total_price;
+				$row['unit_price'] = $value->unit_price;
 				$row['total_price'] = $value->total_price;
 				$data[] = $row;
 				$count++;
@@ -143,6 +143,15 @@ class Shipping extends MY_Controller {
 				'product_shipping_id' => $id
 			);
 			$result = $this->sdm->add($data);
+
+			$row = array();
+			$row['id'] = $insert;
+			$row['products_id'] = $this->input->post('products_id');
+			$row['qty'] = $this->input->post('qty');
+			$row['unit_price'] = $this->input->post('unit_price');
+			$row['total_price'] = $this->input->post('total_price');
+
+			echo json_encode($row);
 			break;
 
 			case "PUT":

@@ -100,7 +100,8 @@ $(document).ready(function() {
         		return $.ajax({
         			type: "POST",
         			url: "receiving/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
+        			data: item,
+        			dataType:"JSON"
         		});
         	},
         	updateItem: function(item) {

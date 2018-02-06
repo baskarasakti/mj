@@ -12,6 +12,8 @@ class Return_material extends MY_Controller {
 			$this->load->model('materials_model', 'mm');
 			$this->load->model('material_usage_model', 'mu');
 			$this->load->model('material_usage_det_model', 'mud');
+			$this->load->model('material_return_model', 'mr');
+			$this->load->model('material_return_det_model', 'mrd');
 			$this->load->model('usage_cat_model', 'uc');
 	}
 	
@@ -32,8 +34,8 @@ class Return_material extends MY_Controller {
 		$data['page_view']  = "master/return";		
 		$data['js_asset']   = "return";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['csrf'] = $this->csrf;						
-		$data['u_categories']    = $this->uc->get_all_data();							
+		$data['csrf'] = $this->csrf;
+		$data['u_categories']    = $this->uc->get_all_data();					
 		$this->load->view('layouts/master', $data);
 	}
 
@@ -59,38 +61,44 @@ class Return_material extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
-			'product_categories_id' => $this->input->post('product_categories_id'),
+			'return_date' => $this->normalize_text($this->input->post('return_date')),
+			'code' => $this->input->post('code'),
+			'material_usage_id' => $this->input->post('asd'),
 			'created_at' => date("Y-m-d H:m:s")
 		);
-		$inserted = $this->mu->add_id($data);
+		$inserted = $this->mr->add_id($data);
 		echo json_encode(array('id' => $inserted));
 	}
 
 	function get_by_id($id){
+		$data = array();
 		$detail = $this->mu->get_by_id('id', $id);
-		echo json_encode($detail);
+		$data['detail'] = $detail;
+		$status = $this->mr->have_material_return('material_usage_id', $id);
+		$data['status'] = $status;
+		echo json_encode($data);
 	}
 
 	function update(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
-			'product_categories_id' => $this->input->post('product_categories_id'),
+			'return_date' => $this->normalize_text($this->input->post('return_date')),
+			'code' => $this->input->post('code'),
+			'material_usage_id' => $this->input->post('asd'),
 			'updated_at' => date("Y-m-d H:m:s")
 		);
-		$status = $this->mu->update_id('id', $this->input->post('change_id'), $data);
+		$status = $this->mr->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));
    }
 
 	function delete($id){        
-		$status = $this->mu->delete('id', $id);
+		$status = $this->mr->delete('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 
 	function jsgrid_functions($id){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->mud->get_material_usage_details($id);
+			$result = $this->mrd->get_material_return_details($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
@@ -114,7 +122,25 @@ class Return_material extends MY_Controller {
 				'note' => $this->normalize_text($this->input->post('note')),
 				'material_usage_id' => $id
 			);
-			$result = $this->mud->add($data);
+			$insert = $this->mrd->add($data);
+
+			$data2 = array(
+				'date' => $this->mysql_time_now(),
+				'type' => 'in',
+				'material_usage_details_id' => $insert,
+				'qty' => $this->normalize_text($this->input->post('qty')),
+				'materials_id' => $this->normalize_text($this->input->post('name'))
+			);
+
+			$this->mi->add_id($data2);
+
+			$row = array();
+			$row['id'] = $insert;
+			$row['name'] = $this->input->post('name');
+			$row['qty'] = $this->input->post('qty');
+			$row['note'] = $this->input->post('note');
+
+			echo json_encode($row);
 			break;
 
 			case "PUT":
@@ -123,11 +149,11 @@ class Return_material extends MY_Controller {
 				'qty' => $this->normalize_text($this->input->post('qty')),
 				'note' => $this->normalize_text($this->input->post('note'))
 			);
-			$result = $this->mud->update('id',$this->input->post('id'),$data);
+			$result = $this->mrd->update('id',$this->input->post('id'),$data);
 			break;
 
 			case "DELETE":
-			$status = $this->mud->delete('id', $this->input->post('id'));
+			$status = $this->mrd->delete('id', $this->input->post('id'));
 			break;
 		}
 	}
