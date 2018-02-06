@@ -40,6 +40,11 @@
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
+							<label for="name" class="control-label">Code</label>
+							<input type="text" class="form-control" id="code" name="code" placeholder="Code" readonly>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
 							<label for="name" class="control-label">Name</label>
 							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
 							<div class="help-block with-errors"></div>
@@ -51,6 +56,32 @@
 								<?php
 									foreach($p_categories as $item){
 										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
+									}
+								?>
+							</select>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-4">
+								<div class="radio">
+									<input name="type" checked value="foil" required="" type="radio">
+									<label for="out"> Foil </label>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="radio">
+									<input name="type" value="tipping" required="" type="radio">
+									<label for="out"> Tipping </label>
+								</div>
+							</div>
+						</div>
+						<div id="color-group" class="form-group">
+							<label for="color" class="control-label">Color</label>
+							<select class="custom-select col-sm-12" id="color" name="color" required>
+								<option value="" selected="">Choose...</option>
+								<?php
+									foreach($colors as $item){
+										echo '<option value="'.$item->code.'">'.$item->name.'</option>';
 									}
 								?>
 							</select>

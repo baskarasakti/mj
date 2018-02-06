@@ -49,6 +49,15 @@ class Projects_model extends MY_Model {
 		}
 	}
 
-	
+	public function generate_id(){
+		$prefix = "SO-";
+		$infix = date("Ymd-");
+		$this->db->select("MAX(RIGHT(`code`, 4)) as 'maxID'");
+        $this->db->like('code', $prefix.$infix, 'after');
+        $result = $this->db->get($this->_t);
+        $code = $result->row(0)->maxID;
+        $code++; 
+        return $prefix.$infix.sprintf("%04s", $code);
+	}
 
 }

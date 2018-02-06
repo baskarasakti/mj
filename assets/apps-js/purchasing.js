@@ -3,6 +3,10 @@ var action;
 
 $(document).ready(function() {
 
+	$('#delivery_date').datepicker({
+		format: 'yyyy-mm-dd' 
+	});
+
 	var columns = [];
 	var right_align = [];
 	$("#datatable").find('th').each(function(i, th){
@@ -37,8 +41,21 @@ $(document).ready(function() {
 	
 	$('#form-panel').hide();
 
+	function generateID(){
+		$.ajax({
+			url : site_url+"purchasing/generate_id",
+			type: "GET",
+			dataType: "JSON",
+			success: function(data)
+			{
+				$("#code").val(data.id);
+			}
+		});	
+	}
+
 	$('#add-btn').click(function(){
 		action = "Add";
+		generateID();
 		$('#form-title').text('Add Form');
 		$("#form").validator();
 		show_hide_form(true);
@@ -202,7 +219,10 @@ function edit(id){
 		success: function(data)
 		{
 			$('#code').val(data.code);
-			$('#date').val(data.delivery_date);
+			$('#delivery_date').val(data.delivery_date);
+			$('#delivery_place').val(data.delivery_place);
+			$('#note').val(data.note);
+			$('#vendor').val(data.vendors_id);
 			$("#form").validator();
 			$('#form-title').text('Edit Form');
 			$('[name="asd"]').val(id);

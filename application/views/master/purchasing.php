@@ -41,12 +41,22 @@
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
 							<label for="code" class="control-label">Code</label>
-							<input type="text" class="form-control" id="code" name="code" placeholder="Code" required>
+							<input type="text" class="form-control" id="code" name="code" placeholder="Code" readonly required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="date" class="control-label">Delivery Date</label>
-							<input type="text" class="form-control" id="date" name="date" placeholder="Delivery Date" required>
+							<label for="delivery_date" class="control-label">Delivery Date</label>
+							<input type="text" class="form-control" id="delivery_date" name="delivery_date" placeholder="Delivery Date" required>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="address" class="control-label">Address</label>
+							<input type="text" class="form-control" id="delivery_place" name="delivery_place" placeholder="Delivery Address" required>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="note" class="control-label">Note</label>
+							<textarea id="note" name="note" class="form-control"></textarea>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">

@@ -3,6 +3,39 @@ var action;
 
 $(document).ready(function() {
 
+
+	function generateID(ptype){
+		$.ajax({
+			url : site_url+"products/generate_id",
+			type: "GET",
+			data: {
+				type: ptype,
+				color: $("#color").val(),
+			},
+			dataType: "JSON",
+			success: function(data)
+			{
+				$("#code").val(data.id);
+			}
+		});	
+	}
+
+	//Generate ID
+	$("#color").change(function(){
+		var ptype = $('[name="type"]').val();
+		generateID(ptype);
+	});
+
+	$('[name="type"]').change(function(){
+		if(this.value == "tipping"){
+			$("#color-group").hide();
+			generateID(this.value);
+		}else{
+			$("#code").val("");
+			$("#color-group").show();	
+		}
+	});
+
 	var columns = [];
 	var right_align = [];
 	$("#datatable").find('th').each(function(i, th){
@@ -262,7 +295,15 @@ function edit(id){
 		dataType: "JSON",
 		success: function(data)
 		{
+			var code = data.code;
+			if(code.length-5 == 0){
+				$('[name="type"][value="tipping"]').prop("checked", true).trigger('change');
+			}else{
+				$("#color").val(code.substring(0, code.length-5).toString());
+				$('[name="type"][value="foil"]').prop("checked", true).trigger('change');
+			}
 			$('#name').val(data.name);
+			$('#code').val(data.code);
 			$('#product_categories_id').val(data.product_categories_id);
 			$("#form").validator();
 			$('#form-title').text('Edit Form');

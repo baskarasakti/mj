@@ -245,8 +245,9 @@ function edit(id){
 			dataType: "JSON",
 			success: function(data)
 			{
-				$('#name').val(data.name);
-				$('#material_categories_id').val(data.material_categories_id);				
+				$('#code').val(data.code);
+				$('#receive_date').val(data.receive_date);
+				$('#vendors_id').val(data.vendors_id);			
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				show_hide_form(true);

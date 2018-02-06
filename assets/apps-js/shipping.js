@@ -42,8 +42,21 @@ $(document).ready(function() {
 	
 	$('#form-panel').hide();
 
+	function generateID(){
+		$.ajax({
+			url : site_url+"shipping/generate_id",
+			type: "GET",
+			dataType: "JSON",
+			success: function(data)
+			{
+				$("#code").val(data.id);
+			}
+		});	
+	}
+
 	$('#add-btn').click(function(){
 		action = "Add";
+		generateID();
 		$('#form-title').text('Add Form');
 		$("#form").validator();
 		show_hide_form(true);

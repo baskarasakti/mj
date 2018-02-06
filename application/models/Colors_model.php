@@ -1,19 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Receive_model extends MY_Model {
+class Colors_model extends MY_Model {
 
-	protected $_t = 'receiving';
+	protected $_t = 'colours';
 		
-	var $table = 'receiving';
-	var $column = array('id','code', 'delivery_date'); //set column field database for order and search
+	var $table = 'colours';
+	var $column = array('id', 'code','name'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('p.id as id, p.code as code, p.delivery_date, r.id as id_receive, r.receive_date, IF(r.receive_date, "true", "false") as status');
-		$this->db->from('purchasing p');
-		$this->db->join($this->table.' r', 'r.purchasing_id = p.id', 'left');
+		$this->db->select('id, code, name');
+		$this->db->from($this->table);
  
 		$i = 0;
 	 
@@ -47,17 +46,6 @@ class Receive_model extends MY_Model {
 			$order = $this->order;
 			$this->db->order_by(key($order), $order[key($order)]);
 		}
-	}
-
-	public function generate_id(){
-		$prefix = "RC-";
-		$infix = date("Ymd-");
-		$this->db->select("MAX(RIGHT(`code`, 4)) as 'maxID'");
-        $this->db->like('code', $prefix.$infix, 'after');
-        $result = $this->db->get($this->_t);
-        $code = $result->row(0)->maxID;
-        $code++; 
-        return $prefix.$infix.sprintf("%04s", $code);
 	}
 
 }

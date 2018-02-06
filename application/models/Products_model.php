@@ -6,12 +6,12 @@ class Products_model extends MY_Model {
 	protected $_t = 'products';
 		
 	var $table = 'products';
-	var $column = array('p.id','p.name', 'pc.name'); //set column field database for order and search
+	var $column = array('p.id', 'p.code', 'p.name', 'pc.name'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('p.id as id, p.name as name, pc.name as category');
+		$this->db->select('p.id as id, p.code as code, p.name as name, pc.name as category');
 		$this->db->from($this->table.' p');
 		$this->db->join('product_categories pc', 'p.product_categories_id = pc.id', 'left');
  
@@ -49,6 +49,22 @@ class Products_model extends MY_Model {
 		}
 	}
 
-	
+	public function generate_id(){
+		$code = "fail";
+		$suffix = "MC";
+		$this->db->select("MAX(RIGHT(`code`, 5)) as 'maxID'");
+		if($this->input->get('type') == "foil"){
+			$this->db->like('code', $this->input->get('color'), 'after');
+		}	
+		$result = $this->db->get($this->_t);
+		$code = substr($result->row(0)->maxID, 0, 3);
+		$code++;
+		$code = sprintf("%03s", $code);
+		if($this->input->get('type') == "foil"){
+			return $this->input->get('color').$code.$suffix;
+		}else{
+			return $code.$suffix;
+		}
+	}
 
 }

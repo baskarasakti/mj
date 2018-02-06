@@ -36,6 +36,11 @@ class Projects extends MY_Controller {
 		$this->load->view('layouts/master', $data);
 	}
 
+	public function generate_id(){
+		$id = $this->pm->generate_id();
+		echo json_encode(array('id' => $id));
+	}
+
 	public function populate_product_select($id=-1){
 		$result = $this->pdm->populate_product_select($id);
 		$data = array();

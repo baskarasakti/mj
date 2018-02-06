@@ -33,55 +33,32 @@
 			</div>
 			<hr> 
 		</div>
-		<div id="form-panel" class="col-md-12 form-hide">
+		<div id="form-panel" class="col-md-12">
 			<div class="panel panel-info">
 				<div id="form-title" class="panel-heading"> Add Form</div>
 				<div class="panel-wrapper collapse in block-div" aria-expanded="true">
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
-							<label for="name" class="control-label">Code</label>
-							<input type="text" class="form-control" id="code" name="code" placeholder="Code" readonly required>
+							<label for="code" class="control-label">Code</label>
+							<input type="text" class="form-control" id="code" name="code" placeholder="Code" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="shipping_date" class="control-label">Shipping Date</label>
-							<input type="text" class="form-control" id="shipping_date" name="shipping_date" placeholder="Shipping Date" required>
+							<label for="name" class="control-label">Colors</label>
+							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
 							<div class="help-block with-errors"></div>
 						</div>
-						<div class="form-group">
-							<label for="projects_id" class="control-label">Projects</label>
-							<select class="custom-select col-sm-12" id="projects_id" name="projects_id" required>
-								<option selected="">Choose...</option>
-								<?php
-									foreach($projects as $item){
-										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
-									}
-								?>
-							</select>
-							<div class="help-block with-errors"></div>
-						</div>
-						<div class="form-group">
-							<label for="note" class="control-label">Note</label>
-							<textarea id="note" name="note" class="form-control"></textarea>
-							<div class="help-block with-errors"></div>
-						</div>
+						<input type="hidden" name="change_id">
 						<div class="form-group text-right">
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
 						</div>
-						<input type="hidden" name="asd" value="">
-						<input type="hidden" name="change_id">
 					</form>
-					<h3 class="box-title">Product List</h3>
-                    <hr>
-					<div class="table-responsive"> 
-						<div id="jsGrid"></div> 
-					</div> 
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- /.row -->
-</div>
 </div>

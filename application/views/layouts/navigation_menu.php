@@ -22,18 +22,21 @@
 							<li> <a href="<?=site_url('processes');?>" class="waves-effect">Processes</a></li>	
 							<li> <a href="<?=site_url('customers');?>">Customers</a></li>
                             <li> <a href="<?=site_url('vendors');?>" class="waves-effect">Vendors</a> </li>						
+                            <li> <a href="<?=site_url('colors');?>" class="waves-effect">Colors</a> </li>						
                         </ul>
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Sales <span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
                             <li> <a href="<?=site_url('projects');?>" class="waves-effect">Sales Order</a> </li>
                             <li> <a href="<?=site_url('shipping');?>" class="waves-effect">Shipping</a> </li>							
+                            <li> <a href="<?=site_url('sales_return');?>" class="waves-effect">Return</a> </li>							
                         </ul>
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Purchasing <span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
                             <li> <a href="<?=site_url('purchasing')?>" class="waves-effect">Purchase Lists</a> </li>
                             <li> <a href="<?=site_url('receiving')?>" class="waves-effect">Receive Items</a> </li>			
+                            <li> <a href="<?=site_url('purchase_return')?>" class="waves-effect">Return</a> </li>			
                         </ul>
 					</li>
 					<li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Production <span class="fa arrow"></span></span></a>

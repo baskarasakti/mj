@@ -41,7 +41,7 @@
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
 							<label for="name" class="control-label">Code</label>
-							<input type="text" class="form-control" id="code" name="code" placeholder="Code" required>
+							<input type="text" class="form-control" id="code" name="code" placeholder="Code" readonly required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">

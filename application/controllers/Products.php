@@ -10,12 +10,13 @@ class Products extends MY_Controller {
 		$this->load->model('product_cat_model', 'pcm');
 		$this->load->model('product_materials_model', 'pmm');
 		$this->load->model('product_process_model', 'ppm');
-		$this->load->model('colours_model', 'cm');
+		$this->load->model('colors_model', 'cm');
 	}
 	
 	private function get_column_attr(){
 		$table = new TableField();
-		$table->addColumn('id', '', 'Code');
+		$table->addColumn('id', '', 'ID');
+		$table->addColumn('code', '', 'Code');
 		$table->addColumn('name', '', 'Name');        
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
@@ -37,6 +38,11 @@ class Products extends MY_Controller {
 		echo json_encode($result);
 	}
 	
+	public function generate_id(){
+		$id = $this->pm->generate_id();
+		echo json_encode(array('id' => $id));
+	}
+
 	public function index()
 	{
 		$data['title'] = "ERP | Products";
@@ -47,6 +53,7 @@ class Products extends MY_Controller {
 		$data['js_asset']   = "products";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['p_categories'] = $this->pcm->get_all_data();	
+		$data['colors'] = $this->cm->get_all_data();		
 		$data['csrf'] = $this->csrf;						
 		$this->load->view('layouts/master', $data);
 	}
@@ -74,6 +81,7 @@ class Products extends MY_Controller {
 		foreach($result['data'] as $value){
 			$row = array();
 			$row['id'] = $value->id;
+			$row['code'] = $value->code;
 			$row['name'] = $value->name;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 			.<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
@@ -89,6 +97,7 @@ class Products extends MY_Controller {
 	function add(){
 		$data = array(
 			'name' => $this->normalize_text($this->input->post('name')),
+			'code' => $this->input->post('code'),
 			'product_categories_id' =>$this->input->post('product_categories_id')
 		);
 		$inserted = $this->pm->add_id($data);
@@ -103,6 +112,7 @@ class Products extends MY_Controller {
 	function update(){
 		$data = array(
 			'name' => $this->normalize_text($this->input->post('name')),
+			'code' => $this->input->post('code'),
 			'product_categories_id' => $this->input->post('product_categories_id')
 		);
 		$status = $this->pm->update_id('id', $this->input->post('change_id'), $data);

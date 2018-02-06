@@ -81,7 +81,7 @@ class Receiving extends MY_Controller {
 
 		$data = array(
 			'purchasing_id' => $id,
-			'code' => $purchase_data->code,
+			'code' => $this->rcv->generate_id(),
 			'receive_date' => date('Y-m-d H:i:s'),
 			'created_at' => date('Y-m-d H:i:s'),
 		);

@@ -50,6 +50,11 @@ class Purchasing extends MY_Controller {
 		$this->load->view('layouts/master', $data);
 	}
 
+	public function generate_id(){
+		$id = $this->prc->generate_id();
+		echo json_encode(array('id' => $id));
+	}
+
 	public function view_data(){
 		$result = $this->prc->get_output_data();
 		$data = array();
@@ -71,9 +76,12 @@ class Purchasing extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'code' => $this->normalize_text($this->input->post('code')),
-			'delivery_date' => $this->normalize_text($this->input->post('date')),
-			'vendors_id' => $this->normalize_text($this->input->post('vendor')),
+			'code' => $this->input->post('code'),
+			'delivery_date' => $this->input->post('delivery_date'),
+			'vendors_id' => $this->input->post('vendor'),
+			'delivery_place' => $this->normalize_text($this->input->post('delivery_place')),
+			'note' => $this->normalize_text($this->input->post('note')),
+			'created_at' => $this->mysql_time_now()
 		);
 		$inserted = $this->prc->add_id($data);
 		echo json_encode(array('id' => $inserted));
@@ -86,9 +94,11 @@ class Purchasing extends MY_Controller {
 
 	function update(){
 		$data = array(
-			'code' => $this->normalize_text($this->input->post('code')),
-			'delivery_date' => $this->normalize_text($this->input->post('date')),
-			'vendors_id' => $this->normalize_text($this->input->post('vendor'))
+			'delivery_date' => $this->input->post('delivery_date'),
+			'vendors_id' => $this->input->post('vendor'),
+			'delivery_place' => $this->normalize_text($this->input->post('delivery_place')),
+			'note' => $this->normalize_text($this->input->post('note')),
+			'updated_at' => $this->mysql_time_now()
 		);
 		$status = $this->prc->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));
