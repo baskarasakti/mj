@@ -28,7 +28,7 @@ class Product_receiving extends MY_Controller {
 		$data['page_title'] = "Product Receiving";
 		$data['table_title'] = "List Item";		
 		$data['breadcumb']  = array("Production", "Product Receiving");
-		$data['page_view']  = "master/product_receiving";		
+		$data['page_view']  = "production/product_receiving";		
 		$data['js_asset']   = "product-receiving";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['process'] = $this->prcm->get_all_data();	

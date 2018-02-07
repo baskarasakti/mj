@@ -50,7 +50,7 @@ class Material_inventory extends MY_Controller {
 		$data['page_title'] = "Material Inventory";
 		$data['table_title'] = "List Item";		
 		$data['breadcumb']  = array("Master", "Material Inventory");
-		$data['page_view']  = "master/material_inventory";		
+		$data['page_view']  = "inventory/material_inventory";		
 		$data['js_asset']   = "material-inventory";	
 		$data['columns']    = $this->get_column_attr();
 		$data['columns1']    = $this->get_column_attr1();

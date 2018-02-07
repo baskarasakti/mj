@@ -39,10 +39,10 @@ class Purchasing extends MY_Controller {
 	public function index()
 	{
 		$data['title'] = "ERP | Purchase List";
-		$data['page_title'] = "Purcchasing";
+		$data['page_title'] = "Purchasing";
 		$data['table_title'] = "List Item";		
 		$data['breadcumb']  = array("Master", "Purchase List");
-		$data['page_view']  = "master/purchasing";		
+		$data['page_view']  = "purchasing/purchasing";		
 		$data['js_asset']   = "purchasing";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;						

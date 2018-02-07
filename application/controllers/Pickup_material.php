@@ -29,7 +29,7 @@ class Pickup_material extends MY_Controller {
 		$data['page_title'] = "Pickup Materials";
 		$data['table_title'] = "List Item";		
 		$data['breadcumb']  = array("Master", "Pickup Materials");
-		$data['page_view']  = "master/pickup";		
+		$data['page_view']  = "production/pickup";		
 		$data['js_asset']   = "pickup";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;						

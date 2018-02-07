@@ -47,7 +47,7 @@ class Receiving extends MY_Controller {
 		$data['page_title'] = "Receiving";
 		$data['table_title'] = "List Item";		
 		$data['breadcumb']  = array("Master", "Receiving List");
-		$data['page_view']  = "master/receiving";		
+		$data['page_view']  = "purchasing/receiving";		
 		$data['js_asset']   = "receiving";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;						

@@ -297,7 +297,7 @@ function edit(id){
 		success: function(data)
 		{
 			var code = data.code;
-			if(code.length-5 == 0){
+			if(code==null || code.length-5 == 0){
 				$('[name="type"][value="tipping"]').prop("checked", true).trigger('change');
 			}else{
 				$("#color").val(code.substring(0, code.length-5).toString());

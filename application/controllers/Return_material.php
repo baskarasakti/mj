@@ -31,7 +31,7 @@ class Return_material extends MY_Controller {
 		$data['page_title'] = "Return Materials";
 		$data['table_title'] = "List Item";		
 		$data['breadcumb']  = array("Master", "Return Materials");
-		$data['page_view']  = "master/return";		
+		$data['page_view']  = "production/return";		
 		$data['js_asset']   = "return";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;
