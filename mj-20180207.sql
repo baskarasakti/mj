@@ -848,7 +848,7 @@ ENGINE = InnoDB;
 -- Table `megahjaya2`.`s_return_details`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `megahjaya2`.`s_return_details` (
-  `id` INT NOT NULL,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `qty` FLOAT NULL,
   `note` TEXT NULL,
   `sales_return_id` INT UNSIGNED NOT NULL,
@@ -877,23 +877,18 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`product_inventory` (
   `date` DATETIME NULL,
   `type` VARCHAR(5) NULL,
   `product_shipping_detail_id` INT UNSIGNED NULL,
-  `s_return_details_id` INT NULL,
   `product_receiving_details_id` INT UNSIGNED NULL,
   `qty` FLOAT NULL DEFAULT 0,
   `products_id` INT UNSIGNED NOT NULL,
+  `s_return_details_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_product_inventory_product_shipping_detail1_idx` (`product_shipping_detail_id` ASC),
-  INDEX `fk_product_inventory_s_return_details1_idx` (`s_return_details_id` ASC),
   INDEX `fk_product_inventory_product_receiving_details1_idx` (`product_receiving_details_id` ASC),
   INDEX `fk_product_inventory_products1_idx` (`products_id` ASC),
+  INDEX `fk_product_inventory_s_return_details1_idx` (`s_return_details_id` ASC),
   CONSTRAINT `fk_product_inventory_product_shipping_detail1`
     FOREIGN KEY (`product_shipping_detail_id`)
     REFERENCES `megahjaya2`.`product_shipping_detail` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_product_inventory_s_return_details1`
-    FOREIGN KEY (`s_return_details_id`)
-    REFERENCES `megahjaya2`.`s_return_details` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_product_inventory_product_receiving_details1`
@@ -904,6 +899,11 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`product_inventory` (
   CONSTRAINT `fk_product_inventory_products1`
     FOREIGN KEY (`products_id`)
     REFERENCES `megahjaya2`.`products` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_product_inventory_s_return_details1`
+    FOREIGN KEY (`s_return_details_id`)
+    REFERENCES `megahjaya2`.`s_return_details` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

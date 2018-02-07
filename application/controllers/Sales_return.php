@@ -114,16 +114,15 @@ class Sales_return extends MY_Controller {
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->sdm->get_shipping_details($id);
+			$result = $this->srdm->get_sales_return_details($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['products_id'] = $value->product_id;
+				$row['product_id'] = $value->product_id;
 				$row['qty'] = $value->qty;
-				$row['unit_price'] = $value->unit_price;
-				$row['total_price'] = $value->total_price;
+				$row['note'] = $value->note;
 				$data[] = $row;
 				$count++;
 			}
@@ -134,20 +133,18 @@ class Sales_return extends MY_Controller {
 
 			case "POST":
 			$data = array(
-				'products_id' => $this->input->post('products_id'),
+				'products_id' => $this->input->post('product_id'),
 				'qty' => $this->input->post('qty'),
-				'unit_price' =>$this->input->post('unit_price'),
-				'total_price' => $this->input->post('total_price'),
-				'product_shipping_id' => $id
+				'note' =>$this->input->post('note'),
+				'sales_return_id' => $id
 			);
-			$result = $this->sdm->add($data);
+			$insert = $this->srdm->add_id($data);
 
 			$row = array();
 			$row['id'] = $insert;
-			$row['products_id'] = $this->input->post('products_id');
+			$row['product_id'] = $this->input->post('product_id');
 			$row['qty'] = $this->input->post('qty');
-			$row['unit_price'] = $this->input->post('unit_price');
-			$row['total_price'] = $this->input->post('total_price');
+			$row['note'] = $this->input->post('note');
 
 			echo json_encode($row);
 			break;
@@ -156,16 +153,15 @@ class Sales_return extends MY_Controller {
 			$this->input->raw_input_stream;
 			$data = array(
 				'qty' => $this->input->input_stream('qty'),
-				'unit_price' =>$this->input->input_stream('unit_price'),
-				'total_price' => $this->input->input_stream('total_price'),
-				'products_id' => $this->input->input_stream('products_id')
+				'note' =>$this->input->input_stream('note'),
+				'products_id' => $this->input->input_stream('product_id')
 			);
-			$result = $this->sdm->update('id',$this->input->input_stream('id'),$data);
+			$result = $this->srdm->update('id',$this->input->input_stream('id'),$data);
 			break;
 
 			case "DELETE":
 			$this->input->raw_input_stream;
-			$status = $this->sdm->delete('id', $this->input->input_stream('id'));
+			$status = $this->srdm->delete('id', $this->input->input_stream('id'));
 			break;
 		}
 	}

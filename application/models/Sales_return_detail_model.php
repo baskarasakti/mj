@@ -3,9 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Sales_return_detail_model extends MY_Model {
 
-	protected $_t = 'product_shipping';
+	protected $_t = 's_return_details';
 		
-	var $table = 'product_shipping';
+	var $table = 's_return_details';
 	var $column = array('ps.id', 'ps.code', 'shipping_date', 'note', 'p.code'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
@@ -58,6 +58,14 @@ class Sales_return_detail_model extends MY_Model {
         $code = $result->row(0)->maxID;
         $code++; 
         return $prefix.$infix.sprintf("%04s", $code);
+	}
+
+	function get_sales_return_details($id){
+		$this->db->select('srd.id as id, qty, srd.note as note, srd.products_id as product_id');
+		$this->db->where('sales_return_id', $id);
+		$this->db->join('products p', 'srd.products_id = p.id', 'left');
+		$result = $this->db->get($this->_t.' srd');
+		return $result->result();
 	}
 
 }
