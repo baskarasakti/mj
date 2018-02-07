@@ -102,7 +102,7 @@ function show_hide_form(bShow){
 function form_datagrid(id){
 	var products;
     $.ajax({
-    	url: site_url+'shipping/populate_shipping_details/'+id,
+    	url: site_url+'shipping/populate_shipping_details/'+$('[name="product_shipping_id"]').val(),
     	type: "GET",
     	async: false,
     	success : function(text)
@@ -225,13 +225,13 @@ function edit(id){
 		dataType: "JSON",
 		success: function(data)
 		{
-			form_datagrid(id);
 			$('#code').val(data.code);
 			$('#sales_return_date').val(data.date);
 			$('#product_shipping_id').val(data.product_shipping_id);
 			$("#form").validator();
 			$('#form-title').text('Edit Form');
 			$('[name="asd"]').val(id);
+			form_datagrid(id);
 			$('#jsGrid').jsGrid('loadData');
 			show_hide_form(true);
 		}
