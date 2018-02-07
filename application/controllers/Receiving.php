@@ -41,6 +41,23 @@ class Receiving extends MY_Controller {
 		echo json_encode($result);
 	}
 	
+	public function populate_receiving_details($id=-1){
+		$result = $this->rcvd->populate_receiving_details($id);
+		$data = array();
+		$count = 0;
+		foreach($result as $value){
+			$row = array();
+			$row['Name'] = $value->value;
+			$row['Id'] = $value->id;
+			$data[] = $row;
+			$count++;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
+
 	public function index()
 	{
 		$data['title'] = "ERP | Receiving List";

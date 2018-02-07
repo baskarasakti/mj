@@ -1,18 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Receive_det_model extends MY_Model {
+class Purchase_return_detail_model extends MY_Model {
 
-	protected $_t = 'receive_details';
+	protected $_t = 'p_return_details';
 		
-	var $table = 'receive_details';
-	var $column = array('id','code', 'delivery_date'); //set column field database for order and search
+	var $table = 'p_return_details';
+	var $column = array('ps.id', 'ps.code', 'shipping_date', 'note', 'p.code'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('qty, unit_price, total_price, receiving_id, materials_id');
-		$this->db->from($this->table);
+		$this->db->select('ps.id as id, ps.code as code, shipping_date, note, p.code as p_code');
+		$this->db->from($this->table.' ps');
+		$this->db->join('projects p', 'ps.projects_id = p.id', 'left');
  
 		$i = 0;
 	 
@@ -48,19 +49,23 @@ class Receive_det_model extends MY_Model {
 		}
 	}
 
-	function get_receive_details($id){
-        $this->db->select(array('receive_details.id as id','materials.id as id_materials','qty','unit_price','total_price','materials_id'));
-        $this->db->where('receiving_id', $id);
-        $this->db->join('materials', 'materials.id = receive_details.materials_id', 'LEFT');
-        $result = $this->db->get('receive_details');
-        return $result->result();
+	public function generate_id(){
+		$prefix = "SH-";
+		$infix = date("Ymd-");
+		$this->db->select("MAX(RIGHT(`code`, 4)) as 'maxID'");
+        $this->db->like('code', $prefix.$infix, 'after');
+        $result = $this->db->get($this->_t);
+        $code = $result->row(0)->maxID;
+        $code++; 
+        return $prefix.$infix.sprintf("%04s", $code);
 	}
 
-	function populate_receiving_details($id){
-		$this->db->select('m.id as id, m.name as value');
-		$this->db->where('receiving_id', $id);	
-		$this->db->join('materials m', 'rd.materials_id = m.id', 'left');
-		$result = $this->db->get($this->_t.' rd');
+	function get_purchase_return_details($id){
+		$this->db->select('prd.id as id, qty, prd.note as note, prd.materials_id as materials_id');
+		$this->db->where('return_id', $id);
+		$this->db->join('materials m', 'prd.materials_id = m.id', 'left');
+		$result = $this->db->get($this->_t.' prd');
 		return $result->result();
 	}
+
 }

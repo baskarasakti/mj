@@ -97,11 +97,10 @@ class Sales_return extends MY_Controller {
 	function update(){
 		$data = array(
 			'code' => $this->input->post('code'),			
-			'shipping_date' => $this->to_mysql_date($this->input->post('shipping_date')),
-			'note' => $this->normalize_text($this->input->post('note')),
-			'projects_id' =>$this->input->post('projects_id'),
-			'updated_at' => $this->mysql_time_now()
+			'date' => $this->to_mysql_date($this->input->post('sales_return_date')),
+			'product_shipping_id' => $this->input->post('product_shipping_id'),
 		);
+		$data = $this->add_updating_detail($data);
 		$status = $this->sm->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));
 	}

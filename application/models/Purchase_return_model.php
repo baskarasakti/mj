@@ -3,17 +3,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Purchase_return_model extends MY_Model {
 
-	protected $_t = 'sales_return';
+	protected $_t = 'purchase_return';
 		
-	var $table = 'sales_return';
-	var $column = array('sr.id', 'sr.code', 'date', 'ps.code'); //set column field database for order and search
-    var $order = array('sr.id' => 'asc'); // default order 
+	var $table = 'purchase_return';
+	var $column = array('pr.id', 'pr.code', 'date', 'r.code'); //set column field database for order and search
+    var $order = array('pr.id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('sr.id as id, sr.code as code, date, ps.code as p_code');
-		$this->db->from($this->table.' sr');
-		$this->db->join('product_shipping ps', 'sr.product_shipping_id = ps.id', 'left');
+		$this->db->select('pr.id as id, pr.code as code, date, r.code as r_code');
+		$this->db->from($this->table.' pr');
+		$this->db->join('receiving r', 'pr.receiving_id = r.id', 'left');
  
 		$i = 0;
 	 
@@ -50,7 +50,7 @@ class Purchase_return_model extends MY_Model {
 	}
 
 	public function generate_id(){
-		$prefix = "SR-";
+		$prefix = "PR-";
 		$infix = date("Ymd-");
 		$this->db->select("MAX(RIGHT(`code`, 4)) as 'maxID'");
         $this->db->like('code', $prefix.$infix, 'after');
