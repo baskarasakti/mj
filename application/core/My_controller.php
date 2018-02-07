@@ -30,4 +30,15 @@ class MY_controller extends CI_Controller {
 		return date("Y-m-d H:m:s");
 	}
 
+	function add_adding_detail($data){
+		$data['created_at'] = $this->mysql_time_now();
+		$data['created_by'] = $this->session->userdata('name');
+		return $data;
+	}
+
+	function add_updating_detail(){
+		$data['updated_at'] = $this->mysql_time_now();
+		$data['updated_by'] = $this->session->userdata('name');
+		return $data;
+	}
 }

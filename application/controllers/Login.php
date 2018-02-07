@@ -35,8 +35,11 @@ class Login extends CI_Controller {
 			$this->session->set_userdata(
 				array(
 					'loggedIn'=> TRUE,
+					'user_id'=> $data['user_id'],
 					'username'=> $data['username'],
 					'name'=> $data['name'],
+					'role_id'=> $data['role_id'],
+					'role'=> $data['role'],
 					'language'=> 'english',
 				));
 			redirect('dashboard');

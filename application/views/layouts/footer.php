@@ -1,1 +1,1 @@
-<footer class="footer text-center"> Copyright © 2017 <a href="">Tim Absensi ITS</a>. All rights reserved. </footer>
+<footer class="footer text-center"> Copyright © 2017 <a href="http://indiglob.com/">IndiGlobal</a>. All rights reserved. </footer>

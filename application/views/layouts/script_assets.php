@@ -48,7 +48,8 @@
 	<script src="<?= asset_url('plugins/bower_components/typeahead.js-master/dist/typeahead.bundle.min.js');?>"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 	<!-- Extra JavaScript -->
-	 <script src="<?= asset_url('apps-js/extra.js');?>"></script>
+	<script src="<?= asset_url('apps-js/extra.js');?>"></script>
+	<script src="<?= asset_url('js/jquery.PrintArea.js');?>" type="text/JavaScript"></script>
 	<script>
 		var base_url = "<?=base_url();?>";
 		var site_url = "<?=site_url('/');?>";

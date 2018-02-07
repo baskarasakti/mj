@@ -45,25 +45,20 @@
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="shipping_date" class="control-label">Shipping Date</label>
-							<input type="text" class="form-control" id="shipping_date" name="shipping_date" placeholder="Shipping Date" required>
+							<label for="sales_return_date" class="control-label">Return Date</label>
+							<input type="text" class="form-control" id="sales_return_date" name="sales_return_date" placeholder="Shipping Date" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="projects_id" class="control-label">Projects</label>
-							<select class="custom-select col-sm-12" id="projects_id" name="projects_id" required>
+							<label for="product_shipping_id " class="control-label">Shipping Code</label>
+							<select class="custom-select col-sm-12" id="product_shipping_id" name="product_shipping_id" required>
 								<option selected="">Choose...</option>
 								<?php
-									foreach($projects as $item){
+									foreach($shippings as $item){
 										echo '<option value="'.$item->id.'">'.$item->code.'</option>';
 									}
 								?>
 							</select>
-							<div class="help-block with-errors"></div>
-						</div>
-						<div class="form-group">
-							<label for="note" class="control-label">Note</label>
-							<textarea id="note" name="note" class="form-control"></textarea>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group text-right">

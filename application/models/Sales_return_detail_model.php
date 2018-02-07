@@ -1,18 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Users_model extends MY_Model {
+class Sales_return_detail_model extends MY_Model {
 
-	protected $_t = 'users';
+	protected $_t = 'product_shipping';
 		
-	var $table = 'users';
-	var $column = array('id','name', 'username', 'email', 'address', 'telp'); //set column field database for order and search
+	var $table = 'product_shipping';
+	var $column = array('ps.id', 'ps.code', 'shipping_date', 'note', 'p.code'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('id, name, username, email, address, telp');
-		$this->db->from($this->table);
+		$this->db->select('ps.id as id, ps.code as code, shipping_date, note, p.code as p_code');
+		$this->db->from($this->table.' ps');
+		$this->db->join('projects p', 'ps.projects_id = p.id', 'left');
  
 		$i = 0;
 	 
@@ -48,17 +49,15 @@ class Users_model extends MY_Model {
 		}
 	}
 
-	public function get_substr_password($user_id){
-		$this->db->select('SUBSTRING(password, 1, 8) as password');
-		$this->db->where('id', $user_id);
-		$row = $this->db->get($this->_t)->row();
-		return $row->password;
-	}
-
-	public function get_profile_details(){
-		$this->db->where('id', $this->session->userdata('user_id'));
-		$row = $this->db->get('users')->row();
-		return $row;
+	public function generate_id(){
+		$prefix = "SH-";
+		$infix = date("Ymd-");
+		$this->db->select("MAX(RIGHT(`code`, 4)) as 'maxID'");
+        $this->db->like('code', $prefix.$infix, 'after');
+        $result = $this->db->get($this->_t);
+        $code = $result->row(0)->maxID;
+        $code++; 
+        return $prefix.$infix.sprintf("%04s", $code);
 	}
 
 }

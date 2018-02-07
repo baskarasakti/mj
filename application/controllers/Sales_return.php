@@ -1,48 +1,48 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Shipping extends MY_Controller {
+class Sales_return extends MY_Controller {
 
 	function  __construct() {
 		parent::__construct();
 		$this->load->helper('tablefield');
 		$this->load->model('shipping_model', 'sm');
 		$this->load->model('shipping_details_model', 'sdm');
-		$this->load->model('projects_model', 'prm');
+		$this->load->model('sales_return_model', 'srm');
+		$this->load->model('sales_return_detail_model', 'srdm');
 	}
 	
 	private function get_column_attr(){
 		$table = new TableField();
 		$table->addColumn('id', '', 'ID');
 		$table->addColumn('code', '', 'Code');  
-		$table->addColumn('projects_id', '', 'Projects Code');       
-		$table->addColumn('shipping_date', '', 'Shipping Date');        
-		$table->addColumn('note', '', 'Note');               
+		$table->addColumn('p_code', '', 'Shipping Code');       
+		$table->addColumn('date', '', 'Return Date');               
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
 	}
 	
 	public function index()
 	{
-		$data['title'] = "ERP | Shipping";
-		$data['page_title'] = "Shipping";
+		$data['title'] = "ERP | Sales Return";
+		$data['page_title'] = "Sales Return";
 		$data['table_title'] = "List Item";		
-		$data['breadcumb']  = array("Sales", "Shipping");
-		$data['page_view']  = "sales/shipping";		
-		$data['js_asset']   = "shipping";	
+		$data['breadcumb']  = array("Sales", "Sales Return");
+		$data['page_view']  = "sales/return";		
+		$data['js_asset']   = "sales_return";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['projects'] = $this->prm->get_all_data();	
+		$data['shippings'] = $this->sm->get_all_data();	
 		$data['csrf'] = $this->csrf;						
 		$this->load->view('layouts/master', $data);
 	}
 
 	public function generate_id(){
-		$id = $this->sm->generate_id();
+		$id = $this->srm->generate_id();
 		echo json_encode(array('id' => $id));
 	}
 
-	public function populate_shipping_details($id=-1){
-		$result = $this->sdm->populate_shipping_details($id);
+	public function populate_product_select($id=-1){
+		$result = $this->sm->populate_product_select($id);
 		$data = array();
 		$count = 0;
 		foreach($result as $value){
@@ -58,16 +58,15 @@ class Shipping extends MY_Controller {
 	}
 
 	public function view_data(){
-		$result = $this->sm->get_output_data();
+		$result = $this->srm->get_output_data();
 		$data = array();
 		$count = 0;
 		foreach($result['data'] as $value){
 			$row = array();
 			$row['id'] = $value->id;
 			$row['code'] = $value->code;
-			$row['projects_id'] = $value->p_code;
-			$row['shipping_date'] = $value->shipping_date;
-			$row['note'] = $value->note;
+			$row['p_code'] = $value->p_code;
+			$row['date'] = $value->date;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
@@ -82,17 +81,16 @@ class Shipping extends MY_Controller {
 	function add(){
 		$data = array(
 			'code' => $this->input->post('code'),			
-			'shipping_date' => $this->to_mysql_date($this->input->post('shipping_date')),
-			'note' => $this->normalize_text($this->input->post('note')),
-			'projects_id' =>$this->input->post('projects_id'),
-			'created_at' => $this->mysql_time_now()
+			'date' => $this->to_mysql_date($this->input->post('sales_return_date')),
+			'product_shipping_id' => $this->input->post('product_shipping_id'),
 		);
-		$inserted = $this->sm->add_id($data);
+		$data = $this->add_adding_detail($data);
+		$inserted = $this->srm->add_id($data);
 		echo json_encode(array('id' => $inserted));
 	}
 
 	function get_by_id($id){
-		$detail = $this->sm->get_by_id('id', $id);
+		$detail = $this->srm->get_by_id('id', $id);
 		echo json_encode($detail);
 	}
 
@@ -142,7 +140,7 @@ class Shipping extends MY_Controller {
 				'total_price' => $this->input->post('total_price'),
 				'product_shipping_id' => $id
 			);
-			$insert = $this->sdm->add_id($data);
+			$result = $this->sdm->add($data);
 
 			$row = array();
 			$row['id'] = $insert;
