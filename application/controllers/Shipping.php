@@ -69,7 +69,8 @@ class Shipping extends MY_Controller {
 			$row['projects_id'] = $value->p_code;
 			$row['shipping_date'] = $value->shipping_date;
 			$row['note'] = $value->note;
-			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
+			$row['actions'] = '<a href=invoice/print_shipping/'.$value->id.'><button class="btn btn-sm btn-success" type="button">Print</button></a>
+			<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
 			$count++;

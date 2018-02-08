@@ -11,7 +11,7 @@ class Shipping_model extends MY_Model {
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('ps.id as id, ps.code as code, shipping_date, note, p.code as p_code');
+		$this->db->select('ps.id as id, ps.code as code, shipping_date, note, p.code as p_code, p.customers_id');
 		$this->db->from($this->table.' ps');
 		$this->db->join('projects p', 'ps.projects_id = p.id', 'left');
  
@@ -58,6 +58,19 @@ class Shipping_model extends MY_Model {
         $code = $result->row(0)->maxID;
         $code++; 
         return $prefix.$infix.sprintf("%04s", $code);
+	}
+
+	function get_shipping_by_id($id){
+		$this->db->select('ps.id as id, ps.code as code, shipping_date, note, p.code as p_code, p.customers_id');
+		$this->db->from($this->table.' ps');
+		$this->db->join('projects p', 'ps.projects_id = p.id', 'left');
+        $this->db->where('ps.id', $id);
+        $result = $this->db->get();
+        $data = array();
+        if($result->result()){
+            $data = $result->row();
+        }
+        return $data;
 	}
 
 }

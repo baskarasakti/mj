@@ -64,7 +64,8 @@ class Purchasing extends MY_Controller {
 			$row = array();
 			$row['code'] = $value->code;
 			$row['delivery_date'] = $value->delivery_date;
-			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
+			$row['actions'] = '<a href=invoice/print_purchasing/'.$value->id.'><button class="btn btn-sm btn-success" type="button">Print</button></a>
+			<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 			.<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
 			$count++;

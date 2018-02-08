@@ -11,8 +11,9 @@ class Purchase_det_model extends MY_Model {
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('id, qty, unit_price, total_price, materials_id');
-		$this->db->from($this->table);
+		$this->db->select('pd.id, pd.qty, pd.unit_price, pd.total_price, pd.materials_id, m.name as name');
+		$this->db->from($this->table." pd");
+		$this->db->join('materials m', 'm.id = pd.materials_id');
  
 		$i = 0;
 	 
@@ -54,6 +55,19 @@ class Purchase_det_model extends MY_Model {
         $this->db->join('materials', 'materials.id = purchase_details.materials_id', 'LEFT');
         $result = $this->db->get('purchase_details');
         return $result->result();
+	}
+
+	function get_purchase_det_where_id($column, $id){
+        $this->db->select('pd.id, pd.qty, pd.unit_price, pd.total_price, pd.materials_id, m.name as name');
+		$this->db->from($this->table." pd");
+		$this->db->join('materials m', 'm.id = pd.materials_id');
+        $this->db->where($column, $id);
+        $result = $this->db->get();
+        $data = array();
+        if($result->result()){
+            $data = $result->result();
+        }
+        return $data;
 	}
 
 }

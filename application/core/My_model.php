@@ -117,6 +117,16 @@ class MY_Model extends CI_Model {
         }
         return $data;
 	}
+
+	function get_where_id($column, $id){
+        $this->db->where($column, $id);
+        $result = $this->db->get($this->_t);
+        $data = array();
+        if($result->result()){
+            $data = $result->result();
+        }
+        return $data;
+	}
 	
 	function update($column, $id, $data){
         $this->db->where($column, $id);

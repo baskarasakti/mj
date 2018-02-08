@@ -32,6 +32,7 @@ class Product_receiving extends MY_Controller {
 		$data['js_asset']   = "product-receiving";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['process'] = $this->prcm->get_all_data();	
+		$data['menu'] = $this->get_menu();	
 		$data['csrf'] = $this->csrf;						
 		$this->load->view('layouts/master', $data);
 	}

@@ -6,12 +6,12 @@ class Purchase_model extends MY_Model {
 	protected $_t = 'purchasing';
 		
 	var $table = 'purchasing';
-	var $column = array('id','code', 'delivery_date'); //set column field database for order and search
+	var $column = array('id','code', 'delivery_date', 'vendors_id'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('id, code, delivery_date');
+		$this->db->select('id, code, delivery_date, vendors_id');
 		$this->db->from($this->table);
  
 		$i = 0;
