@@ -8,6 +8,7 @@ class MY_controller extends CI_Controller {
     function __construct() {
         parent::__construct();
 		$this->load->library('session');
+		$this->load->model('previllage_model', 'previllage');
 		//$this->lang->load('login', 'english');
         if(!$this->session->userdata('loggedIn')){
             redirect('login');
@@ -41,4 +42,9 @@ class MY_controller extends CI_Controller {
 		$data['updated_by'] = $this->session->userdata('name');
 		return $data;
 	}
+
+	function get_menu(){
+		return $this->previllage->get_previllage();
+	}
+
 }

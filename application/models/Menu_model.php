@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Materials_model extends MY_Model {
+class Menu_model extends MY_Model {
 
-	protected $_t = 'materials';
+	protected $_t = 'menu';
 
 	protected $_menus = array(
 		'Dashboard' => array(
@@ -121,9 +121,29 @@ class Materials_model extends MY_Model {
 	);
 
 	public function add_initial_menu(){
-		foreach($menus as $key => $value){
-			if(){
-				
+		if($this->count_all_data() == 0){
+			$this->add_menu();
+		}
+	}
+
+	public function add_menu(){
+		$i = 0;
+		foreach($this->_menus as $key=>$value){
+			$data = array(
+				'menu' => $key,
+				'parent_id' => 0,
+				'link' => $value['link']
+			);
+			$pid = $this->add_id($data);
+			if(isset($value['child'])){
+				foreach($value['child'] as $k => $v){
+					$data = array(
+						'menu' => $k,
+						'parent_id' => $pid,
+						'link' => $v['link']
+					);
+					$status = $this->add($data);
+				}
 			}
 		}
 	}

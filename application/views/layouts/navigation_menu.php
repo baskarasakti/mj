@@ -10,7 +10,43 @@
             <button class="btn btn-default" type="button"> <i class="fa fa-search"></i> </button>
             </span> </div>
                         <!-- /input-group -->
-                    </li>
+					</li>
+
+<?php
+	$size = sizeof($menu);
+	for($i = 0; $i < $size; $i++){
+		$curr = $menu[$i];
+		if($i == 0){
+			$prev = null;
+			$next = $menu[$i+1];
+		}elseif($i == $size - 1){
+			$prev = $menu[$i-1];
+			$next = null;
+		}else{
+			$prev = $menu[$i-1];
+			$next = $menu[$i+1];
+		}
+
+		if($curr->parent_id == 0 && $curr->link != "#"){
+			echo '<li> <a href="'.site_url($curr->link).'" class="waves-effect"><i data-icon="P" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">'.$curr->menu.'</span></a> </li>';
+		}elseif($curr->parent_id == 0 && $curr->link == "#"){
+			echo '<li><a href="javascript:void(0);" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">'.$curr->menu.' <span class="fa arrow"></span></span></a>';
+		}elseif($curr->parent_id != 0 ){
+			if(($prev == null || $prev->parent_id != $curr->parent_id )){
+				echo '<ul class="nav nav-second-level">
+							<li> <a href="'.site_url($curr->link).'" class="waves-effect">'.$curr->menu.'</a></li>';
+			}elseif(($next == null || $next->parent_id != $curr->parent_id )){
+				echo '<li> <a href="'.site_url($curr->link).'" class="waves-effect">'.$curr->menu.'</a> </li>						
+					</ul>
+				</li>';
+			}else{
+				echo '<li> <a href="'.site_url($curr->link).'" class="waves-effect">'.$curr->menu.'</a></li>';
+			}
+		}
+	}
+
+?>
+<!--
                     <li> <a href="<?=site_url('dashboard');?>" class="waves-effect"><i data-icon="P" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Dashboard</span></a> </li>
                     <li><a href="inbox.html" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Master <span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level">
@@ -62,7 +98,7 @@
                             <li> <a href="calendar.html" class="waves-effect">Application</a></li>							
                         </ul>
 					</li>
-                </ul>
+-->                </ul>
             </div>
         </div>
         <!-- Left navbar-header end -->

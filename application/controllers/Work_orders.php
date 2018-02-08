@@ -32,7 +32,8 @@ class Work_orders extends MY_Controller {
 		$data['page_view']  = "production/work_orders";		
 		$data['js_asset']   = "work-orders";	
 		$data['columns']    = $this->get_column_attr();		
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();						
 		$this->load->view('layouts/master', $data);
 	}
 

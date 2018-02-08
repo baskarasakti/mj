@@ -15,7 +15,8 @@ class Invoice extends MY_Controller {
 		$data['breadcumb']  = array("Invoice");
 		$data['page_view']  = "invoice/invoice";		
 		$data['js_asset']   = "invoice";	
-		$data['csrf'] = $this->csrf;							
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();							
 		$this->load->view('layouts/master', $data);
 	}
 }

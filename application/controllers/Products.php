@@ -54,7 +54,8 @@ class Products extends MY_Controller {
 		$data['columns']    = $this->get_column_attr();	
 		$data['p_categories'] = $this->pcm->get_all_data();	
 		$data['colors'] = $this->cm->get_all_data();		
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;		
+		$data['menu'] = $this->get_menu();					
 		$this->load->view('layouts/master', $data);
 	}
 

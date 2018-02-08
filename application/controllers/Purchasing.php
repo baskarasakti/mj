@@ -45,7 +45,8 @@ class Purchasing extends MY_Controller {
 		$data['page_view']  = "purchasing/purchasing";		
 		$data['js_asset']   = "purchasing";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();						
 		$data['vendors'] = $this->vd->get_all_data();	
 		$this->load->view('layouts/master', $data);
 	}

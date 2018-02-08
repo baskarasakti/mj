@@ -5,7 +5,7 @@ class Dashboard extends MY_Controller {
 
 	function  __construct() {
 		parent::__construct();
-			//$this->load->model('Login', 'login');
+			
 	}
                 
 	public function index()
@@ -15,7 +15,8 @@ class Dashboard extends MY_Controller {
 		$data['breadcumb']  = array("Dashboard");
 		$data['page_view']  = "dashboard";		
 		$data['js_asset']   = "dashboard";	
-		$data['csrf'] = $this->csrf;							
+		$data['csrf'] = $this->csrf;
+		$data['menu'] = $this->get_menu();							
 		$this->load->view('layouts/master', $data);
 	}
 }

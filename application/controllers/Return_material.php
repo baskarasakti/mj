@@ -35,6 +35,7 @@ class Return_material extends MY_Controller {
 		$data['js_asset']   = "return";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;
+		$data['menu'] = $this->get_menu();	
 		$data['u_categories']    = $this->uc->get_all_data();					
 		$this->load->view('layouts/master', $data);
 	}

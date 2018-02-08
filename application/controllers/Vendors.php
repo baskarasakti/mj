@@ -29,7 +29,8 @@ class Vendors extends MY_Controller {
 		$data['page_view']  = "master/vendors";		
 		$data['js_asset']   = "Vendors";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();						
 		$this->load->view('layouts/master', $data);
 	}
 

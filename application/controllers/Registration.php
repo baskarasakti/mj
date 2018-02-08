@@ -6,6 +6,7 @@ class Registration extends CI_Controller {
 	function  __construct() {
 		parent::__construct();
 			$this->load->model('registration_model', 'rm');
+			$this->load->model('menu_model', 'mm');
 			$this->load->model('users_model', 'um');			
 			$this->load->model('roles_model', 'rom');			
 			$this->load->library('session');
@@ -13,7 +14,8 @@ class Registration extends CI_Controller {
 	}
                 
 	public function index()
-	{
+	{	
+		$this->mm->add_initial_menu();
 		if($this->rom->count_all_data() == 0){
 			$data = array(
 				'name' => "Admin"

@@ -31,7 +31,8 @@ class Users extends MY_Controller {
 		$data['page_view']  = "settings/users";
 		$data['js_asset']   = "users";
 		$data['columns']    = $this->get_column_attr();	
-		$data['csrf'] = $this->csrf;			
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();			
 		$data['roles'] = $this->rm->get_all_data();		
 		$this->load->view('layouts/master', $data);
 	}

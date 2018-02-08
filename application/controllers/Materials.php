@@ -28,7 +28,8 @@ class Materials extends MY_Controller {
 		$data['page_view']  = "master/materials";		
 		$data['js_asset']   = "materials";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;		
+		$data['menu'] = $this->get_menu();					
 		$data['m_categories'] = $this->mcm->get_all_data();							
 		$this->load->view('layouts/master', $data);
 	}

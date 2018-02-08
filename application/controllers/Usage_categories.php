@@ -27,7 +27,8 @@ class Usage_categories extends MY_Controller {
 		$data['page_view']  = "master/usage_categories";		
 		$data['js_asset']   = "usage-categories";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();						
 		$this->load->view('layouts/master', $data);
 	}
 

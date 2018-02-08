@@ -705,7 +705,7 @@ ENGINE = InnoDB;
 -- Table `megahjaya2`.`menu`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `megahjaya2`.`menu` (
-  `id` INT(2) UNSIGNED NOT NULL,
+  `id` INT(2) UNSIGNED NOT NULL AUTO_INCREMENT,
   `menu` VARCHAR(50) NULL,
   `parent_id` INT(2) UNSIGNED NULL,
   `order` INT(2) NULL,

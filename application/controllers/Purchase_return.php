@@ -32,7 +32,8 @@ class Purchase_return extends MY_Controller {
 		$data['js_asset']   = "purchase_return";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['receiving'] = $this->rm->get_all_data();	
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;			
+		$data['menu'] = $this->get_menu();				
 		$this->load->view('layouts/master', $data);
 	}
 

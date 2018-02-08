@@ -28,7 +28,8 @@ class Productions extends MY_Controller {
 		$data['page_view']  = "production/productions";		
 		$data['js_asset']   = "productions";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();						
 		$this->load->view('layouts/master', $data);
 	}
 

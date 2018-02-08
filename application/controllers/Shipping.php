@@ -32,7 +32,8 @@ class Shipping extends MY_Controller {
 		$data['js_asset']   = "shipping";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['projects'] = $this->prm->get_all_data();	
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();						
 		$this->load->view('layouts/master', $data);
 	}
 

@@ -15,7 +15,8 @@ class Profile extends MY_Controller {
 		$data['breadcumb']  = array("Profile");
 		$data['page_view']  = "profile";		
 		$data['js_asset']   = "profile";	
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();						
 		$this->load->view('layouts/master', $data);
 	}
 

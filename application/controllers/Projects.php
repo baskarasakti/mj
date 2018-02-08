@@ -32,7 +32,8 @@ class Projects extends MY_Controller {
 		$data['js_asset']   = "projects";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['customers'] = $this->cm->get_all_data();	
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();						
 		$this->load->view('layouts/master', $data);
 	}
 

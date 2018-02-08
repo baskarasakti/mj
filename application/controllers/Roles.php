@@ -26,7 +26,8 @@ class Roles extends MY_Controller {
 		$data['page_view']  = "settings/roles";		
 		$data['js_asset']   = "roles";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();						
 		$this->load->view('layouts/master', $data);
 	}
 

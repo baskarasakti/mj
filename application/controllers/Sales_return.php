@@ -32,7 +32,8 @@ class Sales_return extends MY_Controller {
 		$data['js_asset']   = "sales_return";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['shippings'] = $this->sm->get_all_data();	
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;		
+		$data['menu'] = $this->get_menu();					
 		$this->load->view('layouts/master', $data);
 	}
 

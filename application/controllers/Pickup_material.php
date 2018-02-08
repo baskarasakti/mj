@@ -32,7 +32,8 @@ class Pickup_material extends MY_Controller {
 		$data['page_view']  = "production/pickup";		
 		$data['js_asset']   = "pickup";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['csrf'] = $this->csrf;						
+		$data['csrf'] = $this->csrf;					
+		$data['menu'] = $this->get_menu();		
 		$data['u_categories']    = $this->uc->get_all_data();		
 		$this->load->view('layouts/master', $data);
 	}
