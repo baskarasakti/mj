@@ -6,7 +6,8 @@ class Roles extends MY_Controller {
 	function  __construct() {
 		parent::__construct();
 			$this->load->helper('tablefield');
-			$this->load->model('Roles_model', 'rm');
+			$this->load->model('roles_model', 'rm');
+			$this->load->model('previllage_model', 'pm');
 	}
 	
 	private function get_column_attr(){
@@ -54,7 +55,8 @@ class Roles extends MY_Controller {
 		$data = array(
 			'name' => $this->normalize_text($this->input->post('name'))
 		);
-		$inserted = $this->rm->add($data);
+		$id = $this->rm->add_id($data);
+		$inserted = $this->pm->add_role_previllage($id);
 		echo json_encode(array('status' => $inserted));
 	}
 
