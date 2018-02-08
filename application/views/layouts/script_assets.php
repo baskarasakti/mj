@@ -30,7 +30,9 @@
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
 	<!-- Editable -->
-    <script src="<?= asset_url('plugins/bower_components/jsgrid/dist/jsgrid.min.js');?>"></script>
+	<script src="<?= asset_url('plugins/bower_components/jsgrid/dist/jsgrid.min.js');?>"></script>
+	<!-- Js Tree -->
+    <script src="<?= asset_url('plugins/bower_components/jstree/dist/jstree.min.js');?>"></script>
 	<!--BlockUI Script -->
 	<script src="<?= asset_url('plugins/bower_components/blockUI/jquery.blockUI.js');?>"></script>
 	<!-- Plugin JavaScript -->

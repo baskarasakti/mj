@@ -10,6 +10,8 @@
 	<link type="text/css" rel="stylesheet" href="<?= asset_url('plugins/bower_components/jsgrid/dist/jsgrid-theme.min.css');?>" />
 	 <!--alerts CSS -->
 	 <link href="<?= asset_url('plugins/bower_components/sweetalert/sweetalert.css');?>" rel="stylesheet" type="text/css">
+	 <!--Js Tree CSS -->
+	 <link href="<?= asset_url('plugins/bower_components/jstree/dist/themes/default/style.min.css');?>" rel="stylesheet" type="text/css">
 	 <!-- Date picker plugins css -->
 	 <link href="<?= asset_url('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css');?>" rel="stylesheet" type="text/css" />
 	 <!-- Typehead CSS -->
