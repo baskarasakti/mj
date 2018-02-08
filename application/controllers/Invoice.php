@@ -63,4 +63,22 @@ class Invoice extends MY_Controller {
 		$data['menu'] = $this->get_menu();							
 		$this->load->view('layouts/master', $data);
 	}
+
+	public function print_work_order($id)
+	{
+		$data['shipping'] = $this->sm->get_shipping_by_id($id);
+		$data['shipping_det'] = $this->sdm->get_shipping_details($id);
+
+		$customer_id = $data['shipping']->customers_id;
+		$data['customer'] = $this->cm->get_by_id('id', $customer_id);
+
+		$data['title'] = "ERP | Invoice";
+		$data['page_title'] = "Invoice";
+		$data['breadcumb']  = array("Invoice");
+		$data['page_view']  = "invoice/invoice_shipping";		
+		$data['js_asset']   = "invoice";	
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();							
+		$this->load->view('layouts/master', $data);
+	}
 }

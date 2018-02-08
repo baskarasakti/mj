@@ -60,7 +60,7 @@ class Menu_model extends MY_Model {
 			'link' => '#',
 			'child' => array(
 				'Purchase Order' => array(
-					'link' => 'projects',
+					'link' => 'purchasing',
 				),
 				'Receiving' => array(
 					'link' => 'receiving',
@@ -87,6 +87,9 @@ class Menu_model extends MY_Model {
 				),
 				'Product Receiving' => array(
 					'link' => 'product_receiving',
+				),
+				'HPP' => array(
+					'link' => 'hpp',
 				)
 			)
 		),
@@ -107,11 +110,11 @@ class Menu_model extends MY_Model {
 				'Roles' => array(
 					'link' => 'roles',
 				),
-				'Users' => array(
-					'link' => 'users',
-				),
 				'Previllage' => array(
 					'link' => 'previllage',
+				),
+				'Users' => array(
+					'link' => 'users',
 				),
 				'Application' => array(
 					'link' => 'application',

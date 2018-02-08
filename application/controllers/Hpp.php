@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Projects extends MY_Controller {
+class Hpp extends MY_Controller {
 
 	function  __construct() {
 		parent::__construct();
@@ -24,14 +24,13 @@ class Projects extends MY_Controller {
 	
 	public function index()
 	{
-		$data['title'] = "ERP | Sales Order";
-		$data['page_title'] = "Sales Order";
+		$data['title'] = "ERP | HPP";
+		$data['page_title'] = "HPP";
 		$data['table_title'] = "List Item";		
-		$data['breadcumb']  = array("Sales", "Sales Order");
-		$data['page_view']  = "sales/projects";		
-		$data['js_asset']   = "projects";	
+		$data['breadcumb']  = array("HPP", "HPP Product");
+		$data['page_view']  = "master/hpp";		
+		$data['js_asset']   = "hpp";	
 		$data['columns']    = $this->get_column_attr();	
-		$data['customers'] = $this->cm->get_all_data();	
 		$data['csrf'] = $this->csrf;	
 		$data['menu'] = $this->get_menu();						
 		$this->load->view('layouts/master', $data);
@@ -129,16 +128,15 @@ class Projects extends MY_Controller {
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->pdm->get_project_details($id);
+			$result = $this->get_project_material($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['products_id'] = $value->products_id;
+				$row['material'] = $value->material;
 				$row['qty'] = $value->qty;
-				$row['unit_price'] = $value->total_price;
-				$row['total_price'] = $value->total_price;
+				$row['unit_price'] = $this->get_avg_price($value->id);
 				$data[] = $row;
 				$count++;
 			}
@@ -185,7 +183,27 @@ class Projects extends MY_Controller {
 		}
 	}
 
-	
+	public function get_project_material($id){
+		$this->db->select('mud.materials_id as id, m.name as material, mud.qty as qty');
+		$this->db->where('projects_id', $id);
+		$this->db->where('pd.id = wo.project_details_id');
+		$this->db->where('wo.id = prd.work_orders_id');
+		$this->db->where('prd.id = mu.production_details_id');
+		$this->db->where('mu.id = mud.material_usage_id');
+		$this->db->where('mu.id = mud.material_usage_id');
+		$this->db->where('mud.materials_id = m.id');
+		$result = $this->db->get('project_details pd, work_orders wo, production_details prd, material_usage mu, material_usage_details mud, materials m');
+		return $result->result();
+
+	}
+
+	function get_avg_price($id){
+		$this->db->select('AVG(unit_price) as average');
+		$this->db->where('materials_id', $id);
+		$this->db->group_by('materials_id');
+		$row = $this->db->get('purchase_details')->row();
+		return $row->average;
+	}
 
 
 }

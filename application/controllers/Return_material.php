@@ -14,6 +14,7 @@ class Return_material extends MY_Controller {
 			$this->load->model('material_usage_det_model', 'mud');
 			$this->load->model('material_return_model', 'mr');
 			$this->load->model('material_return_det_model', 'mrd');
+			$this->load->model('material_inventory_model', 'mi');
 			$this->load->model('usage_cat_model', 'uc');
 	}
 	
@@ -121,7 +122,7 @@ class Return_material extends MY_Controller {
 				'materials_id' => $this->normalize_text($this->input->post('name')),
 				'qty' => $this->normalize_text($this->input->post('qty')),
 				'note' => $this->normalize_text($this->input->post('note')),
-				'material_usage_id' => $id
+				'material_return_id' => $id
 			);
 			$insert = $this->mrd->add($data);
 
