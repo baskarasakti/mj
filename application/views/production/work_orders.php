@@ -39,35 +39,23 @@
 				<div class="panel-wrapper collapse in block-div" aria-expanded="true">
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
-						<!-- <div class="form-group">
+						 <div class="form-group">
 							<label for="name" class="control-label">Code</label>
-							<input type="text" class="form-control" id="code" name="code" placeholder="Code" required>
+							<input type="text" class="form-control" id="code" name="code" placeholder="Code" readonly>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label">Name</label>
-							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+							<label for="name" class="control-label">Start Date</label>
+							<input type="text" class="form-control" id="startdate" name="start_date" placeholder="Start Date" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="customers_id" class="control-label">Category</label>
-							<select class="custom-select col-sm-12" id="customers_id" name="customers_id" required>
-								<option selected="">Choose...</option>
-								<?php
-									foreach($customers as $item){
-										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
-									}
-								?>
-							</select>
+							<label for="name" class="control-label">End Date</label>
+							<input type="text" class="form-control" id="enddate" name="end_date" placeholder="End Date" required>
 							<div class="help-block with-errors"></div>
 						</div>
-						<div class="form-group">
-							<label for="description" class="control-label">Description</label>
-							<input type="text" class="form-control" id="description" name="description" placeholder="Description">
-							<div class="help-block with-errors"></div>
-						</div>-->
 						<div class="form-group text-right">
-							<!-- <button type="button" id="saveBtn" class="btn btn-success">Save</button> -->
+							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
 						</div> 
 						<input type="hidden" name="asd" value="">

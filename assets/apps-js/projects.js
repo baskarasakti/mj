@@ -142,7 +142,6 @@ $(document).ready(function() {
         { name: "id", title:"ID" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
         { name: "unit_price", title:"Unit Price", type: "number", width: 50 }, 
-        { name: "total_price", title:"Total Price", type: "number", width: 50 }, 
         { name: "products_id", title:"Product", type: "select", items: products, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { type: "control" } 
         ] 

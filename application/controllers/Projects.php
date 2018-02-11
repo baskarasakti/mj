@@ -150,8 +150,8 @@ class Projects extends MY_Controller {
 			case "POST":
 			$data = array(
 				'qty' => $this->input->post('qty'),
-				'unit_price' =>$this->input->post('unit_price'),
-				'total_price' => $this->input->post('total_price'),
+				'unit_price' => $this->input->post('unit_price'),
+				'total_price' => $this->input->post('unit_price')*$this->input->post('qty'),
 				'products_id' => $this->input->post('products_id'),
 				'projects_id' => $id
 			);

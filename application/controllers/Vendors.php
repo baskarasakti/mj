@@ -7,6 +7,7 @@ class Vendors extends MY_Controller {
 		parent::__construct();
 			$this->load->helper('tablefield');
 			$this->load->model('vendors_model', 'vm');
+			$this->load->model('materials_model', 'mm');
 	}
 	
 	private function get_column_attr(){
@@ -27,7 +28,7 @@ class Vendors extends MY_Controller {
 		$data['table_title'] = "List Item";		
 		$data['breadcumb']  = array("Master", "Vendors");
 		$data['page_view']  = "master/vendors";		
-		$data['js_asset']   = "Vendors";	
+		$data['js_asset']   = "vendors";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;	
 		$data['menu'] = $this->get_menu();						
@@ -88,6 +89,57 @@ class Vendors extends MY_Controller {
 	function delete($id){        
 		$status = $this->vm->delete('id', $id);
 		echo json_encode(array('status' => $status));
+	}
+
+	function jsgrid_functions($id = -1){
+		switch($_SERVER["REQUEST_METHOD"]) {
+			case "GET":
+			$result = $this->vm->get_vendor_materials($id);
+			$data = array();
+			$count = 0;
+			foreach($result as $value){
+				$row = array();
+				$row['id'] = $value->id;
+				$row['name'] = $value->material_name;
+				$row['category'] = $value->material_category;
+				$data[] = $row;
+				$count++;
+			}
+
+			$result = $data;
+			echo json_encode($result);
+			break;
+
+			case "POST":
+			$data = array(
+				'name' => $this->input->post('name'),
+				'material_categories_id' => $this->input->post('category'),
+				'vendors_id' => $id
+			);
+			$result = $this->mm->add_id($data);
+
+			$row = array();
+			$row['id'] = $result;
+			$row['name'] = $this->input->post('name');
+			$row['category'] = $this->input->post('category');
+
+			echo json_encode($row);
+			break;
+
+			case "PUT":
+			$this->input->raw_input_stream;
+			$data = array(
+				'name' => $this->input->input_stream('name'),
+				'material_categories_id' => $this->input->input_stream('category')
+			);
+			$result = $this->mm->update('id',$this->input->input_stream('id'),$data);
+			break;
+
+			case "DELETE":
+			$this->input->raw_input_stream;
+			$status = $this->mm->delete('id', $this->input->input_stream('id'));
+			break;
+		}
 	}
 
 }

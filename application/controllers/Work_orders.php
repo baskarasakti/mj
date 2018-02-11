@@ -9,7 +9,6 @@ class Work_orders extends MY_Controller {
 		$this->load->model('projects_model', 'pm');
 		$this->load->model('work_orders_model', 'wom');		
 		$this->load->model('project_details_model', 'pdm');
-		$this->load->model('work_orders_model', 'wom');
 	}
 	
 	private function get_column_attr(){
@@ -35,6 +34,11 @@ class Work_orders extends MY_Controller {
 		$data['csrf'] = $this->csrf;	
 		$data['menu'] = $this->get_menu();						
 		$this->load->view('layouts/master', $data);
+	}
+
+	public function generate_id(){
+		$id = $this->wom->generate_id();
+		echo json_encode(array('id' => $id));
 	}
 
 	public function populate_wo_select(){
@@ -65,7 +69,8 @@ class Work_orders extends MY_Controller {
 			$row['name'] = $value->name;
 			$row['description'] = $value->description;
 			$row['customer'] = $value->customer;
-			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
+			$row['actions'] = '<a href=invoice/print_wo/'.$value->id.'><button class="btn btn-sm btn-success" type="button">Print</button></a>
+			<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
 			$count++;
@@ -78,31 +83,35 @@ class Work_orders extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'code' => $this->input->post('code'),			
-			'name' => $this->normalize_text($this->input->post('name')),
-			'description' => $this->normalize_text($this->input->post('description')),
-			'customers_id' =>$this->input->post('customers_id')
+			'code' => $this->input->post('code'),
+			'start_date' =>$this->input->post('start_date'),
+			'end_date' => $this->input->post('end_date'),
+			'project_details_id' => $this->input->post('asd'),
+			'created_at' => date("Y-m-d H:m:s")
 		);
-		$inserted = $this->pm->add_id($data);
+		$inserted = $this->wom->add_id($data);
 		echo json_encode(array('id' => $inserted));
 	}
 
 	function get_by_id($id){
-		$detail = $this->pm->get_by_id('id', $id);
+		$detail = $this->wom->get_by_id('id', $id);
 		echo json_encode($detail);
 	}
 
 	function update(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
-			'product_categories_id' => $this->input->post('product_categories_id')
+			'code' => $this->input->post('code'),
+			'start_date' =>$this->input->post('start_date'),
+			'end_date' => $this->input->post('end_date'),
+			'project_details_id' => $this->input->post('asd'),
+			'created_at' => date("Y-m-d H:m:s")
 		);
-		$status = $this->pm->update_id('id', $this->input->post('change_id'), $data);
+		$status = $this->wom->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));
 	}
 
 	function delete($id){        
-		$status = $this->pm->delete('id', $id);
+		$status = $this->wom->delete('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 

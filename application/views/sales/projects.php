@@ -44,11 +44,11 @@
 							<input type="text" class="form-control" id="code" name="code" placeholder="Code" readonly required>
 							<div class="help-block with-errors"></div>
 						</div>
-						<div class="form-group">
+						<div cl<!-- ass="form-group">
 							<label for="name" class="control-label">Name</label>
 							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
 							<div class="help-block with-errors"></div>
-						</div>
+						</div> -->
 						<div class="form-group">
 							<label for="customers_id" class="control-label">Customers</label>
 							<select class="custom-select col-sm-12" id="customers_id" name="customers_id" required>

@@ -74,6 +74,11 @@ $(document).ready(function() {
     	}
     });
 
+    var isVisible = false;
+    if (role_id == 1) {
+    	isVisible = true;
+    }
+
     $("#jsGrid1").jsGrid({ 
     	width: "100%", 
     	height: "400px", 
@@ -124,7 +129,7 @@ $(document).ready(function() {
         { name: "id", visible:false }, 
         { name: "name", title:"Item Name", type: "select", items: materials, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
-        { name: "price", title:"Price", type: "number", width: 200 },  
+        { name: "price", title:"Price", type: "number", width: 200, visible:isVisible },  
         { type: "control", deleteButton: false, editButton: false } 
         ] 
     }); 

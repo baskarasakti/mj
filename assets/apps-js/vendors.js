@@ -58,6 +58,70 @@ $(document).ready(function() {
             save_data();
          }
 	 });
+
+	var category;
+    $.ajax({
+    	url: site_url+'material_categories/get_material_categories',
+    	type: "GET",
+    	async: false,
+    	success : function(text)
+    	{
+    		category = JSON.parse(text);
+    	}
+    });
+
+    $("#jsGrid").jsGrid({ 
+    	width: "100%", 
+    	height: "400px", 
+
+    	inserting: true, 
+    	editing: true, 
+    	sorting: true, 
+    	paging: true, 
+
+        // data: lists, 
+        controller: {
+        	loadData: function(filter) {
+        		return $.ajax({
+        			type: "GET",
+        			url: "vendors/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: filter,
+        			dataType:"JSON"
+        		});
+        	},
+        	insertItem: function(item) {
+        		item["csrf_token"] = $("[name='csrf_token']").val();
+        		console.log(item)
+        		return $.ajax({
+        			type: "POST",
+        			url: "vendors/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: item,
+        			dataType:"JSON"
+        		});
+        	},
+        	updateItem: function(item) {
+        		return $.ajax({
+        			type: "PUT",
+        			url: "vendors/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: item
+        		});
+        	},
+        	deleteItem: function(item) {
+        		return $.ajax({
+        			type: "DELETE",
+        			url: "vendors/jsgrid_functions",
+        			data: item
+        		});
+        	}
+        },
+
+        fields: [ 
+        { name: "id" }, 
+        { name: "name", title:"Material Name", type: "text", width: 150, validate: "required" }, 
+        { name: "category", title:"Category", type: "select", items: category, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
+        { type: "control" } 
+        ] 
+	}); 
 	
 });
 
@@ -132,6 +196,8 @@ function edit(id){
 				$('#telp').val(data.telp);
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
+				$('[name="asd"]').val(id);
+				$('#jsGrid').jsGrid('loadData');
 				show_hide_form(true);
 			}
 		});

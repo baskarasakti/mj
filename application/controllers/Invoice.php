@@ -14,6 +14,8 @@ class Invoice extends MY_Controller {
 		$this->load->model('shipping_model', 'sm');
 		$this->load->model('shipping_details_model', 'sdm');
 		$this->load->model('projects_model', 'prm');
+		$this->load->model('work_orders_model', 'wom');		
+		$this->load->model('project_details_model', 'pdm');
 	}
                 
 	public function index()
@@ -64,18 +66,15 @@ class Invoice extends MY_Controller {
 		$this->load->view('layouts/master', $data);
 	}
 
-	public function print_work_order($id)
+	public function print_wo($id)
 	{
-		$data['shipping'] = $this->sm->get_shipping_by_id($id);
-		$data['shipping_det'] = $this->sdm->get_shipping_details($id);
-
-		$customer_id = $data['shipping']->customers_id;
-		$data['customer'] = $this->cm->get_by_id('id', $customer_id);
+		$data['work_orders'] = $this->wom->get_by_id('projects_id',$id);
+		$data['project_details'] = $this->pdm->get_project_details($id);
 
 		$data['title'] = "ERP | Invoice";
 		$data['page_title'] = "Invoice";
 		$data['breadcumb']  = array("Invoice");
-		$data['page_view']  = "invoice/invoice_shipping";		
+		$data['page_view']  = "invoice/invoice_wo";		
 		$data['js_asset']   = "invoice";	
 		$data['csrf'] = $this->csrf;	
 		$data['menu'] = $this->get_menu();							

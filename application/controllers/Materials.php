@@ -50,6 +50,22 @@ class Materials extends MY_Controller {
 		echo json_encode($result);
 	}
 
+	public function populate_categories_select(){
+		$result = $this->mcm->get_all_data();
+		$data = array();
+		$count = 0;
+		foreach($result as $value){
+			$row = array();
+			$row['Name'] = $value->name;
+			$row['Id'] = $value->id;
+			$data[] = $row;
+			$count++;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
 	public function view_data(){
 		$result = $this->mm->get_output_data();
         $data = array();

@@ -40,7 +40,7 @@
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
-							<label for="name" class="control-label">Name</label>
+							<label for="name" class="control-label">Company Name</label>
 							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
 							<div class="help-block with-errors"></div>
 						</div>
@@ -58,6 +58,20 @@
 							<label for="telp" class="control-label">Telp</label>
 							<input type="text" class="form-control" id="telp" name="telp" placeholder="Telp" required>
 							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-4">
+								<div class="radio">
+									<input name="ppn" checked value="1" required="" type="radio">
+									<label for="out"> PPN </label>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="radio">
+									<input name="ppn" value="0" required="" type="radio">
+									<label for="out"> Non-PPN </label>
+								</div>
+							</div>
 						</div>
 						<input type="hidden" name="change_id">
 						<div class="form-group text-right">
