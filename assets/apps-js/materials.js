@@ -131,6 +131,7 @@ function edit(id){
 			{
 				$('#name').val(data.name);
 				$('#material_categories_id').val(data.material_categories_id);				
+				$('#vendors_id').val(data.vendors_id);				
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				show_hide_form(true);

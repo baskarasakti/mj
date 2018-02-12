@@ -44,9 +44,16 @@
 							<input type="text" class="form-control" id="code" name="code" placeholder="Code" readonly>
 							<div class="help-block with-errors"></div>
 						</div>
-						<div class="form-group">
-							<label for="name" class="control-label">Name</label>
-							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+						<div id="color-group" class="form-group">
+							<label for="color" class="control-label">Color</label>
+							<select class="custom-select col-sm-12" id="color" name="color" required>
+								<option value="" selected="">Choose...</option>
+								<?php
+									foreach($colors as $item){
+										echo '<option value="'.$item->code.'">'.$item->name.'</option>';
+									}
+								?>
+							</select>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
@@ -75,16 +82,9 @@
 								</div>
 							</div>
 						</div>
-						<div id="color-group" class="form-group">
-							<label for="color" class="control-label">Color</label>
-							<select class="custom-select col-sm-12" id="color" name="color" required>
-								<option value="" selected="">Choose...</option>
-								<?php
-									foreach($colors as $item){
-										echo '<option value="'.$item->code.'">'.$item->name.'</option>';
-									}
-								?>
-							</select>
+						<div class="form-group">
+							<label for="name" class="control-label">Name</label>
+							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group text-right">

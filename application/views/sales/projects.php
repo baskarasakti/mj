@@ -44,11 +44,20 @@
 							<input type="text" class="form-control" id="code" name="code" placeholder="Code" readonly required>
 							<div class="help-block with-errors"></div>
 						</div>
-						<div cl<!-- ass="form-group">
-							<label for="name" class="control-label">Name</label>
-							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
-							<div class="help-block with-errors"></div>
-						</div> -->
+						<div class="form-group row">
+							<div class="col-sm-4">
+								<div class="radio">
+									<input name="vat" checked value="1" required="" type="radio">
+									<label for="out"> VAT </label>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="radio">
+									<input name="vat" value="0" required="" type="radio">
+									<label for="out"> Non VAT </label>
+								</div>
+							</div>
+						</div>
 						<div class="form-group">
 							<label for="customers_id" class="control-label">Customers</label>
 							<select class="custom-select col-sm-12" id="customers_id" name="customers_id" required>

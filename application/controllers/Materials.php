@@ -8,6 +8,7 @@ class Materials extends MY_Controller {
 			$this->load->helper('tablefield');
 			$this->load->model('materials_model', 'mm');
 			$this->load->model('material_cat_model', 'mcm');
+			$this->load->model('vendors_model', 'vm');
 	}
 	
 	private function get_column_attr(){
@@ -31,6 +32,7 @@ class Materials extends MY_Controller {
 		$data['csrf'] = $this->csrf;		
 		$data['menu'] = $this->get_menu();					
 		$data['m_categories'] = $this->mcm->get_all_data();							
+		$data['vendors'] = $this->vm->get_all_data();							
 		$this->load->view('layouts/master', $data);
 	}
 
@@ -90,6 +92,7 @@ class Materials extends MY_Controller {
 		$data = array(
 			'name' => $this->normalize_text($this->input->post('name')),
 			'material_categories_id' => $this->input->post('material_categories_id'),
+			'vendors_id' => $this->input->post('vendors_id'),
 			'created_at' => date("Y-m-d H:m:s")
 		);
 		$inserted = $this->mm->add($data);
@@ -105,6 +108,7 @@ class Materials extends MY_Controller {
 		$data = array(
 			'name' => $this->normalize_text($this->input->post('name')),
 			'material_categories_id' => $this->input->post('material_categories_id'),
+			'vendors_id' => $this->input->post('vendors_id'),
 			'updated_at' => date("Y-m-d H:m:s")
 		);
 		$status = $this->mm->update('id', $this->input->post('change_id'), $data);

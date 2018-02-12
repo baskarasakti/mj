@@ -15,7 +15,7 @@ class Projects extends MY_Controller {
 		$table = new TableField();
 		$table->addColumn('id', '', 'ID');
 		$table->addColumn('code', '', 'Code');        
-		$table->addColumn('name', '', 'Name');        
+		$table->addColumn('vat', '', 'VAT');        
 		$table->addColumn('description', '', 'Description');        
 		$table->addColumn('customer', '', 'Customer');        
 		$table->addColumn('actions', '', 'Actions');        
@@ -82,7 +82,11 @@ class Projects extends MY_Controller {
 			$row = array();
 			$row['id'] = $value->id;
 			$row['code'] = $value->code;
-			$row['name'] = $value->name;
+			$vat = "VAT";
+			if($value->vat == 0){
+				$vat = "Non VAT";
+			}
+			$row['vat'] = $vat;
 			$row['description'] = $value->description;
 			$row['customer'] = $value->customer;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
@@ -99,10 +103,11 @@ class Projects extends MY_Controller {
 	function add(){
 		$data = array(
 			'code' => $this->input->post('code'),			
-			'name' => $this->normalize_text($this->input->post('name')),
+			'vat' => $this->input->post('vat'),
 			'description' => $this->normalize_text($this->input->post('description')),
 			'customers_id' =>$this->input->post('customers_id')
 		);
+		$data = $this->add_adding_detail($data);
 		$inserted = $this->pm->add_id($data);
 		echo json_encode(array('id' => $inserted));
 	}
@@ -114,9 +119,10 @@ class Projects extends MY_Controller {
 
 	function update(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
+			'vat' => $this->input->post('vat'),
 			'product_categories_id' => $this->input->post('product_categories_id')
 		);
+		$data = $this->add_updating_detail($data);
 		$status = $this->pm->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));
 	}
@@ -155,7 +161,7 @@ class Projects extends MY_Controller {
 				'products_id' => $this->input->post('products_id'),
 				'projects_id' => $id
 			);
-			$insert = $this->pdm->add($data);
+			$insert = $this->pdm->add_id($data);
 
 			$row = array();
 			$row['id'] = $insert;

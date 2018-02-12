@@ -37,10 +37,11 @@ $(document).ready(function() {
 	
 	$('#form-panel').hide();
 
-	function generateID(){
+	function generateID(vat){
 		$.ajax({
 			url : site_url+"projects/generate_id",
 			type: "GET",
+			data:{vat:vat},
 			dataType: "JSON",
 			success: function(data)
 			{
@@ -49,9 +50,13 @@ $(document).ready(function() {
 		});	
 	}
 
+	$("[name='vat']").change(function(){
+		generateID(this.value);
+	});
+
 	$('#add-btn').click(function(){
 		action = "Add";
-		generateID();
+		generateID($("[name='vat']").val());
 		$('#form-title').text('Add Form');
 		$("#form").validator();
 		show_hide_form(true);
@@ -139,10 +144,10 @@ $(document).ready(function() {
         },
 
         fields: [ 
-        { name: "id", title:"ID" }, 
+		{ name: "id", title:"ID", visible:false}, 
+		{ name: "products_id", title:"Product", type: "select", items: products, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
         { name: "unit_price", title:"Unit Price", type: "number", width: 50 }, 
-        { name: "products_id", title:"Product", type: "select", items: products, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { type: "control" } 
         ] 
 	}); 

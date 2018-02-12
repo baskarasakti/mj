@@ -88,7 +88,8 @@ function generate_tree(id){
                       jt.jstree('check_node', $(this));
                     });
                      $('#tree').on("changed.jstree", function (e, data) {
-                        selectedNode = data.selected; 
+						selectedNode = data.selected; 
+						console.log(selectedNode);
                       });
                 });
    
@@ -139,7 +140,7 @@ function formTree(data, result){
 
 	}
 	treeview += "</ul>";
-	console.log(treeview);
+	//console.log(treeview);
     result(treeview);
 }
 
@@ -154,7 +155,8 @@ function modifyTree(treeVar){
              }
        },
        "checkbox": {
-           "keep_selected_style": false
+		   "keep_selected_style": false,
+		   "three_state" : false
        },
        "plugins": ["checkbox","types"]
    });

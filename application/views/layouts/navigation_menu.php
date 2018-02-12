@@ -32,10 +32,10 @@
 		}elseif($curr->parent_id == 0 && $curr->link == "#"){
 			echo '<li><a href="javascript:void(0);" class="waves-effect"><i data-icon=")" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">'.$curr->menu.' <span class="fa arrow"></span></span></a>';
 		}elseif($curr->parent_id != 0 ){
-			if(($prev == null || $prev->parent_id != $curr->parent_id )){
+			if(($prev == null || $curr->parent_id != $prev->parent_id )){
 				echo '<ul class="nav nav-second-level">
 							<li> <a href="'.site_url($curr->link).'" class="waves-effect">'.$curr->menu.'</a></li>';
-			}elseif(($next == null || $next->parent_id != $curr->parent_id )){
+			}elseif(($next == null || $curr->parent_id != $next->parent_id )){
 				echo '<li> <a href="'.site_url($curr->link).'" class="waves-effect">'.$curr->menu.'</a> </li>						
 					</ul>
 				</li>';

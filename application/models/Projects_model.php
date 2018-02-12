@@ -6,12 +6,12 @@ class Projects_model extends MY_Model {
 	protected $_t = 'projects';
 		
 	var $table = 'projects';
-	var $column = array('p.id', 'p.code', 'p.name', 'p.description', 'c.name'); //set column field database for order and search
+	var $column = array('p.id', 'p.code', 'p.vat', 'p.description', 'c.name'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('p.id as id, p.code as code, p.name as name, p.description, c.name as customer');
+		$this->db->select('p.id as id, p.code as code, p.vat as vat, p.description, c.name as customer');
 		$this->db->from($this->table.' p');
 		$this->db->join('customers c', 'p.customers_id = c.id', 'left');
  
@@ -50,14 +50,19 @@ class Projects_model extends MY_Model {
 	}
 
 	public function generate_id(){
-		$prefix = "SO-";
-		$infix = date("Ymd-");
-		$this->db->select("MAX(RIGHT(`code`, 4)) as 'maxID'");
-        $this->db->like('code', $prefix.$infix, 'after');
+		$vat = "P";
+		if($this->input->get('vat') == 0){
+			$vat = "NP";
+		}
+		$seg1 = "/MC-".$vat; 
+		$seg2 = "/MKT-".$this->get_roman_number(date("n")); 
+		$seg3 = "/".date("Y"); 
+		$this->db->select("MAX(LEFT(`code`, 3)) as 'maxID'");
+        $this->db->like('code', $seg1.$seg2.$seg3, 'before');
         $result = $this->db->get($this->_t);
         $code = $result->row(0)->maxID;
         $code++; 
-        return $prefix.$infix.sprintf("%04s", $code);
+        return sprintf("%03s", $code).$seg1.$seg2.$seg3;
 	}
 
 }

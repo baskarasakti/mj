@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Previllage_model extends MY_Model {
 
-	protected $_t = 'previllage';
+	protected $_t = 'previlege';
 
 	public function set_initial_previllage(){
 		if($this->count_all_data() == 0){
@@ -67,12 +67,12 @@ class Previllage_model extends MY_Model {
 	function save_previllage(){
 		$this->db->set('view',0);
         $this->db->where('roles_id',$this->input->post('id'));
-        $this->db->update('previllage');
+        $this->db->update('previlege');
         foreach ($this->input->post('menu') as $item){
             if(is_numeric($item)){
                 $this->db->set('view',1);
                 $this->db->where('id',$item);
-                $this->db->update('previllage');
+                $this->db->update('previlege');
             }
         }
         return TRUE;

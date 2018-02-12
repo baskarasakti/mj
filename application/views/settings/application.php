@@ -40,32 +40,13 @@
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
-							<label for="material_categories_id" class="control-label">Category</label>
-							<select class="custom-select col-sm-12" id="material_categories_id" name="material_categories_id" required>
-								<option selected="">Choose...</option>
-								<?php
-									foreach($m_categories as $item){
-										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
-									}
-								?>
-							</select>
+							<label for="code" class="control-label">Code</label>
+							<input type="text" class="form-control" id="code" name="code" placeholder="Code" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label">Name</label>
+							<label for="name" class="control-label">Colors</label>
 							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
-							<div class="help-block with-errors"></div>
-						</div>
-						<div class="form-group">
-							<label for="vendors_id" class="control-label">Vendor</label>
-							<select class="custom-select col-sm-12" id="vendors_id" name="vendors_id" required>
-								<option selected="">Choose...</option>
-								<?php
-									foreach($vendors as $item){
-										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
-									}
-								?>
-							</select>
 							<div class="help-block with-errors"></div>
 						</div>
 						<input type="hidden" name="change_id">
