@@ -44,6 +44,20 @@
 							<input type="text" class="form-control" id="code" name="code" placeholder="Code" readonly required>
 							<div class="help-block with-errors"></div>
 						</div>
+						<div class="form-group row">
+							<div class="col-sm-4">
+								<div class="radio">
+									<input name="vat" checked value="1" required="" type="radio">
+									<label for="out"> VAT </label>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="radio">
+									<input name="vat" value="0" required="" type="radio">
+									<label for="out"> Non VAT </label>
+								</div>
+							</div>
+						</div>
 						<div class="form-group">
 							<label for="delivery_date" class="control-label">Delivery Date</label>
 							<input type="text" class="form-control" id="delivery_date" name="delivery_date" placeholder="Delivery Date" required>
@@ -66,6 +80,18 @@
 								<?php
 									foreach($vendors as $vendor){
 										echo '<option value="'.$vendor->id.'">'.$vendor->name.'</option>';
+									}
+								?>
+							</select>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="currency" class="control-label">Currency</label>
+							<select class="custom-select col-sm-12" id="currency" name="currency" required>
+								<option selected="">Choose...</option>
+								<?php
+									foreach($currency as $q){
+										echo '<option value="'.$q->id.'">'.$q->symbol.'</option>';
 									}
 								?>
 							</select>

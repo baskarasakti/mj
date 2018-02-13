@@ -49,7 +49,7 @@ class Receive_det_model extends MY_Model {
 	}
 
 	function get_receive_details($id){
-        $this->db->select(array('receive_details.id as id','materials.id as id_materials','qty','unit_price','total_price','materials_id'));
+        $this->db->select(array('receive_details.id as id', 'discount','materials.id as id_materials','qty','unit_price','total_price','materials_id'));
         $this->db->where('receiving_id', $id);
         $this->db->join('materials', 'materials.id = receive_details.materials_id', 'LEFT');
         $result = $this->db->get('receive_details');

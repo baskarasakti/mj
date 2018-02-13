@@ -1,20 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Materials_model extends MY_Model {
+class Uom_model extends MY_Model {
 
-	protected $_t = 'materials';
+	protected $_t = 'uom';
 		
-	var $table = 'materials';
-	var $column = array('m.id','m.name', 'mc.name'); //set column field database for order and search
+	var $table = 'uom';
+	var $column = array('id', 'name','symbol'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('m.id as id, m.name as name, mc.name as category, u.name as uom');
-		$this->db->from($this->table.' m');
-		$this->db->join('material_categories mc', 'm.material_categories_id = mc.id', 'left');
-		$this->db->join('uom u', 'm.uom_id = u.id', 'left');
+		$this->db->select('id, name, symbol');
+		$this->db->from($this->table);
  
 		$i = 0;
 	 
@@ -48,17 +46,6 @@ class Materials_model extends MY_Model {
 			$order = $this->order;
 			$this->db->order_by(key($order), $order[key($order)]);
 		}
-	}
-
-	public function get_data(){
-		return $this->db->get('roles')->result();
-	}
-
-	public function get_materials_per_vendor($id)
-	{
-		$this->db->select(array('id', 'name'));
-		$this->db->from($this->table);
-		return $this->db->get()->result();
 	}
 
 }

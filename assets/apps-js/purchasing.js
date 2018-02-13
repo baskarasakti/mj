@@ -84,16 +84,30 @@ $(document).ready(function() {
     //     { "Item Name": 2, "Qty": 29, "Amount": 300000}, 
     //     { "Item Name": 1, "Qty": 56, "Amount": 100000}, 
     //     { "Item Name": 1, "Qty": 32, "Amount": 300000} 
-    // ]; 
+    // ];  
 
-    var materials;
+});
+
+function form_jsGrid(id) {
+	var materials;
     $.ajax({
-    	url: site_url+'purchasing/get_materials',
+    	url: site_url+'materials/populate_select_per_vendor/'+id,
     	type: "GET",
     	async: false,
     	success : function(text)
     	{
     		materials = JSON.parse(text);
+    	}
+    });
+
+    var uom;
+    $.ajax({
+    	url: site_url+'uom/populate_select',
+    	type: "GET",
+    	async: false,
+    	success : function(text)
+    	{
+    		uom = JSON.parse(text);
     	}
     });
 
@@ -137,7 +151,14 @@ $(document).ready(function() {
         		return $.ajax({
         			type: "DELETE",
         			url: "purchasing/jsgrid_functions",
-        			data: item
+        			data: item,
+        			success: function(data)
+        			{
+        				if(data.status){
+        				}else{
+        					alert('Fail');
+        				}
+        			}
         		});
         	}
         },
@@ -146,12 +167,11 @@ $(document).ready(function() {
         { name: "id", visible:false }, 
         { name: "name", title:"Item Name", type: "select", items: materials, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
-        { name: "price", title:"Price", type: "number", width: 200 },  
+        { name: "uom", title:"Uom", type: "select", items: uom, valueField: "Id", textField: "Name", width: 50, readOnly: true }, 
         { type: "control" } 
         ] 
-    }); 
-
-});
+    });
+}
 
 function show_hide_form(bShow){
 	if(bShow==true){
@@ -201,6 +221,7 @@ function save_data(){
 				$("#saveBtn").prop('disabled', true);
 				$('div.block-div').unblock();
 				$('[name="asd"]').val(data.id);
+				form_jsGrid(data.vendors_id);
 				show_hide_form(true);
 				// $('#form')[0].reset();
 			}else{
@@ -219,11 +240,14 @@ function edit(id){
 		dataType: "JSON",
 		success: function(data)
 		{
+			form_jsGrid(data.vendors_id);
 			$('#code').val(data.code);
+			$('#vat').val(data.vat);
 			$('#delivery_date').val(data.delivery_date);
 			$('#delivery_place').val(data.delivery_place);
 			$('#note').val(data.note);
 			$('#vendor').val(data.vendors_id);
+			$('#currency').val(data.currency_id);
 			$("#form").validator();
 			$('#form-title').text('Edit Form');
 			$('[name="asd"]').val(id);

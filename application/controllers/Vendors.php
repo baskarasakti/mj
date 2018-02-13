@@ -102,6 +102,7 @@ class Vendors extends MY_Controller {
 				$row['id'] = $value->id;
 				$row['name'] = $value->material_name;
 				$row['category'] = $value->material_category;
+				$row['uom'] = $value->uom;
 				$data[] = $row;
 				$count++;
 			}
@@ -114,6 +115,7 @@ class Vendors extends MY_Controller {
 			$data = array(
 				'name' => $this->input->post('name'),
 				'material_categories_id' => $this->input->post('category'),
+				'uom_id' => $this->input->post('uom'),
 				'vendors_id' => $id
 			);
 			$result = $this->mm->add_id($data);
@@ -122,6 +124,7 @@ class Vendors extends MY_Controller {
 			$row['id'] = $result;
 			$row['name'] = $this->input->post('name');
 			$row['category'] = $this->input->post('category');
+			$row['uom'] = $this->input->post('uom');
 
 			echo json_encode($row);
 			break;
@@ -130,7 +133,8 @@ class Vendors extends MY_Controller {
 			$this->input->raw_input_stream;
 			$data = array(
 				'name' => $this->input->input_stream('name'),
-				'material_categories_id' => $this->input->input_stream('category')
+				'material_categories_id' => $this->input->input_stream('category'),
+				'uom_id' => $this->input->input_stream('uom')
 			);
 			$result = $this->mm->update('id',$this->input->input_stream('id'),$data);
 			break;

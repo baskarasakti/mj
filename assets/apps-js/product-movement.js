@@ -4,9 +4,10 @@ var action;
 $(document).ready(function() {
 
 	$('#receive_date').datepicker({
-		format: 'yyyy-mm-dd',
-		startDate: '-7d',
-        endDate: '0d',
+		format: 'yyyy-mm-dd' 
+	});
+
+	$('#inlineFormCustomSelect').select2({
 	});
 
 	var columns = [];
@@ -28,7 +29,7 @@ $(document).ready(function() {
         deferRender: true,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         ajax: {
-            url: site_url+'receiving/view_data',
+            url: site_url+'product_movement/view_data',
             type: "POST",
             dataSrc : 'data',
             data: function ( d ) {
@@ -43,7 +44,6 @@ $(document).ready(function() {
 	});
 	
 	$('#form-panel').hide();
-	$('#detail-panel').hide();
 
 	$('#add-btn').click(function(){
 		action = "Add";
@@ -54,7 +54,7 @@ $(document).ready(function() {
 
 	$('#cancelBtn').click(function(){
 		$("#form").validator('destroy');
-		show_hide_form_detail(false);
+		show_hide_form(false);
 		$('#form')[0].reset();
 	});
 
@@ -66,86 +66,23 @@ $(document).ready(function() {
          }
 	 });
 
-    var materials;
+    var processes;
     $.ajax({
-    	url: site_url+'purchasing/get_materials',
+    	url: site_url+'processes/populate_select',
     	type: "GET",
     	async: false,
     	success : function(text)
     	{
-    		materials = JSON.parse(text);
+    		processes = JSON.parse(text);
     	}
     });
-
-    var isVisible = false;
-    if (role_id == 1) {
-    	isVisible = true;
-    }
 
     $("#jsGrid").jsGrid({ 
     	width: "100%", 
     	height: "400px", 
 
-    	inserting: false, 
-    	editing: false, 
-    	deleting: false, 
-    	sorting: true, 
-    	paging: true, 
-
-        // data: lists, 
-        controller: {
-        	loadData: function(filter) {
-        		return $.ajax({
-        			type: "GET",
-        			url: "receiving/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: filter,
-        			dataType:"JSON"
-        		});
-        	},
-        	insertItem: function(item) {
-        		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
-        		return $.ajax({
-        			type: "POST",
-        			url: "receiving/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item,
-        			dataType:"JSON"
-        		});
-        	},
-        	updateItem: function(item) {
-        		return $.ajax({
-        			type: "PUT",
-        			url: "receiving/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
-        		});
-        	},
-        	deleteItem: function(item) {
-        		return $.ajax({
-        			type: "DELETE",
-        			url: "receiving/jsgrid_functions",
-        			data: item
-        		});
-        	}
-        },
-
-        fields: [ 
-        { name: "id", visible:false }, 
-        { name: "name", title:"Item Name", type: "select", items: materials, valueField: "Id", textField: "Name", width: 150, validate: "required"}, 
-        { name: "qty", title:"Qty", type: "number", width: 50 }, 
-        { name: "price", title:"Price", type: "number", width: 200},  
-        { name: "discount", title:"Discount", type: "number", width: 200},  
-        { name: "total_price", title:"Total Price", type: "number", width: 200, readOnly: true},  
-        { type: "control", deleteButton: false, editButton: false } 
-        ] 
-    }); 
-
-    $("#jsGrid1").jsGrid({ 
-    	width: "100%", 
-    	height: "400px", 
-
-    	inserting: false, 
+    	inserting: true, 
     	editing: true, 
-    	deleting: false, 
     	sorting: true, 
     	paging: true, 
 
@@ -154,7 +91,7 @@ $(document).ready(function() {
         	loadData: function(filter) {
         		return $.ajax({
         			type: "GET",
-        			url: "receiving/jsgrid_functions/"+$('[name="asd"]').val(),
+        			url: "product_movement/jsgrid_functions/"+$('[name="asd"]').val(),
         			data: filter,
         			dataType:"JSON"
         		});
@@ -164,7 +101,7 @@ $(document).ready(function() {
         		console.log(item)
         		return $.ajax({
         			type: "POST",
-        			url: "receiving/jsgrid_functions/"+$('[name="asd"]').val(),
+        			url: "product_movement/jsgrid_functions/"+$('[name="asd"]').val(),
         			data: item,
         			dataType:"JSON"
         		});
@@ -172,14 +109,14 @@ $(document).ready(function() {
         	updateItem: function(item) {
         		return $.ajax({
         			type: "PUT",
-        			url: "receiving/jsgrid_functions/"+$('[name="asd"]').val(),
+        			url: "product_movement/jsgrid_functions/"+$('[name="asd"]').val(),
         			data: item
         		});
         	},
         	deleteItem: function(item) {
         		return $.ajax({
         			type: "DELETE",
-        			url: "receiving/jsgrid_functions",
+        			url: "product_movement/jsgrid_functions",
         			data: item
         		});
         	}
@@ -187,14 +124,11 @@ $(document).ready(function() {
 
         fields: [ 
         { name: "id", visible:false }, 
-        { name: "name", title:"Item Name", type: "select", items: materials, valueField: "Id", textField: "Name", width: 150, validate: "required", readOnly: true }, 
-        { name: "qty", title:"Qty", type: "number", width: 50 }, 
-        { name: "price", title:"Price", type: "number", width: 200},  
-        { name: "discount", title:"Discount", type: "number", width: 200},  
-        { name: "total_price", title:"Total Price", type: "number", width: 200, readOnly: true},
-        { type: "control", deleteButton: false} 
+        { name: "code", title:"Code", type: "text", width: 50 }, 
+        { name: "processes_id", title:"Process", type: "select", items: processes, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
+        { type: "control" } 
         ] 
-    }); 
+    });
 	
 });
 
@@ -202,21 +136,7 @@ function show_hide_form(bShow){
 	if(bShow==true){
 		$('#form-panel').show();
 		$('#table-panel').hide();
-		$('#detail-panel').hide();
 	}else{
-		$('#form-panel').hide();
-		$('#table-panel').show();
-		$('#detail-panel').hide();
-	}
-}
-
-function show_hide_form_detail(bShow){
-	if(bShow==true){
-		$('#table-panel').hide();
-		$('#form-panel').hide();
-		$('#detail-panel').show();
-	}else{
-		$('#detail-panel').hide();
 		$('#form-panel').hide();
 		$('#table-panel').show();
 	}
@@ -229,9 +149,9 @@ function reload_table(){
 function save_data(){
 	var url;
 	if(action == "Add"){
-		url = site_url+"receiving/add/"+$('[name="asd"]').val();
+		url = site_url+"product_movement/add";
 	}else{
-		url = site_url+"receiving/update";
+		url = site_url+"product_movement/update";
 	}
    
 	var data = $("#form").serializeArray();
@@ -256,11 +176,12 @@ function save_data(){
 		   {
 			   if(data.id){
 				   reload_table();
-				   $("#saveBtn").text("Saved");
-				   $("#saveBtn").prop('disabled', true);
+				   $("#saveBtn").text("Save");
+				   $("#saveBtn").prop('disabled', false);
 				   $('div.block-div').unblock();
-				   $('#jsGrid').jsGrid('loadData');
+				   $('[name="asd"]').val(data.id);
 				   show_hide_form(true);
+				   // $('#form')[0].reset();
 			   }else{
 				   alert('Fail');
 			   }
@@ -268,43 +189,23 @@ function save_data(){
 	   });
    }
 
-function receiving(id){
-	action = "Add";
+function edit(id){
+	action = "Edit";
 	$('[name="change_id"]').val(id);
 	$.ajax({
-			url : site_url+"purchasing/get_by_id/"+id,
+			url : site_url+"product_movement/get_by_id/"+id,
 			type: "GET",
 			dataType: "JSON",
 			success: function(data)
 			{
-				$('#code').val(data.code);
-				$('#delivery_date').val(data.delivery_date);
-				$('#vendors_id').val(data.vendors_id);			
+				$('#receive_date').val(data.receive_date);
+				$('#processes_id').val(data.processes_id);
+				$('#processes_id1').val(data.processes_id1);				
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				$('[name="asd"]').val(id);
 				$('#jsGrid').jsGrid('loadData');
 				show_hide_form(true);
-			}
-		});
-}
-
-function details(id){
-	$.ajax({
-			url : site_url+"receiving/get_by_id/"+id,
-			type: "GET",
-			dataType: "JSON",
-			success: function(data)
-			{
-				$('#code1').val(data.code);
-				$('#date1').val(data.receive_date);
-				$("#form").validator();
-				$('#form-title').text('Details');
-				$("#saveBtn").text("Save");
-				$("#saveBtn").prop('disabled', false);
-				$('[name="asd"]').val(id);
-				$('#jsGrid1').jsGrid('loadData');
-				show_hide_form_detail(true);
 			}
 		});
 }
@@ -322,7 +223,7 @@ function remove(id){
 		},
 		function(){
 			$.ajax({
-				url : site_url+"receiving/delete/"+id,
+				url : site_url+"product_movement/delete/"+id,
 				type: "GET",
 				dataType: "JSON",
 				success: function(data)

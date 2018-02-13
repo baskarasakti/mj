@@ -52,8 +52,8 @@ class Materials extends MY_Controller {
 		echo json_encode($result);
 	}
 
-	public function populate_categories_select(){
-		$result = $this->mcm->get_all_data();
+	public function populate_select_per_vendor($id){
+		$result = $this->mm->get_materials_per_vendor($id);
 		$data = array();
 		$count = 0;
 		foreach($result as $value){
@@ -66,6 +66,11 @@ class Materials extends MY_Controller {
 
 		$result = $data;
 		echo json_encode($result);
+	}
+
+	public function get_uom_materials($id)
+	{
+		# code...
 	}
 
 	public function view_data(){

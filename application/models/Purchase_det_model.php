@@ -50,15 +50,16 @@ class Purchase_det_model extends MY_Model {
 	}
 
 	function get_purchase_details($id){
-        $this->db->select(array('purchase_details.id as id','materials.id as id_materials','qty','unit_price','total_price','materials_id'));
+        $this->db->select(array('purchase_details.id as id','materials.id as id_materials','qty','materials_id', 'u.id as uom'));
         $this->db->where('purchasing_id', $id);
         $this->db->join('materials', 'materials.id = purchase_details.materials_id', 'LEFT');
+        $this->db->join('uom u', 'u.id = materials.uom_id', 'LEFT');
         $result = $this->db->get('purchase_details');
         return $result->result();
 	}
 
 	function get_purchase_det_where_id($column, $id){
-        $this->db->select('pd.id, pd.qty, pd.unit_price, pd.total_price, pd.materials_id, m.name as name');
+        $this->db->select('pd.id, pd.qty, pd.materials_id, m.name as name');
 		$this->db->from($this->table." pd");
 		$this->db->join('materials m', 'm.id = pd.materials_id');
         $this->db->where($column, $id);
@@ -68,6 +69,24 @@ class Purchase_det_model extends MY_Model {
             $data = $result->result();
         }
         return $data;
+	}
+
+	public function check_received($id)
+	{
+		$this->db->select('purchasing_id, materials_id');
+		$this->db->from($this->table." pd");
+		$this->db->where('id', $id);
+		$row = $this->db->get()->row();
+
+		$this->db->from('receive_details rd');
+		$this->db->join('receiving r', 'rd.receiving_id = r.id', 'left');
+		$this->db->where('r.purchasing_id', $row->purchasing_id);
+		$this->db->where('rd.materials_id', $row->materials_id);
+		if ($this->db->count_all_results() > 0) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 
 }

@@ -1,20 +1,20 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Materials_model extends MY_Model {
+class Product_movement_det_model extends MY_Model {
 
-	protected $_t = 'materials';
+	protected $_t = 'product_movement_details';
 		
-	var $table = 'materials';
-	var $column = array('m.id','m.name', 'mc.name'); //set column field database for order and search
+	var $table = 'product_movement_details';
+	var $column = array('id','code','date','product_movement_id','processes_id'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('m.id as id, m.name as name, mc.name as category, u.name as uom');
-		$this->db->from($this->table.' m');
-		$this->db->join('material_categories mc', 'm.material_categories_id = mc.id', 'left');
-		$this->db->join('uom u', 'm.uom_id = u.id', 'left');
+		$this->db->select('pmd.ad as id, p.name as name, pmd.date, pmd.code');
+		$this->db->join("product_movement pm", "pm.id = pmd.product_movement_id", "left");
+		$this->db->join("products p", "p.id = pm.products_id", "left");
+		$this->db->from($this->table. " pmd");
  
 		$i = 0;
 	 
@@ -54,11 +54,13 @@ class Materials_model extends MY_Model {
 		return $this->db->get('roles')->result();
 	}
 
-	public function get_materials_per_vendor($id)
+	public function get_product_movement_details($id)
 	{
-		$this->db->select(array('id', 'name'));
-		$this->db->from($this->table);
+		$this->db->select(array('pmd.id as id', 'pmd.code as code', 'pc.id as processes_id'));
+		$this->db->from($this->table." pmd");
+		$this->db->join('processes pc', 'pc.id = pmd.processes_id');
+		$this->db->join('product_movement pm', 'pm.id = pmd.product_movement_id');
+		$this->db->join('products p', 'p.id = pm.products_id');
 		return $this->db->get()->result();
 	}
-
 }

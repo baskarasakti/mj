@@ -11,7 +11,7 @@ class Receive_model extends MY_Model {
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('p.id as id, p.code as code, p.delivery_date, r.id as id_receive, r.receive_date, IF(r.receive_date, "true", "false") as status');
+		$this->db->select('r.id as id, p.code as code, p.delivery_date, r.id as id_receive, r.receive_date, IF(r.receive_date, "true", "false") as status');
 		$this->db->from('purchasing p');
 		$this->db->join($this->table.' r', 'r.purchasing_id = p.id', 'left');
  

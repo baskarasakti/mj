@@ -39,6 +39,15 @@ class Menu_model extends MY_Model {
 				),
 				'Colors' => array(
 					'link' => 'colors',
+				),
+				'Uom' => array(
+					'link' => 'uom',
+				),
+				'Uom Converter' => array(
+					'link' => 'uom_converter',
+				),
+				'Currency' => array(
+					'link' => 'currency',
 				)
 			)
 		), 
@@ -75,9 +84,6 @@ class Menu_model extends MY_Model {
 			'child' => array(
 				'Work Order' => array(
 					'link' => 'work_orders',
-				),
-				'Production' => array(
-					'link' => 'productions',
 				),
 				'Pickup Material' => array(
 					'link' => 'pickup_material',

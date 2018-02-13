@@ -11,8 +11,9 @@ class Purchase_model extends MY_Model {
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('id, code, delivery_date, vendors_id');
-		$this->db->from($this->table);
+		$this->db->select('pc.id, pc.code, pc.delivery_date, pc.vendors_id, v.name as vendor, CASE WHEN pc.vat = 0 THEN "NON-PPN" ELSE "PPN" END as vat', false);
+		$this->db->from($this->table." pc");
+		$this->db->join('vendors v', 'v.id = pc.vendors_id');
  
 		$i = 0;
 	 
@@ -49,14 +50,16 @@ class Purchase_model extends MY_Model {
 	}
 
 	public function generate_id(){
-		$prefix = "PO-";
-		$infix = date("Ymd-");
-		$this->db->select("MAX(RIGHT(`code`, 4)) as 'maxID'");
-        $this->db->like('code', $prefix.$infix, 'after');
+		$vat = "P";
+		$seg1 = "/OP-MC"; 
+		$seg2 = "/".$this->get_roman_number(date("n")); 
+		$seg3 = "/".substr(date("Y"), 2, 2); 
+		$this->db->select("MAX(LEFT(`code`, 3)) as 'maxID'");
+        $this->db->like('code', $seg1.$seg2.$seg3, 'before');
         $result = $this->db->get($this->_t);
         $code = $result->row(0)->maxID;
         $code++; 
-        return $prefix.$infix.sprintf("%04s", $code);
+        return sprintf("%03s", $code).$seg1.$seg2.$seg3;
 	}
 
 }

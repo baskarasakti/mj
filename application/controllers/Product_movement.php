@@ -1,51 +1,54 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Product_receiving extends MY_Controller {
+class Product_movement extends MY_Controller {
 
 	function  __construct() {
 		parent::__construct();
 		$this->load->helper('tablefield');
-		$this->load->model('product_receiving_model', 'prm');
-		$this->load->model('product_receiving_det_model', 'prdm');
-		$this->load->model('productions_model', 'pm');
+		$this->load->model('product_movement_model', 'pmm');
+		$this->load->model('product_movement_det_model', 'pmdm');
 		$this->load->model('processes_model', 'prcm');
-		$this->load->model('production_details_model', 'pdm');
+		$this->load->model('work_orders_model', 'wom');
 	}
 	
 	private function get_column_attr(){
 		$table = new TableField();
 		$table->addColumn('id', '', 'ID');
-		$table->addColumn('receive_date', '', 'Receive Date');         
-		$table->addColumn('name', '', 'Process');         
+		$table->addColumn('code', '', 'Receive Date');         
+		$table->addColumn('start_date', '', 'Start Date');         
+		$table->addColumn('end_date', '', 'End Date');         
+		$table->addColumn('qty', '', 'Qty');         
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
 	}
 	
 	public function index()
 	{
-		$data['title'] = "ERP | Shipping";
-		$data['page_title'] = "Product Receiving";
+		$data['title'] = "ERP | Product Movement";
+		$data['page_title'] = "Product Movement";
 		$data['table_title'] = "List Item";		
-		$data['breadcumb']  = array("Production", "Product Receiving");
-		$data['page_view']  = "production/product_receiving";		
-		$data['js_asset']   = "product-receiving";	
+		$data['breadcumb']  = array("Production", "Product Movement");
+		$data['page_view']  = "production/product_movement";		
+		$data['js_asset']   = "product-movement";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['process'] = $this->prcm->get_all_data();	
-		$data['menu'] = $this->get_menu();	
-		$data['csrf'] = $this->csrf;						
+		$data['menu'] = $this->get_menu();					
+		$data['csrf'] = $this->csrf;		
 		$this->load->view('layouts/master', $data);
 	}
 
 	public function view_data(){
-		$result = $this->prm->get_output_data();
+		$result = $this->pmm->get_output_data();
 		$data = array();
 		$count = 0;
 		foreach($result['data'] as $value){
 			$row = array();
 			$row['id'] = $value->id;
-			$row['receive_date'] = $value->receive_date;
-			$row['name'] = $value->name;
+			$row['code'] = $value->code;
+			$row['start_date'] = $value->start_date;
+			$row['end_date'] = $value->end_date;
+			$row['qty'] = $value->qty;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
@@ -90,15 +93,14 @@ class Product_receiving extends MY_Controller {
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->prdm->get_product_receiving_details($id);
+			$result = $this->pmdm->get_product_movement_details($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['products_id'] = $value->product_id;
-				$row['qty'] = $value->qty;
-				$row['note'] = $value->note;
+				$row['code'] = $value->code;
+				$row['processes_id'] = $value->processes_id;
 				$data[] = $row;
 				$count++;
 			}

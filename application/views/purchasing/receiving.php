@@ -41,17 +41,17 @@
 					<form id="form" data-toggle="validator">
 						<div class="form-group">
 							<label for="code" class="control-label">Code</label>
-							<input type="text" class="form-control" id="code" name="code" placeholder="Code" required>
+							<input type="text" class="form-control" id="code" name="code" placeholder="Code" readonly>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
 							<label for="date" class="control-label">Delivery Date</label>
-							<input type="text" class="form-control" id="date" name="date" placeholder="Delivery Date" required>
+							<input type="text" class="form-control" id="delivery_date" name="delivery_date" placeholder="Delivery Date" readonly>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
 							<label for="vendor" class="control-label">Vendor</label>
-							<select class="custom-select col-sm-12" id="vendor" name="vendor" required>
+							<select class="custom-select col-sm-12" id="vendors_id" name="vendors_id" disabled>
 								<option selected="">Choose...</option>
 								<?php
 									foreach($vendors as $vendor){
@@ -59,6 +59,16 @@
 									}
 								?>
 							</select>
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="date" class="control-label">Receive Date</label>
+							<input type="text" class="form-control" id="receive_date" name="receive_date" placeholder="Delivery Date">
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="date" class="control-label">File Upload</label>
+							<input type="file" id="file" name="file">
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group text-right">
@@ -104,7 +114,7 @@
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group text-right">
-							<button type="button" id="cancelBtn" class="btn btn-danger" onclick="show_hide_form_detail(false)">Cancel</button>
+							<button type="button" id="cancelBtn1" class="btn btn-danger" onclick="show_hide_form_detail(false)">Cancel</button>
 						</div>
 						<input type="hidden" name="asd">
 						<div class="table-responsive"> 

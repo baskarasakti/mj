@@ -83,9 +83,7 @@ class Receiving extends MY_Controller {
 			$row['delivery_date'] = $value->delivery_date;
 			$row['receive_date'] = $value->receive_date;
 			$row['status'] = $value->status;
-			$row['actions'] = $value->status=="true" ? '<button class="btn btn-sm btn-info" onclick="details('.$value->id_receive.')" type="button"><i class="fa  fa-info-circle"></i></button>
-			<button class="btn btn-sm btn-success" type="button">Received</button>' : '<button class="btn btn-sm btn-info" onclick="details('.$value->id_receive.')" type="button"><i class="fa  fa-info-circle"></i></button>
-			<button class="btn btn-sm btn-info" onclick="receiving('.$value->id.')" type="button">Receive</button>';
+			$row['actions'] = $value->status=="true" ? '<button class="btn btn-sm btn-success" onclick="details('.$value->id.')" type="button">Received</button>' : '<button class="btn btn-sm btn-info" onclick="receiving('.$value->id.')" type="button">Receive</button>';
 			$data[] = $row;
 			$count++;
 		}
@@ -100,8 +98,9 @@ class Receiving extends MY_Controller {
 
 		$data = array(
 			'purchasing_id' => $id,
-			'code' => $this->rcv->generate_id(),
-			'receive_date' => date('Y-m-d H:i:s'),
+			'code' => $this->input->post('code'),
+			'receive_date' => $this->input->post('receive_date'),
+			'currency_id' => $purchase_data->currency_id,
 			'created_at' => date('Y-m-d H:i:s'),
 		);
 		$inserted = $this->rcv->add_id($data);
@@ -109,9 +108,10 @@ class Receiving extends MY_Controller {
 		$purchase_details = $this->prd->get_purchase_details($id);
 		foreach($purchase_details as $value){
 			$data = array(
-				'qty' => $value->qty,
-				'unit_price' => $value->unit_price,
-				'total_price' => $value->qty*$value->unit_price,
+				'qty' => 0,
+				'unit_price' => 0,
+				'discount' => 0,
+				'total_price' => 0,
 				'receiving_id' => $inserted,
 				'materials_id' => $value->materials_id,
 			);
@@ -163,6 +163,8 @@ class Receiving extends MY_Controller {
 				$row['name'] = $value->id_materials;
 				$row['qty'] = $value->qty;
 				$row['price'] = $value->unit_price;
+				$row['discount'] = $value->discount;
+				$row['total_price'] = $value->total_price;
 				$data[] = $row;
 				$count++;
 			}
@@ -171,35 +173,38 @@ class Receiving extends MY_Controller {
 			echo json_encode($result);
 			break;
 
-			case "POST":
-			$data = array(
-				'materials_id' => $this->normalize_text($this->input->post('name')),
-				'qty' => $this->normalize_text($this->input->post('qty')),
-				'unit_price' => $this->normalize_text($this->input->post('price')),
-				'purchasing_id' => $id
-			);
-			$result = $this->prd->add($data);
+			// case "POST":
+			// $data = array(
+			// 	'materials_id' => $this->normalize_text($this->input->post('name')),
+			// 	'qty' => $this->normalize_text($this->input->post('qty')),
+			// 	'unit_price' => $this->normalize_text($this->input->post('price')),
+			// 	'purchasing_id' => $id
+			// );
+			// $result = $this->prd->add($data);
 
-			$row = array();
-			$row['id'] = $insert;
-			$row['name'] = $this->input->post('name');
-			$row['qty'] = $this->input->post('qty');
-			$row['price'] = $this->input->post('price');
+			// $row = array();
+			// $row['id'] = $insert;
+			// $row['name'] = $this->input->post('name');
+			// $row['qty'] = $this->input->post('qty');
+			// $row['price'] = $this->input->post('price');
 
-			echo json_encode($row);
-			break;
+			// echo json_encode($row);
+			// break;
 
 			case "PUT":
+			$this->input->raw_input_stream;
 			$data = array(
-				'materials_id' => $this->normalize_text($this->input->post('name')),
-				'qty' => $this->normalize_text($this->input->post('qty')),
-				'unit_price' => $this->normalize_text($this->input->post('price'))
+				// 'materials_id' => $this->normalize_text($this->input->post('name')),
+				'qty' => $this->input->input_stream('qty'),
+				'unit_price' => $this->input->input_stream('price'),
+				'discount' => $this->input->input_stream('discount'),
+				'total_price' => $this->input->input_stream('price')*$this->input->input_stream('qty')
 			);
-			$result = $this->prd->update('id',$this->input->post('id'),$data);
+			$result = $this->rcvd->update('id',$this->input->input_stream('id'),$data);
 			break;
 
 			case "DELETE":
-			$status = $this->prc->delete('id', $this->input->post('id'));
+			$status = $this->rcvd->delete('id', $this->input->input_stream('id'));
 			break;
 		}
 	}

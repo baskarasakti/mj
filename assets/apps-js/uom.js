@@ -22,7 +22,7 @@ $(document).ready(function() {
         deferRender: true,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         ajax: {
-            url: site_url+'vendors/view_data',
+            url: site_url+'uom/view_data',
             type: "POST",
             dataSrc : 'data',
             data: function ( d ) {
@@ -58,82 +58,6 @@ $(document).ready(function() {
             save_data();
          }
 	 });
-
-	var category;
-    $.ajax({
-    	url: site_url+'material_categories/get_material_categories',
-    	type: "GET",
-    	async: false,
-    	success : function(text)
-    	{
-    		category = JSON.parse(text);
-    	}
-    });
-
-    var uom;
-    $.ajax({
-    	url: site_url+'uom/populate_select',
-    	type: "GET",
-    	async: false,
-    	success : function(text)
-    	{
-    		uom = JSON.parse(text);
-    	}
-    });
-
-    $("#jsGrid").jsGrid({ 
-    	width: "100%", 
-    	height: "400px", 
-
-    	inserting: true, 
-    	editing: true, 
-    	sorting: true, 
-    	paging: true, 
-
-        // data: lists, 
-        controller: {
-        	loadData: function(filter) {
-        		return $.ajax({
-        			type: "GET",
-        			url: "vendors/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: filter,
-        			dataType:"JSON"
-        		});
-        	},
-        	insertItem: function(item) {
-        		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
-        		return $.ajax({
-        			type: "POST",
-        			url: "vendors/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item,
-        			dataType:"JSON"
-        		});
-        	},
-        	updateItem: function(item) {
-        		return $.ajax({
-        			type: "PUT",
-        			url: "vendors/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
-        		});
-        	},
-        	deleteItem: function(item) {
-        		return $.ajax({
-        			type: "DELETE",
-        			url: "vendors/jsgrid_functions",
-        			data: item
-        		});
-        	}
-        },
-
-        fields: [ 
-        { name: "id" }, 
-        { name: "name", title:"Material Name", type: "text", width: 150, validate: "required" }, 
-        { name: "category", title:"Category", type: "select", items: category, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
-        { name: "uom", title:"Uom", type: "select", items: uom, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
-        { type: "control" } 
-        ] 
-	}); 
 	
 });
 
@@ -154,9 +78,9 @@ function reload_table(){
 function save_data(){
 	var url;
 	if(action == "Add"){
-		url = site_url+"vendors/add";
+		url = site_url+"uom/add";
 	}else{
-		url = site_url+"vendors/update";
+		url = site_url+"uom/update";
 	}
    
 	var data = $("#form").serializeArray();
@@ -197,19 +121,15 @@ function edit(id){
 	action = "Edit";
 	$('[name="change_id"]').val(id);
 	$.ajax({
-			url : site_url+"vendors/get_by_id/"+id,
+			url : site_url+"uom/get_by_id/"+id,
 			type: "GET",
 			dataType: "JSON",
 			success: function(data)
 			{
 				$('#name').val(data.name);
-				$('#description').val(data.description);
-				$('#address').val(data.address);
-				$('#telp').val(data.telp);
+				$('#symbol').val(data.symbol);
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
-				$('[name="asd"]').val(id);
-				$('#jsGrid').jsGrid('loadData');
 				show_hide_form(true);
 			}
 		});
@@ -228,7 +148,7 @@ function remove(id){
 		},
 		function(){
 			$.ajax({
-				url : site_url+"vendors/delete/"+id,
+				url : site_url+"uom/delete/"+id,
 				type: "GET",
 				dataType: "JSON",
 				success: function(data)
