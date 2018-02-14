@@ -9,6 +9,12 @@ class Demo_data extends MY_Controller {
 	var $material_categories = array("Tinta Asli", "Tinta Tap", "Kardus", "Core", "Solvent", "Pemanis", "Penolong");
 	var $product_categories = array("Tipping", "Foil");
 	var $usage_categories = array("Tinta/Solvent", "Kardus", "Core", "Pemanis", "Penolong");
+	var $colors = array("Red", "Green", "Blue", "White", "Gold");
+	var $uom = array("Kilogram", "Pieces", "Meter");
+	var $uom_symbol = array("Kg", "Pc", "M");
+	var $currency = array("Rupiah", "Dollar");
+	var $currency_symbol = array("Rp", "$");
+	var $currency_rate = array("1", "13500");
 	var $tipping_proc = array(1,2,3,5);
 	var $foil_proc = array(1,3,5);
 
@@ -25,14 +31,20 @@ class Demo_data extends MY_Controller {
 			$this->load->model('processes_model', 'prm');
 			$this->load->model('customers_model', 'cum');
 			$this->load->model('vendors_model', 'vem');
+			$this->load->model('colors_model', 'cm');
+			$this->load->model('uom_model', 'um');
+			$this->load->model('currency_model', 'curm');
 	}
 
 	function fill_demo_data(){
-		$this->fill_material_category();
-		$this->fill_material();
 		$this->fill_process();
 		$this->fill_customer();
 		$this->fill_vendor();
+		$this->fill_colors();
+		$this->fill_uom();
+		$this->fill_currency();
+		$this->fill_material_category();
+		$this->fill_material();
 		$this->fill_product_category();
 		$this->fill_product();
 		$this->fill_product_material();
@@ -57,6 +69,23 @@ class Demo_data extends MY_Controller {
 		$this->mcm->add_batch($data);
 	}
 
+	//Fill Vendors Data
+	function fill_vendor(){
+		$data = array();
+		for($i=$this->min; $i <= $this->max; $i++){
+			$row = array();
+			$row['id'] = $i;
+			$row['code'] = "";
+			$row['name'] =  "Vendor ".$i;
+			$row['description'] =  "Vendor ".$i." Description";
+			$row['address'] =  "Vendor ".$i." Address";
+			$row['telp'] =  str_repeat("".$i, 12);
+			$row['created_at'] = $this->mysql_time_now();
+			$data[] = $row;
+		}
+		$this->vem->add_batch($data);
+	}
+
 	//Fill Material Data
 	function fill_material(){
 		$data = array();
@@ -66,6 +95,8 @@ class Demo_data extends MY_Controller {
 			$row['id'] = $i;
 			$row['name'] = $this->material_categories[$rand-1]." ".$i;
 			$row['created_at'] = $this->mysql_time_now();
+			$row['vendors_id'] = rand($this->min, $this->max);
+			$row['uom_id'] = rand($this->min, sizeof($this->uom));
 			$row['material_categories_id'] = $rand;
 			$data[] = $row;
 		}
@@ -104,22 +135,6 @@ class Demo_data extends MY_Controller {
 		$this->cum->add_batch($data);
 	}
 
-	//Fill Vendors Data
-	function fill_vendor(){
-		$data = array();
-		for($i=$this->min; $i <= $this->max; $i++){
-			$row = array();
-			$row['id'] = $i;
-			$row['code'] = "";
-			$row['name'] =  "Vendor ".$i;
-			$row['description'] =  "Vendor ".$i." Description";
-			$row['address'] =  "Vendor ".$i." Address";
-			$row['telp'] =  str_repeat("".$i, 12);
-			$row['created_at'] = $this->mysql_time_now();
-			$data[] = $row;
-		}
-		$this->vem->add_batch($data);
-	}
 
 	//Fill Product Categories Data
 	function fill_product_category(){
@@ -141,6 +156,8 @@ class Demo_data extends MY_Controller {
 	//Fill Product Data
 	function fill_product(){
 		$data = array();
+		$tipping_count = 1;
+		$foil_count = 1;
 		for($i=$this->min; $i <= $this->max; $i++){
 			$rand = rand(1, sizeof($this->product_categories));
 			$row = array();
@@ -148,8 +165,27 @@ class Demo_data extends MY_Controller {
 			$row['name'] = $this->product_categories[$rand-1]." ".$i;
 			$row['created_at'] = $this->mysql_time_now();
 			$row['product_categories_id'] = $rand;
+			$row['uom_id'] = rand($this->min, sizeof($this->uom));
+			// $row['code'] = sprintf('%03s', $tipping_count)."MC";
+			// 	$tipping_count++;
+			$cod = null;
+			$col = null;
+			if ($rand == 1) {
+				$cod = sprintf('%03s', $tipping_count)."MC";
+				$tipping_count++;
+			} else {
+				$rand_num = rand(1, sizeof($this->colors));
+				$rand_color = $this->colors[$rand_num-1];
+				$temp = substr($rand_color, 0, 2);
+				$cod = strtoupper($temp).sprintf('%03s', $foil_count)."MC";
+				$col = $rand_num;
+				$foil_count++;
+			}
+			$row['code'] = $cod;
+			$row['colours_id'] = $col;
 			$data[] = $row;
 		}
+		//echo json_encode($data, JSON_PRETTY_PRINT);
 		$this->pm->add_batch($data);
 	}
 
@@ -226,6 +262,52 @@ class Demo_data extends MY_Controller {
 			$data[] = $row;
  		}
 		$this->ucm->add_batch($data);
+	}
+
+	//Fill Colors
+	function fill_colors(){
+		$data = array();
+		$i = 0;
+		foreach($this->colors as $clr){
+			$i++;
+			$row = array();
+			$row['id'] = $i;
+			$row['code'] = substr($clr, 0, 2);
+			$row['name'] = $clr;
+			$data[] = $row;
+ 		}
+		$this->cm->add_batch($data);
+	}
+
+	//Fill Uom
+	function fill_uom(){
+		$data = array();
+		$i = 0;
+		foreach($this->uom as $u){
+			$i++;
+			$row = array();
+			$row['id'] = $i;
+			$row['name'] = $u;
+			$row['symbol'] = $this->uom_symbol[$i-1];
+			$data[] = $row;
+ 		}
+		$this->um->add_batch($data);
+	}
+
+	//Fill Uom
+	function fill_currency(){
+		$data = array();
+		$i = 0;
+		foreach($this->currency as $curr){
+			$i++;
+			$row = array();
+			$row['id'] = $i;
+			$row['name'] = $curr;
+			$row['symbol'] = $this->currency_symbol[$i-1];
+			$row['rate'] = $this->currency_rate[$i-1];
+			$data[] = $row;
+ 		}
+		$this->curm->add_batch($data);
 	}
 
 	//Fill Material Usage Categories

@@ -58,6 +58,7 @@ class Materials_model extends MY_Model {
 	{
 		$this->db->select(array('id', 'name'));
 		$this->db->from($this->table);
+		$this->db->where('vendors_id', $id);
 		return $this->db->get()->result();
 	}
 

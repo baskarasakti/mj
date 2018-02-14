@@ -6,7 +6,7 @@ class Project_details_model extends MY_Model {
 	protected $_t = 'project_details';
 
 	function get_project_details($id){
-		$this->db->select(array('pd.id as id','pd.qty as qty','unit_price','total_price','products_id','p.name'));
+		$this->db->select(array('pd.id as id','pd.qty as qty','products_id','p.name'));
 		$this->db->where('projects_id', $id);
 		$this->db->join('products p', 'pd.products_id = p.id', 'left');
 		$result = $this->db->get($this->_t.' pd');

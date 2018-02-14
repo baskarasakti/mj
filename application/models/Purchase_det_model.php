@@ -58,19 +58,6 @@ class Purchase_det_model extends MY_Model {
         return $result->result();
 	}
 
-	function get_purchase_det_where_id($column, $id){
-        $this->db->select('pd.id, pd.qty, pd.materials_id, m.name as name');
-		$this->db->from($this->table." pd");
-		$this->db->join('materials m', 'm.id = pd.materials_id');
-        $this->db->where($column, $id);
-        $result = $this->db->get();
-        $data = array();
-        if($result->result()){
-            $data = $result->result();
-        }
-        return $data;
-	}
-
 	public function check_received($id)
 	{
 		$this->db->select('purchasing_id, materials_id');

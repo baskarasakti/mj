@@ -11,9 +11,10 @@ class Purchase_model extends MY_Model {
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('pc.id, pc.code, pc.delivery_date, pc.vendors_id, v.name as vendor, CASE WHEN pc.vat = 0 THEN "NON-PPN" ELSE "PPN" END as vat', false);
+		$this->db->select('Distinct(pc.id), pc.code, pc.delivery_date, pc.vendors_id, v.name as vendor, CASE WHEN pc.vat = 0 THEN "NON-PPN" ELSE "PPN" END as vat, IF(r.receive_date, "true", "false") as status', false);
 		$this->db->from($this->table." pc");
-		$this->db->join('vendors v', 'v.id = pc.vendors_id');
+		$this->db->join('vendors v', 'pc.vendors_id = v.id', 'left');
+		$this->db->join('receiving r', 'pc.id = r.purchasing_id', 'left');
  
 		$i = 0;
 	 

@@ -1,4 +1,6 @@
 var table;
+var table1;
+var id_purchase = -1;
 var action;
 
 $(document).ready(function() {
@@ -19,6 +21,16 @@ $(document).ready(function() {
             right_align.push(i);
     });
 
+    var columns1 = [];
+    var right_align1 = [];
+    $("#datatable1").find('th').each(function(i, th){
+        var field = $(th).attr('data-field');
+        var align = $(th).attr('data-align');
+        columns1.push({data: field, name: field});
+        if(align == "right")
+            right_align1.push(i);
+    });
+
 	table = $('#datatable').DataTable({
         dom: 'lrftip',
         processing: true,
@@ -28,7 +40,7 @@ $(document).ready(function() {
         deferRender: true,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         ajax: {
-            url: site_url+'receiving/view_data',
+            url: site_url+'purchasing/view_data',
             type: "POST",
             dataSrc : 'data',
             data: function ( d ) {
@@ -37,25 +49,67 @@ $(document).ready(function() {
         },
         columns: columns,
         columnDefs: [ 
-			{ className: "dt-body-right", targets: right_align },
-			{ "orderable": false, targets : [-1]  } 
+            { className: "dt-body-right", targets: right_align },
+            { "orderable": false, targets : [-1]  } ,
+            { "visible": false, targets : [0,-1]  } 
+        ]
+    });
+
+    table1 = $('#datatable1').DataTable({
+        dom: 'lrftip',
+        responsive: true,
+        pageLength: 10,
+        deferRender: true,
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        ajax: {
+            url: site_url+'receiving/view_data/'+id_purchase,
+            type: "POST",
+            dataSrc : 'data',
+            data: function ( d ) {
+                d.csrf_token = $("[name='csrf_token']").val();
+            }
+        },
+        columns: columns1,
+        columnDefs: [ 
+			{ className: "dt-body-right", targets: right_align1 },
+            { "orderable": false, targets : [-1]  } ,
+			{ "visible": false, targets : [0]  } 
         ]
 	});
+
+    $('#datatable tbody').on( 'click', 'tr', function () {
+
+        if ( $(this).hasClass('active') ) {
+            $(this).removeClass('active');
+        }
+        else {
+            table.$('tr.active').removeClass('active');
+            $(this).addClass('active');
+        }
+        var id = table.row( this ).data().id;
+        id_purchase = id;
+        table1.ajax.url(site_url+'receiving/view_data/'+id_purchase).load();
+        $('#add-btn').show();
+        $('#nopo').text(table.row( this ).data().code);
+    } );
 	
 	$('#form-panel').hide();
 	$('#detail-panel').hide();
+    $('#add-btn').hide();
 
 	$('#add-btn').click(function(){
 		action = "Add";
 		$('#form-title').text('Add Form');
 		$("#form").validator();
 		show_hide_form(true);
+        receiving(id_purchase);
 	});
 
 	$('#cancelBtn').click(function(){
 		$("#form").validator('destroy');
 		show_hide_form_detail(false);
 		$('#form')[0].reset();
+        table1.ajax.url(site_url+'receiving/view_data/'+id_purchase).load();
 	});
 
     $("#saveBtn").click(function (e) {
@@ -87,7 +141,7 @@ $(document).ready(function() {
     	height: "400px", 
 
     	inserting: false, 
-    	editing: false, 
+    	editing: true, 
     	deleting: false, 
     	sorting: true, 
     	paging: true, 
@@ -116,7 +170,8 @@ $(document).ready(function() {
         		return $.ajax({
         			type: "PUT",
         			url: "receiving/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
+        			data: item,
+                    dataType:"JSON"
         		});
         	},
         	deleteItem: function(item) {
@@ -173,7 +228,8 @@ $(document).ready(function() {
         		return $.ajax({
         			type: "PUT",
         			url: "receiving/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
+        			data: item,
+                    dataType:"JSON"
         		});
         	},
         	deleteItem: function(item) {
@@ -229,9 +285,9 @@ function reload_table(){
 function save_data(){
 	var url;
 	if(action == "Add"){
-		url = site_url+"receiving/add/"+$('[name="asd"]').val();
+		url = site_url+"receiving/add/"+$('[name="change_id"]').val();
 	}else{
-		url = site_url+"receiving/update";
+		url = site_url+"receiving/update/"+$('[name="asd"]').val();
 	}
    
 	var data = $("#form").serializeArray();
@@ -259,6 +315,7 @@ function save_data(){
 				   $("#saveBtn").text("Saved");
 				   $("#saveBtn").prop('disabled', true);
 				   $('div.block-div').unblock();
+                   $('[name="asd"]').val(data.id);
 				   $('#jsGrid').jsGrid('loadData');
 				   show_hide_form(true);
 			   }else{
@@ -277,12 +334,14 @@ function receiving(id){
 			dataType: "JSON",
 			success: function(data)
 			{
+                $("#saveBtn").text("Save");
+                $("#saveBtn").prop('disabled', false);
 				$('#code').val(data.code);
 				$('#delivery_date').val(data.delivery_date);
 				$('#vendors_id').val(data.vendors_id);			
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
-				$('[name="asd"]').val(id);
+				$('[name="asd"]').val(-1);
 				$('#jsGrid').jsGrid('loadData');
 				show_hide_form(true);
 			}
@@ -290,21 +349,25 @@ function receiving(id){
 }
 
 function details(id){
+    action = "Edit";
+    $('[name="change_id"]').val(id);
 	$.ajax({
-			url : site_url+"receiving/get_by_id/"+id,
+			url : site_url+"receiving/get_receiving/"+id,
 			type: "GET",
 			dataType: "JSON",
 			success: function(data)
 			{
-				$('#code1').val(data.code);
-				$('#date1').val(data.receive_date);
-				$("#form").validator();
-				$('#form-title').text('Details');
-				$("#saveBtn").text("Save");
-				$("#saveBtn").prop('disabled', false);
-				$('[name="asd"]').val(id);
-				$('#jsGrid1').jsGrid('loadData');
-				show_hide_form_detail(true);
+                $("#saveBtn").text("Save");
+                $("#saveBtn").prop('disabled', false);
+				$('#code').val(data.code);
+                $('#delivery_date').val(data.delivery_date);
+                $('#receive_date').val(data.receive_date);
+                $('#vendors_id').val(data.vendors_id);          
+                $("#form").validator();
+                $('#form-title').text('Edit Form');
+                $('[name="asd"]').val(data.id);
+                $('#jsGrid').jsGrid('loadData');
+                show_hide_form(true);
 			}
 		});
 }

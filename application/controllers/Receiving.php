@@ -15,12 +15,23 @@ class Receiving extends MY_Controller {
 		$this->load->model('material_inventory_model', 'mi');
 	}
 	
+
 	private function get_column_attr(){
 		$table = new TableField();
+		$table->addColumn('id', '', 'Id');
 		$table->addColumn('code', '', 'Kode');
-		$table->addColumn('delivery_date', '', 'Delivery Date');       
-		$table->addColumn('receive_date', '', 'Receive Date');     
-		$table->addColumn('status', '', 'Status');     
+		$table->addColumn('delivery_date', '', 'Date');        
+		$table->addColumn('vat', '', 'Vat');        
+		$table->addColumn('vendor', '', 'Vendor');        
+		$table->addColumn('actions', '', 'Actions');        
+		return $table->getColumns();
+	}
+
+	private function get_column_attr1(){
+		$table = new TableField();
+		$table->addColumn('id', '', 'Id');
+		$table->addColumn('code', '', 'Kode');     
+		$table->addColumn('receive_date', '', 'Receive Date');        
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
 	}
@@ -62,35 +73,37 @@ class Receiving extends MY_Controller {
 	{
 		$data['title'] = "ERP | Receiving List";
 		$data['page_title'] = "Receiving";
-		$data['table_title'] = "List Item";		
+		$data['table_title'] = "List Purchase Order";		
+		$data['table_title1'] = "List Receiving";		
 		$data['breadcumb']  = array("Master", "Receiving List");
 		$data['page_view']  = "purchasing/receiving";		
 		$data['js_asset']   = "receiving";	
 		$data['columns']    = $this->get_column_attr();	
+		$data['columns1']    = $this->get_column_attr1();	
 		$data['csrf'] = $this->csrf;
 		$data['menu'] = $this->get_menu();							
 		$data['vendors'] = $this->vd->get_all_data();	
 		$this->load->view('layouts/master', $data);
 	}
 
-	public function view_data(){
-		$result = $this->rcv->get_output_data();
+	public function view_data($id){
+		$result = $this->rcv->get_where_id('purchasing_id',$id);
 		$data = array();
 		$count = 0;
-		foreach($result['data'] as $value){
+		foreach($result as $value){
 			$row = array();
+			$row['id'] = $value->purchasing_id;
 			$row['code'] = $value->code;
-			$row['delivery_date'] = $value->delivery_date;
 			$row['receive_date'] = $value->receive_date;
-			$row['status'] = $value->status;
-			$row['actions'] = $value->status=="true" ? '<button class="btn btn-sm btn-success" onclick="details('.$value->id.')" type="button">Received</button>' : '<button class="btn btn-sm btn-info" onclick="receiving('.$value->id.')" type="button">Receive</button>';
+			$row['actions'] = '<button class="btn btn-sm btn-default" onclick="details('.$value->id.')" type="button">details</button> <a href=invoice/print_receiving/'.$value->id.'><button class="btn btn-sm btn-success" type="button">print</button></a>
+			';
 			$data[] = $row;
 			$count++;
 		}
 
-		$result['data'] = $data;
+		$result = $data;
 
-		echo json_encode($result);
+		echo json_encode(array('data' => $result));
 	}
 
 	function add($id){
@@ -108,7 +121,7 @@ class Receiving extends MY_Controller {
 		$purchase_details = $this->prd->get_purchase_details($id);
 		foreach($purchase_details as $value){
 			$data = array(
-				'qty' => 0,
+				'qty' => $value->qty,
 				'unit_price' => 0,
 				'discount' => 0,
 				'total_price' => 0,
@@ -136,18 +149,25 @@ class Receiving extends MY_Controller {
 		echo json_encode($detail);
 	}
 
-	function update(){
+	function get_receiving($id){
+		$detail = $this->rcv->get_receiving($id);
+		echo json_encode($detail);
+	}
+
+	function update($id){
+		$purchase_data = $this->prc->get_by_id('id',$id);
 		$data = array(
-			'code' => $this->normalize_text($this->input->post('code')),
-			'delivery_date' => $this->normalize_text($this->input->post('date')),
-			'vendors_id' => $this->normalize_text($this->input->post('vendor'))
+			'code' => $this->input->post('code'),
+			'receive_date' => $this->input->post('receive_date'),
+			'currency_id' => $purchase_data->currency_id,
+			'created_at' => date('Y-m-d H:i:s')
 		);
-		$status = $this->prc->update_id('id', $this->input->post('change_id'), $data);
+		$status = $this->rcv->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));
 	}
 
 	function delete($id){        
-		$status = $this->prc->delete('id', $id);
+		$status = $this->rcv->delete('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 
@@ -201,6 +221,16 @@ class Receiving extends MY_Controller {
 				'total_price' => $this->input->input_stream('price')*$this->input->input_stream('qty')
 			);
 			$result = $this->rcvd->update('id',$this->input->input_stream('id'),$data);
+
+			$row = array();
+			$row['id'] = $this->input->input_stream('id');
+			$row['name'] = $this->input->input_stream('name');
+			$row['qty'] = $this->input->input_stream('qty');
+			$row['price'] = $this->input->input_stream('price');
+			$row['discount'] = $this->input->input_stream('discount');
+			$row['total_price'] = $this->input->input_stream('price')*$this->input->input_stream('qty');
+
+			echo json_encode($row);
 			break;
 
 			case "DELETE":

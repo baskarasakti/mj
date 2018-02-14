@@ -26,11 +26,11 @@ class Projects extends MY_Controller {
 	{
 		$data['title'] = "ERP | Sales Order";
 		$data['page_title'] = "Sales Order";
-		$data['table_title'] = "List Item";		
+		$data['table_title'] = "List Sales Order";		
 		$data['breadcumb']  = array("Sales", "Sales Order");
 		$data['page_view']  = "sales/projects";		
 		$data['js_asset']   = "projects";	
-		$data['columns']    = $this->get_column_attr();	
+		$data['columns']    = $this->get_column_attr();
 		$data['customers'] = $this->cm->get_all_data();	
 		$data['csrf'] = $this->csrf;	
 		$data['menu'] = $this->get_menu();						
@@ -142,9 +142,6 @@ class Projects extends MY_Controller {
 				$row = array();
 				$row['id'] = $value->id;
 				$row['products_id'] = $value->products_id;
-				$row['qty'] = $value->qty;
-				$row['unit_price'] = $value->total_price;
-				$row['total_price'] = $value->total_price;
 				$data[] = $row;
 				$count++;
 			}
@@ -156,8 +153,6 @@ class Projects extends MY_Controller {
 			case "POST":
 			$data = array(
 				'qty' => $this->input->post('qty'),
-				'unit_price' => $this->input->post('unit_price'),
-				'total_price' => $this->input->post('unit_price')*$this->input->post('qty'),
 				'products_id' => $this->input->post('products_id'),
 				'projects_id' => $id
 			);
@@ -167,8 +162,6 @@ class Projects extends MY_Controller {
 			$row['id'] = $insert;
 			$row['products_id'] = $this->input->post('products_id');
 			$row['qty'] = $this->input->post('qty');
-			$row['unit_price'] = $this->input->post('unit_price');
-			$row['total_price'] = $this->input->post('total_price');
 
 			echo json_encode($row);
 			break;
@@ -177,8 +170,6 @@ class Projects extends MY_Controller {
 			$this->input->raw_input_stream;
 			$data = array(
 				'qty' => $this->input->input_stream('qty'),
-				'unit_price' =>$this->input->input_stream('unit_price'),
-				'total_price' => $this->input->input_stream('total_price'),
 				'products_id' => $this->input->input_stream('products_id')
 			);
 			$result = $this->pdm->update('id',$this->input->input_stream('id'),$data);

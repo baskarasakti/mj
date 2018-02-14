@@ -7,7 +7,8 @@ class Invoice extends MY_Controller {
 		parent::__construct();
 			//$this->load->model('Login', 'login');
 		$this->load->model('purchase_model', 'prc');
-		$this->load->model('purchase_det_model', 'prd');
+		$this->load->model('receive_model', 'rcv');
+		$this->load->model('receive_det_model', 'rcvd');
 		$this->load->model('materials_model', 'mm');
 		$this->load->model('vendors_model', 'vm');
 		$this->load->model('customers_model', 'cm');
@@ -33,7 +34,7 @@ class Invoice extends MY_Controller {
 	public function print_purchasing($id)
 	{
 		$data['purchasing'] = $this->prc->get_by_id('id', $id);
-		$data['purchase_det'] = $this->prd->get_purchase_det_where_id('purchasing_id', $id);
+		$data['receive_det'] = $this->rcvd->get_receive_det_where_id($id);
 
 		$vendor_id = $data['purchasing']->vendors_id;
 		$data['vendor'] = $this->vm->get_by_id('id', $vendor_id);
@@ -42,6 +43,24 @@ class Invoice extends MY_Controller {
 		$data['page_title'] = "Invoice";
 		$data['breadcumb']  = array("Invoice");
 		$data['page_view']  = "invoice/invoice_purchasing";		
+		$data['js_asset']   = "invoice";	
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();							
+		$this->load->view('layouts/master', $data);
+	}
+
+	public function print_receiving($id)
+	{
+		$data['receiving'] = $this->rcv->get_receiving($id);
+		$data['receive_det'] = $this->rcvd->get_receive_det_where_id1($id);
+
+		$vendor_id = $data['receiving']->vendors_id;
+		$data['vendor'] = $this->vm->get_by_id('id', $vendor_id);
+
+		$data['title'] = "ERP | Invoice";
+		$data['page_title'] = "Invoice";
+		$data['breadcumb']  = array("Invoice");
+		$data['page_view']  = "invoice/invoice_receiving";		
 		$data['js_asset']   = "invoice";	
 		$data['csrf'] = $this->csrf;	
 		$data['menu'] = $this->get_menu();							

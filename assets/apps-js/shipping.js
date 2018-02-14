@@ -1,4 +1,6 @@
 var table;
+var table1;
+var id_projects = -1;
 var action;
 
 $(document).ready(function() {
@@ -9,14 +11,24 @@ $(document).ready(function() {
 
 
 	var columns = [];
-	var right_align = [];
-	$("#datatable").find('th').each(function(i, th){
-		var field = $(th).attr('data-field');
-		var align = $(th).attr('data-align');
-		columns.push({data: field, name: field});
-		if(align == "right")
-			right_align.push(i);
-	});
+    var right_align = [];
+    $("#datatable").find('th').each(function(i, th){
+        var field = $(th).attr('data-field');
+        var align = $(th).attr('data-align');
+        columns.push({data: field, name: field});
+        if(align == "right")
+            right_align.push(i);
+    });
+
+    var columns1 = [];
+    var right_align1 = [];
+    $("#datatable1").find('th').each(function(i, th){
+        var field = $(th).attr('data-field');
+        var align = $(th).attr('data-align');
+        columns1.push({data: field, name: field});
+        if(align == "right")
+            right_align1.push(i);
+    });
 
 	table = $('#datatable').DataTable({
 		dom: 'lrftip',
@@ -27,7 +39,7 @@ $(document).ready(function() {
 		deferRender: true,
 		lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
 		ajax: {
-			url: site_url+'shipping/view_data',
+			url: site_url+'projects/view_data',
 			type: "POST",
 			dataSrc : 'data',
 			data: function ( d ) {
@@ -36,11 +48,51 @@ $(document).ready(function() {
 		},
 		columns: columns,
 		columnDefs: [ 
-		{ className: "dt-body-right", targets: right_align } 
+			{ className: "dt-body-right", targets: right_align },
+			{ visible: false, targets: [0,-1] } 
 		]
 	});
+
+	table1 = $('#datatable1').DataTable({
+        dom: 'lrftip',
+        responsive: true,
+        pageLength: 10,
+        deferRender: true,
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        ajax: {
+            url: site_url+'shipping/view_data/'+id_projects,
+            type: "POST",
+            dataSrc : 'data',
+            data: function ( d ) {
+                d.csrf_token = $("[name='csrf_token']").val();
+            }
+        },
+        columns: columns1,
+        columnDefs: [ 
+			{ className: "dt-body-right", targets: right_align1 },
+            { "orderable": false, targets : [-1]  }
+			// { "visible": false, targets : [0]  } 
+        ]
+	});
+
+	$('#datatable tbody').on( 'click', 'tr', function () {
+
+        if ( $(this).hasClass('active') ) {
+            $(this).removeClass('active');
+        }
+        else {
+            table.$('tr.active').removeClass('active');
+            $(this).addClass('active');
+        }
+        var id = table.row( this ).data().id;
+        id_projects = id;
+        table1.ajax.url(site_url+'shipping/view_data/'+id_projects).load();
+        $('#add-btn').show();
+        $('#nopo').text(table.row( this ).data().code);
+    } );
 	
 	$('#form-panel').hide();
+	$('#add-btn').hide();
 
 	function generateID(){
 		$.ajax({
@@ -174,7 +226,7 @@ function reload_table(){
 function save_data(){
 	var url;
 	if(action == "Add"){
-		url = site_url+"shipping/add";
+		url = site_url+"shipping/add/"+id_projects;
 	}else{
 		url = site_url+"shipping/update";
 	}

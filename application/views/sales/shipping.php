@@ -3,35 +3,68 @@
 	<!-- /row -->
 	<div class="row">
 		<div id="table-panel" class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
-			<div class="panel panel-default">
-				<div class="panel-heading"> <?=$table_title;?>         
-					<div class="pull-right">
-						<a href="javascript:void(0);" id="add-btn"><i class="ti-plus"></i> Add Data</a> 
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
+				<div class="panel panel-default">
+					<div class="panel-heading"> <?=$table_title;?>         
+						<!-- <div class="pull-right">
+							<a href="javascript:void(0);" id="add-btn"><i class="ti-plus"></i> Add Data</a> 
+						</div> -->
 					</div>
-				</div>
-				<div class="panel-wrapper collapse in" aria-expanded="true">
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table id="datatable" class="table table-striped">
-								<thead>
-									<tr>
-										<?php
-											foreach($columns as $column){	
-										?>	
-											<th class="dt-head-center" data-field="<?=$column['data_field'];?>" data-align="<?=$column['data_align'];?>" ><?=$column['label'];?></th>
-										<?php
-											}
-										?>
-									</tr>
-								</thead>
-								<tbody>
-								</tbody>
-							</table>
+					<div class="panel-wrapper collapse in" aria-expanded="true">
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table id="datatable" class="table table-striped">
+									<thead>
+										<tr>
+											<?php
+												foreach($columns as $column){	
+											?>	
+												<th class="dt-head-center" data-field="<?=$column['data_field'];?>" data-align="<?=$column['data_align'];?>" ><?=$column['label'];?></th>
+											<?php
+												}
+											?>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
+			<hr>
 			</div>
-			<hr> 
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"> 
+				<div class="panel panel-default">
+					<div class="panel-heading"> <?=$table_title1;?>         
+						<div class="pull-right">
+							<a href="javascript:void(0);" id="add-btn"><i class="ti-plus"></i> Add Data</a> 
+						</div>
+					</div>
+					<div class="panel-wrapper collapse in" aria-expanded="true">
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table id="datatable1" class="table table-striped">
+									<thead>
+										<tr>
+											<?php
+												foreach($columns1 as $column){	
+											?>	
+												<th class="dt-head-center" data-field="<?=$column['data_field'];?>" data-align="<?=$column['data_align'];?>" ><?=$column['label'];?></th>
+											<?php
+												}
+											?>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			<hr>
+			</div>
 		</div>
 		<div id="form-panel" class="col-md-12 form-hide">
 			<div class="panel panel-info">
@@ -47,18 +80,6 @@
 						<div class="form-group">
 							<label for="shipping_date" class="control-label">Shipping Date</label>
 							<input type="text" class="form-control" id="shipping_date" name="shipping_date" placeholder="Shipping Date" required>
-							<div class="help-block with-errors"></div>
-						</div>
-						<div class="form-group">
-							<label for="projects_id" class="control-label">Projects</label>
-							<select class="custom-select col-sm-12" id="projects_id" name="projects_id" required>
-								<option selected="">Choose...</option>
-								<?php
-									foreach($projects as $item){
-										echo '<option value="'.$item->id.'">'.$item->code.'</option>';
-									}
-								?>
-							</select>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">

@@ -11,9 +11,9 @@ class Receive_model extends MY_Model {
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('r.id as id, p.code as code, p.delivery_date, r.id as id_receive, r.receive_date, IF(r.receive_date, "true", "false") as status');
-		$this->db->from('purchasing p');
-		$this->db->join($this->table.' r', 'r.purchasing_id = p.id', 'left');
+		$this->db->select('r.id as id, p.id as purchasing_id, p.code as code, p.delivery_date, r.id as id_receive, r.receive_date, IF(r.receive_date, "true", "false") as status');
+		$this->db->from($this->table.' r');
+		$this->db->join('purchasing p', 'r.purchasing_id = p.id', 'left');
  
 		$i = 0;
 	 
@@ -58,6 +58,16 @@ class Receive_model extends MY_Model {
         $code = $result->row(0)->maxID;
         $code++; 
         return $prefix.$infix.sprintf("%04s", $code);
+	}
+
+	public function get_receiving($id)
+	{
+		$this->db->select('r.id as id, p.code as code, p.delivery_date, r.receive_date, p.vendors_id as vendors_id, v.name as name');
+		$this->db->from($this->table." r");
+		$this->db->join("purchasing p", "r.purchasing_id = p.id", "left");
+		$this->db->join("vendors v", "p.vendors_id = v.id", "left");
+		$this->db->where('r.id', $id);
+		return $this->db->get()->row();
 	}
 
 }

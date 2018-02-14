@@ -36,7 +36,7 @@
 						<p>Mohon dikirimkan kepada kami tanggal : <?= $purchasing->delivery_date ?></p>
 					</div>
 					<div class="col-md-12">
-						<div class="table-responsive m-t-40" style="clear: both;">>
+						<div class="table-responsive m-t-40" style="clear: both;">
 							<table class="table table-hover">
 								<thead>
 									<tr>
@@ -49,18 +49,18 @@
 								</thead>
 								<tbody>
 									<?php
-										$i = 1;
-										foreach ($purchase_det as $q) {
+										$i = 1; $total = 0;
+										foreach ($receive_det as $q) {
 										 	?>
 										 	<tr>
 												<td class="text-center"><?= $i ?></td>
 												<td class="text-right"><?= $q->qty ?></td>
 												<td><?= $q->name ?></td>
 												<td class="text-right"><?= $q->unit_price ?></td>
-												<td class="text-right"><?= $q->unit_price*$q->qty ?></td>
+												<td class="text-right"><?= $q->total_price ?></td>
 											</tr>
 										 	<?php
-										$i++;}
+										$i++;$total += $q->total_price;}
 									?>
 								</tbody>
 							</table>
@@ -69,7 +69,7 @@
 					<div class="col-md-12">
 						<div class="pull-left">NB: <?= $purchasing->note ?></div>
 						<div class="pull-right m-t-30 text-right">
-							<h3><b>Total :</b> $13,986</h3>
+							<h3><b>Total :</b> <?= $total; ?></h3>
 						</div>
 						<div class="clearfix"></div>
 						<hr>

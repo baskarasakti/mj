@@ -4,7 +4,9 @@ var action;
 $(document).ready(function() {
 
 	$('#delivery_date').datepicker({
-		format: 'yyyy-mm-dd' 
+		format: 'yyyy-mm-dd',
+		startDate: '0d',
+		endDate: '+1Y',
 	});
 
 	var columns = [];
@@ -35,7 +37,8 @@ $(document).ready(function() {
 		},
 		columns: columns,
 		columnDefs: [ 
-		{ className: "dt-body-right", targets: right_align } 
+		{ className: "dt-body-right", targets: right_align }, 
+		{ visible: false, targets: [0] }, 
 		]
 	});
 	
@@ -56,8 +59,11 @@ $(document).ready(function() {
 	$('#add-btn').click(function(){
 		action = "Add";
 		generateID();
+		$('[name="asd"]').val("");
 		$('#form-title').text('Add Form');
 		$("#form").validator();
+		form_jsGrid(-1);
+		$('#jsGrid').jsGrid('loadData');
 		show_hide_form(true);
 	});
 

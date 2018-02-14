@@ -63,4 +63,34 @@ class Receive_det_model extends MY_Model {
 		$result = $this->db->get($this->_t.' rd');
 		return $result->result();
 	}
+
+	function get_receive_det_where_id($id){
+        $this->db->select('rd.id, SUM(rd.qty) as qty, rd.materials_id, m.name as name, SUM(rd.unit_price) as unit_price, SUM(rd.total_price) as total_price');
+		$this->db->from($this->table." rd");
+		$this->db->join('materials m', 'rd.materials_id = m.id', 'left');
+		$this->db->join('receiving r', 'rd.receiving_id = r.id', 'left');
+        $this->db->where('r.purchasing_id', $id);
+        $this->db->group_by('rd.materials_id, m.name');
+        $result = $this->db->get();
+        $data = array();
+        if($result->result()){
+            $data = $result->result();
+        }
+        return $data;
+	}
+
+	function get_receive_det_where_id1($id){
+        $this->db->select('rd.id, rd.qty, rd.materials_id, m.name as name, rd.unit_price, rd.total_price, u.symbol as uom');
+		$this->db->from($this->table." rd");
+		$this->db->join('materials m', 'rd.materials_id = m.id', 'left');
+		$this->db->join('uom u', 'm.uom_id = u.id', 'left');
+		$this->db->join('receiving r', 'rd.receiving_id = r.id', 'left');
+        $this->db->where('rd.receiving_id', $id);
+        $result = $this->db->get();
+        $data = array();
+        if($result->result()){
+            $data = $result->result();
+        }
+        return $data;
+	}
 }

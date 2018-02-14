@@ -15,6 +15,7 @@ class Purchasing extends MY_Controller {
 	
 	private function get_column_attr(){
 		$table = new TableField();
+		$table->addColumn('id', '', 'Id');
 		$table->addColumn('code', '', 'Kode');
 		$table->addColumn('delivery_date', '', 'Date');        
 		$table->addColumn('vat', '', 'Vat');        
@@ -66,12 +67,12 @@ class Purchasing extends MY_Controller {
 		$count = 0;
 		foreach($result['data'] as $value){
 			$row = array();
+			$row['id'] = $value->id;
 			$row['code'] = $value->code;
 			$row['delivery_date'] = $value->delivery_date;
 			$row['vat'] = $value->vat;
 			$row['vendor'] = $value->vendor;
-			$row['actions'] = '<a href=invoice/print_purchasing/'.$value->id.'><button class="btn btn-sm btn-success" type="button">Print</button></a>
-			<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
+			$row['actions'] = $value->status == 'true' ? '<a href=invoice/print_purchasing/'.$value->id.'><button class="btn btn-sm btn-success" type="button">Print</button></a>' : '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 			.<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
 			$count++;
@@ -113,7 +114,7 @@ class Purchasing extends MY_Controller {
 			'updated_at' => $this->mysql_time_now()
 		);
 		$status = $this->prc->update_id('id', $this->input->post('change_id'), $data);
-		echo json_encode(array('id' => $status));
+		echo json_encode(array('id' => $status, 'vendors_id' => $this->input->post('vendor')));
 	}
 
 	function delete($id){        
@@ -161,11 +162,12 @@ class Purchasing extends MY_Controller {
 			break;
 
 			case "PUT":
+			$this->input->raw_input_stream;
 			$data = array(
-				'materials_id' => $this->normalize_text($this->input->post('name')),
-				'qty' => $this->normalize_text($this->input->post('qty')),
+				'materials_id' => $this->normalize_text($this->input->input_stream('name')),
+				'qty' => $this->normalize_text($this->input->input_stream('qty')),
 			);
-			$result = $this->prd->update('id',$this->input->post('id'),$data);
+			$result = $this->prd->update('id',$this->input->input_stream('id'),$data);
 			break;
 
 			case "DELETE":
