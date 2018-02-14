@@ -70,8 +70,8 @@ $(document).ready(function() {
         columns: columns1,
         columnDefs: [ 
 			{ className: "dt-body-right", targets: right_align1 },
-            { "orderable": false, targets : [-1]  }
-			// { "visible": false, targets : [0]  } 
+            { "orderable": false, targets : [-1]  },
+			{ "visible": false, targets : [0]  } 
         ]
 	});
 
@@ -111,6 +111,9 @@ $(document).ready(function() {
 		generateID();
 		$('#form-title').text('Add Form');
 		$("#form").validator();
+		$("[name='asd']").val(-1);
+		form_datagrid(-1);
+		$('#jsGrid').jsGrid('loadData');
 		show_hide_form(true);
 	});
 
@@ -120,6 +123,7 @@ $(document).ready(function() {
 		$('#form')[0].reset();
 		$("#saveBtn").text("Save");
 		$("#saveBtn").prop('disabled', false);
+		table1.ajax.url(site_url+'shipping/view_data/'+id_projects).load();
 	});
 
 	$("#saveBtn").click(function (e) {
@@ -154,7 +158,7 @@ function show_hide_form(bShow){
 function form_datagrid(id){
 	var products;
     $.ajax({
-    	url: site_url+'projects/populate_project_details/'+id,
+    	url: site_url+'projects/populate_product_select/'+id_projects,
     	type: "GET",
     	async: false,
     	success : function(text)
@@ -196,7 +200,8 @@ function form_datagrid(id){
         		return $.ajax({
         			type: "PUT",
         			url: "shipping/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
+        			data: item,
+        			dataType:"JSON"
         		});
         	},
         	deleteItem: function(item) {
@@ -209,11 +214,11 @@ function form_datagrid(id){
         },
 
         fields: [ 
-		{ name: "id", title:"ID" }, 
+		{ name: "id", title:"ID", visible: false}, 
 		{ name: "products_id", title:"Product", type: "select", items: products, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
         { name: "unit_price", title:"Unit Price", type: "number", width: 50 }, 
-        { name: "total_price", title:"Total Price", type: "number", width: 50 }, 
+        { name: "total_price", title:"Total Price", type: "number", width: 50, readOnly: true }, 
         { type: "control" } 
         ] 
 	}); 
@@ -252,13 +257,13 @@ function save_data(){
 		success: function(data)
 		{
 			if(data.id){
-				$('[name="asd"]').val(data.id)
+				$('[name="asd"]').val(data.id);
 				form_datagrid(data.id);
 				reload_table();
 				$("#saveBtn").text("Saved");
 				$("#saveBtn").prop('disabled', true);
 				$('div.block-div').unblock();
-				$('[name="asd"]').val(data.id);
+				$('#jsGrid').jsGrid('loadData');
 				show_hide_form(true);
 				// $('#form')[0].reset();
 			}else{

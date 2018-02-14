@@ -80,7 +80,7 @@ class Shipping extends MY_Controller {
 			$row['code'] = $value->code;
 			$row['shipping_date'] = $value->shipping_date;
 			$row['note'] = $value->note;
-			$row['actions'] = '<a href=invoice/print_shipping/'.$value->id.'><button class="btn btn-sm btn-success" type="button">Print</button></a> <button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
+			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button> <a href=invoice/print_shipping/'.$value->id.'><button class="btn btn-sm btn-success" type="button">Print</button></a>';
 			$data[] = $row;
 			$count++;
 		}
@@ -158,35 +158,44 @@ class Shipping extends MY_Controller {
 			echo json_encode($result);
 			break;
 
-			case "POST":
-			$data = array(
-				'products_id' => $this->input->post('products_id'),
-				'qty' => $this->input->post('qty'),
-				'unit_price' =>$this->input->post('unit_price'),
-				'total_price' => $this->input->post('total_price'),
-				'product_shipping_id' => $id
-			);
-			$insert = $this->sdm->add_id($data);
+			// case "POST":
+			// $data = array(
+			// 	'products_id' => $this->input->post('products_id'),
+			// 	'qty' => $this->input->post('qty'),
+			// 	'unit_price' =>$this->input->post('unit_price'),
+			// 	'total_price' => $this->input->post('total_price'),
+			// 	'product_shipping_id' => $id
+			// );
+			// $insert = $this->sdm->add_id($data);
 
-			$row = array();
-			$row['id'] = $insert;
-			$row['products_id'] = $this->input->post('products_id');
-			$row['qty'] = $this->input->post('qty');
-			$row['unit_price'] = $this->input->post('unit_price');
-			$row['total_price'] = $this->input->post('total_price');
+			// $row = array();
+			// $row['id'] = $insert;
+			// $row['products_id'] = $this->input->post('products_id');
+			// $row['qty'] = $this->input->post('qty');
+			// $row['unit_price'] = $this->input->post('unit_price');
+			// $row['total_price'] = $this->input->post('total_price');
 
-			echo json_encode($row);
-			break;
+			// echo json_encode($row);
+			// break;
 
 			case "PUT":
 			$this->input->raw_input_stream;
 			$data = array(
+				'products_id' => $this->input->input_stream('products_id'),
 				'qty' => $this->input->input_stream('qty'),
-				'unit_price' =>$this->input->input_stream('unit_price'),
-				'total_price' => $this->input->input_stream('total_price'),
-				'products_id' => $this->input->input_stream('products_id')
+				'unit_price' => $this->input->input_stream('unit_price'),
+				'total_price' => $this->input->input_stream('qty')*$this->input->input_stream('unit_price')
 			);
 			$result = $this->sdm->update('id',$this->input->input_stream('id'),$data);
+
+			$row = array();
+			$row['id'] = $this->input->input_stream('id');
+			$row['products_id'] = $this->input->input_stream('products_id');
+			$row['qty'] = $this->input->input_stream('qty');
+			$row['unit_price'] = $this->input->input_stream('unit_price');
+			$row['total_price'] = $this->input->input_stream('qty')*$this->input->input_stream('unit_price');
+
+			echo json_encode($row);
 			break;
 
 			case "DELETE":
