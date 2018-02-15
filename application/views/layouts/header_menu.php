@@ -1,7 +1,7 @@
 <!-- Navigation -->
 <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="ti-menu"></i></a>
-                <div class="top-left-part"><a class="logo" href="<?=site_url('dashboard');?>"><b><img src="<?= asset_url('images/logo-white.png');?>" alt="home" /></b><span class="hidden-xs"><img src="<?= asset_url('images/logo-text-white.png');?>" alt="home" /></span></a></div>
+                <div class="top-left-part"><a class="logo" href="<?=site_url('dashboard');?>"><b><img height="55" src="<?= asset_url($this->session->userdata('logo_path'));?>" alt="home" /></b><span class="hidden-xs"><img height="21" width="108" src="<?= asset_url($this->session->userdata('logo_title_path'));?>" alt="home" /></span></a></div>
                 <ul class="nav navbar-top-links navbar-left hidden-xs">
                     <li><a href="javascript:void(0)" class="open-close hidden-xs waves-effect waves-light"><i class="icon-arrow-left-circle ti-menu"></i></a></li>
                     <li>

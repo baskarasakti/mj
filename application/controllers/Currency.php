@@ -54,6 +54,18 @@ class Currency extends MY_Controller {
         echo json_encode($result);
 	}
 
+	function populate_select(){
+		$result = $this->cm->get_all_data();
+		$data = array();
+		foreach($result as $item){
+			$row = array();
+			$row['value'] = $item->id;
+			$row['text'] = $item->name;
+			$data[] = $row;
+		}	
+		echo json_encode($data);
+	}
+
 	function add(){
 		$data = array(
 			'name' => ucfirst($this->input->post('name')),			

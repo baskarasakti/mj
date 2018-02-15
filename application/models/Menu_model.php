@@ -119,7 +119,7 @@ class Menu_model extends MY_Model {
 				'Roles' => array(
 					'link' => 'roles',
 				),
-				'Previllage' => array(
+				'Privilege' => array(
 					'link' => 'previllage',
 				),
 				'Users' => array(

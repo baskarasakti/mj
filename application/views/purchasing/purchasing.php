@@ -64,8 +64,8 @@
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="address" class="control-label">Address</label>
-							<input type="text" class="form-control" id="delivery_place" name="delivery_place" placeholder="Delivery Address" required>
+							<label for="address" class="control-label">Delivery Address</label>
+							<input type="text" class="form-control" id="delivery_place" name="delivery_place" placeholder="Delivery Address" value="<?=$company_address?>" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">

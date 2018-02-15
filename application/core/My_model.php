@@ -180,4 +180,11 @@ class MY_Model extends CI_Model {
 		return $returnValue;
 	}
 
+	function update2($column, $id, $data){
+        $this->db->where($column, $id);
+        $this->db->update($this->_t, $data);
+        $num_affected = $this->db->affected_rows();
+        return $num_affected > 0;
+    }
+
 }

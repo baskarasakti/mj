@@ -8,16 +8,20 @@
 	<!-- Editable CSS -->
     <link type="text/css" rel="stylesheet" href="<?= asset_url('plugins/bower_components/jsgrid/dist/jsgrid.min.css');?>" />
 	<link type="text/css" rel="stylesheet" href="<?= asset_url('plugins/bower_components/jsgrid/dist/jsgrid-theme.min.css');?>" />
-	 <!--alerts CSS -->
-	 <link href="<?= asset_url('plugins/bower_components/sweetalert/sweetalert.css');?>" rel="stylesheet" type="text/css">
-	 <!--Js Tree CSS -->
-	 <link href="<?= asset_url('plugins/bower_components/jstree/dist/themes/default/style.min.css');?>" rel="stylesheet" type="text/css">
-	 <!-- Date picker plugins css -->
-	 <link href="<?= asset_url('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css');?>" rel="stylesheet" type="text/css" />
-	 <!-- Typehead CSS -->
-	 <link href="<?= asset_url('plugins/bower_components/typeahead.js-master/dist/typehead-min.css');?>" rel="stylesheet">
-	 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-    <!-- Menu CSS -->
+	<!--alerts CSS -->
+	<link href="<?= asset_url('plugins/bower_components/sweetalert/sweetalert.css');?>" rel="stylesheet" type="text/css">
+	<!--Js Tree CSS -->
+	<link href="<?= asset_url('plugins/bower_components/jstree/dist/themes/default/style.min.css');?>" rel="stylesheet" type="text/css">
+	<!-- Date picker plugins css -->
+	<link href="<?= asset_url('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css');?>" rel="stylesheet" type="text/css" />
+	<!-- Typehead CSS -->
+	<link href="<?= asset_url('plugins/bower_components/typeahead.js-master/dist/typehead-min.css');?>" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+	<!-- xeditable css -->
+	<link href="<?= asset_url('plugins/bower_components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css');?>" rel="stylesheet" />
+	<!-- Dropify -->
+	<link rel="stylesheet" href="<?= asset_url('plugins/bower_components/dropify/dist/css/dropify.min.css');?>">
+	<link href="<?= asset_url('plugins/bower_components/dropzone-master/dist/dropzone.css');?>" rel="stylesheet" type="text/css" />
 	<!-- Menu CSS -->
 	<link href="<?= asset_url('plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css');?>" rel="stylesheet">
 	<!-- morris CSS -->

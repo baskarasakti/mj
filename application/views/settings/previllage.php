@@ -40,7 +40,7 @@
 		</div>
 		<div id="form-panel" class="col-md-8">
 			<div class="panel panel-info">
-				<div id="form-title" class="panel-heading"> Previllage</div>
+				<div id="form-title" class="panel-heading"> Privilege</div>
 				<div class="panel-wrapper collapse in block-div" aria-expanded="true">
 					<div class="panel-body">
 						<div id="tree"></div>

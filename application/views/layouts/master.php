@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" type="image/png" sizes="16x16" href="<?= asset_url('images/logo-dark.png');?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= asset_url($this->session->userdata('logo_path'));?>">
     <title><?=$title;?></title>
     <?php $this->load->view('layouts/css_assets.php'); ?>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

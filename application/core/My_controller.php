@@ -62,4 +62,30 @@ class MY_controller extends CI_Controller {
 		return $returnValue;
 	}
 
+	public function upload_file($param){
+
+		$data = array();
+
+		$config['upload_path']   = './assets/'.$param['folder'].'/';
+		$config['allowed_types'] = 'jpg|png|jpeg';
+		$config['max_size']      = '2000';
+		$config['overwrite']     =  true;
+		$config['file_name']     =  $param['file_name'];
+
+		$this->load->library('upload', $config);
+
+		if ( ! $this->upload->do_upload($param['field']))
+		{
+			$data['status'] = false;
+			$data['msg'] = $this->upload->display_errors();
+		}
+		else
+		{
+			$upd = $this->upload->data();	
+			$data['status'] = true;
+			$data['msg'] = $param['folder'].'/'.$param['file_name'].$upd['file_ext'];
+		}
+		return $data;
+	}
+
 }

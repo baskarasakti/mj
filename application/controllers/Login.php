@@ -6,6 +6,7 @@ class Login extends CI_Controller {
 	function  __construct() {
 		parent::__construct();
 			$this->load->model('login_model', 'login');
+			$this->load->model('application_model', 'am');
 			$this->load->library('session');
 			$this->lang->load('login', 'english');
 	}
@@ -19,6 +20,7 @@ class Login extends CI_Controller {
 				'name' => $this->security->get_csrf_token_name(),
 				'hash' => $this->security->get_csrf_hash()
 			);	
+			$data['logo'] = $this->am->get_logo();
 			$data['title'] = "ERP | Application Login";
 			$this->load->view('authentication/login', $data);
 		}
@@ -32,6 +34,7 @@ class Login extends CI_Controller {
 			redirect('login');
 		}
 		else{
+			$logo = $this->am->get_logo();	
 			$this->session->set_userdata(
 				array(
 					'loggedIn'=> TRUE,
@@ -40,6 +43,8 @@ class Login extends CI_Controller {
 					'name'=> $data['name'],
 					'role_id'=> $data['role_id'],
 					'role'=> $data['role'],
+					'logo_path'=> $logo->logo_path,
+					'logo_title_path'=> $logo->logo_title_path,
 					'language'=> 'english',
 				));
 			redirect('dashboard');

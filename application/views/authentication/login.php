@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" type="image/png" sizes="16x16" href="<?= asset_url('images/logo-dark.png');?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= asset_url($logo->logo_path);?>">
     <title><?=$title;?></title>
     <!-- Bootstrap Core CSS -->
     <link href="<?= asset_url('bootstrap/dist/css/bootstrap.min.css');?>" rel="stylesheet">
@@ -35,8 +35,8 @@
         <div class="login-box login-sidebar">
             <div class="white-box">
                 <form class="form-horizontal form-material" id="loginform" method="post" action="<?=site_url('login/check_login');?>">
-					<a href="javascript:void(0)" class="text-center db"><img src="<?= asset_url('images/logo-dark.png'); ?>" alt="Home" />
-                        <br/><img src="<?= asset_url('images/logo-text-dark.png'); ?>" alt="Home" /></a>
+					<a href="javascript:void(0)" class="text-center db"><img height="70" src="<?= asset_url($logo->logo_path); ?>" alt="Home" />
+                        <br/><img height="21" width="108" src="<?= asset_url($logo->logo_title_path); ?>" alt="Home" /></a>
 					<div class="text-center" style="color: red; margin-top:10px;">
 						<?php 
 						if($this->session->flashdata('login_error')){

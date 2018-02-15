@@ -19,10 +19,10 @@ class Previllage extends MY_Controller {
 
 	public function index()
 	{
-		$data['title'] = "ERP | Previlege";
-		$data['page_title'] = "Previlege";
+		$data['title'] = "ERP | Privilege";
+		$data['page_title'] = "Privilege";
 		$data['table_title'] = "Roles";	
-		$data['breadcumb']  = array("Setting", "Previlege");
+		$data['breadcumb']  = array("Setting", "Privilege");
 		$data['page_view']  = "settings/previllage";		
 		$data['js_asset']   = "previllage";	
 		$data['columns']    = $this->get_column_attr();	

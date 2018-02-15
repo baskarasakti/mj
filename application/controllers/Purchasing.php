@@ -11,6 +11,7 @@ class Purchasing extends MY_Controller {
 		$this->load->model('materials_model', 'mm');
 		$this->load->model('vendors_model', 'vd');
 		$this->load->model('currency_model', 'cm');
+		$this->load->model('application_model', 'am');
 	}
 	
 	private function get_column_attr(){
@@ -53,6 +54,7 @@ class Purchasing extends MY_Controller {
 		$data['menu'] = $this->get_menu();						
 		$data['vendors'] = $this->vd->get_all_data();	
 		$data['currency'] = $this->cm->get_all_data();	
+		$data['company_address'] = $this->am->get_info()->address;	
 		$this->load->view('layouts/master', $data);
 	}
 

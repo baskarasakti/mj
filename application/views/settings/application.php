@@ -1,64 +1,81 @@
 <div class="container-fluid">
 	<?php $this->load->view('layouts/breadcumb') ?>
-	<!-- /row -->
+	<!-- .row -->
 	<div class="row">
-		<div id="table-panel" class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
-			<div class="panel panel-default">
-				<div class="panel-heading"> <?=$table_title;?>         
-					<div class="pull-right">
-						<a href="javascript:void(0);" id="add-btn"><i class="ti-plus"></i> Add Data</a> 
+	<div class="col-sm-12">
+		<div class="white-box">
+			<div class="row">
+				<div class="col-sm-6 ol-md-6 col-xs-12">
+					<div class="white-box">
+						<h3 class="box-title">Company Logo</h3>
+						<label for="logo_path">Max image size 500kb</label>
+						<form id="logo-form">
+						<input type="file" id="logo_path" name="logo_path" class="dropify" data-max-file-size="500K" data-allowed-file-extensions="png jpg jpeg" />
+						</form>
+						<div class="text-right">
+							<button id="upload1" class="btn btn-sm btn-success">Save</button>
+						</div>
 					</div>
 				</div>
-				<div class="panel-wrapper collapse in" aria-expanded="true">
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table id="datatable" class="table table-striped">
-								<thead>
-									<tr>
-										<?php
-											foreach($columns as $column){	
-										?>	
-											<th class="dt-head-center" data-field="<?=$column['data_field'];?>" data-align="<?=$column['data_align'];?>" ><?=$column['label'];?></th>
-										<?php
-											}
-										?>
-									</tr>
-								</thead>
-								<tbody>
-								</tbody>
-							</table>
+				<div class="col-sm-6 ol-md-6 col-xs-12">
+					<div class="white-box">
+						<h3 class="box-title">Company Text</h3>
+						<label for="logo_title_path">Max image size 500kb</label>
+						<form id="logo-title-form">
+						<input type="file" id="logo_title_path" name="logo_title_path" class="dropify" data-max-file-size="500K" data-allowed-file-extensions="png jpg jpeg"  />
+						</form>
+						<div class="text-right">
+							<button id="upload2" class="btn btn-sm btn-success">Save</button>
 						</div>
 					</div>
 				</div>
 			</div>
-			<hr> 
-		</div>
-		<div id="form-panel" class="col-md-12">
-			<div class="panel panel-info">
-				<div id="form-title" class="panel-heading"> Add Form</div>
-				<div class="panel-wrapper collapse in block-div" aria-expanded="true">
-					<div class="panel-body">
-					<form id="form" data-toggle="validator">
-						<div class="form-group">
-							<label for="code" class="control-label">Code</label>
-							<input type="text" class="form-control" id="code" name="code" placeholder="Code" required>
-							<div class="help-block with-errors"></div>
-						</div>
-						<div class="form-group">
-							<label for="name" class="control-label">Colors</label>
-							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
-							<div class="help-block with-errors"></div>
-						</div>
-						<input type="hidden" name="change_id">
-						<div class="form-group text-right">
-							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
-							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
-						</div>
-					</form>
-					</div>
+			<div class="row">
+				<div class="col-sm-12 text-right">
+					<button id="enable" class="btn btn-success btn-sm">Edit</button>
+				</div>
+				<div class="col-md-12">
+					<table style="clear: both" class="table table-bordered table-striped" id="user">
+						<tbody>
+							<tr>
+								<td width="35%">Tax Payer Reg. Number</td>
+								<td width="65%">
+									<a href="javascript:void(0);" id="taxpayer_reg_number" class="editable" data-type="text" data-pk="1" data-placement="right" data-placeholder="Required" data-title="Enter Tax Reg. Number"><?=$info->taxpayer_reg_number;?></a>
+								</td>
+							</tr>
+							<tr>
+								<td>Company Name</td>
+								<td>
+									<a href="javascript:void(0);" id="name" class="editable" data-type="text" data-pk="1" data-placement="right" data-placeholder="Required" data-title="Enter Company Name"><?=$info->name;?></a>
+								</td>
+							</tr>
+							<tr>
+								<td>Address</td>
+								<td><a href="javascript:void(0);" id="address" class="editable" data-type="textarea" data-pk="1" data-placeholder="Your Company Address..." data-title="Enter comments"><?=$info->address;?></a></td>
+							</tr>
+							<tr>
+								<td>Telp</td>
+								<td>
+									<a href="javascript:void(0);" id="telp" class="editable" data-type="text" data-pk="1" data-placement="right" data-placeholder="Required" data-title="Enter Telephone Number"><?=$info->telp;?></a>
+								</td>
+							</tr>
+							<tr>
+								<td>Owner</td>
+								<td>
+									<a href="javascript:void(0);" id="owner" class="editable" data-type="text" data-pk="1" data-placement="right" data-placeholder="Required" data-title="Enter Company Owner"><?=$info->owner;?></a>
+								</td>
+							</tr>
+							<tr>
+								<td>Base Currency</td>
+								<td>
+									<a href="javascript:void(0);" id="currency_id" data-type="select" data-pk="1" data-value="<?=$info->currency_id;?>" data-title="Select currency"><?=$info->currency;?></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- /.row -->
+</div>
 </div>
