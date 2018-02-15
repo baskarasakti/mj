@@ -31,6 +31,9 @@ class Menu_model extends MY_Model {
 				'Processes' => array(
 					'link' => 'processes',
 				),
+				'Machine' => array(
+					'link' => 'machine',
+				),
 				'Customers' => array(
 					'link' => 'customers',
 				),
