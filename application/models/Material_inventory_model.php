@@ -6,14 +6,15 @@ class Material_inventory_model extends MY_Model {
 	protected $_t = 'material_inventory';
 		
 	var $table = 'material_inventory';
-	var $column = array('id','date', 'type', 'receive_details_id', 'p_return_details_id', 'material_usage_details_id', 'material_return_detail_id', 'qty', 'materials_id'); //set column field database for order and search
-    var $order = array('id' => 'asc'); // default order 
+	var $column = array('m.id', 'debit', 'credit','qty', 'name'); //set column field database for order and search
+    var $order = array('m.id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('mi.id, mi.date, mi.type, m.name as name');
+		$this->db->select(array('m.id as id', 'SUM(CASE WHEN mi.type = "in" THEN mi.qty ELSE 0 END) as debit', 'SUM(CASE WHEN mi.type = "out" THEN mi.qty ELSE 0 END) as credit','SUM(CASE WHEN mi.type = "in" THEN mi.qty ELSE 0 END)-SUM(CASE WHEN mi.type = "out" THEN mi.qty ELSE 0 END) as qty', 'm.name as name'));
 		$this->db->from($this->table. " mi");
 		$this->db->join('materials m', 'm.id = mi.materials_id');
+		$this->db->group_by('m.id, m.name');
  
 		$i = 0;
 	 
@@ -49,12 +50,12 @@ class Material_inventory_model extends MY_Model {
 		}
 	}
 
-	public function get_material_stock()
+	public function get_material_inventories($id)
 	{
-		$this->db->select(array('m.id as id', 'SUM(CASE WHEN mi.type = "in" THEN mi.qty ELSE 0 END)-SUM(CASE WHEN mi.type = "out" THEN mi.qty ELSE 0 END) as qty', 'm.name as name'));
+		$this->db->select(array('m.id as id', 'm.name as name', 'mi.date as date', 'mi.type as type', 'mi.qty as qty', 'mi.receive_details_id', 'mi.p_return_details_id', 'mi.material_usage_details_id', 'mi.material_return_detail_id', 'adjustment'),false);
 		$this->db->from($this->table. " mi");
 		$this->db->join('materials m', 'm.id = mi.materials_id');
-		$this->db->group_by('mi.materials_id');
+		$this->db->where('mi.materials_id', $id);
 		return $this->db->get()->result();
 	}
 
@@ -64,7 +65,7 @@ class Material_inventory_model extends MY_Model {
 		$this->db->from($this->table. " mi");
 		$this->db->join('materials m', 'm.id = mi.materials_id');
 		$this->db->where('mi.materials_id', $id);
-		return $this->db->get()->result();
+		return $this->db->get()->row();
 	}
 
 }

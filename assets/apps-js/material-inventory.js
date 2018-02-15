@@ -38,17 +38,24 @@ $(document).ready(function() {
 	});
 	
 	$('#form-panel').hide();
+	$('#adjustment-panel').hide();
 
 	$('#add-btn').click(function(){
 		action = "Add";
 		$('#form-title').text('Add Form');
 		$("#form").validator();
-		show_hide_form(true);
+		show_hide_form1(true);
 	});
 
 	$('#cancelBtn').click(function(){
 		$("#form").validator('destroy');
 		show_hide_form(false);
+		$('#form')[0].reset();
+	});
+
+	$('#cancelBtn1').click(function(){
+		$("#form").validator('destroy');
+		show_hide_form1(false);
 		$('#form')[0].reset();
 	});
 
@@ -100,9 +107,23 @@ function show_hide_form(bShow){
 	if(bShow==true){
 		$('#form-panel').show();
 		$('#table-panel').hide();
+		$('#adjustment-panel').hide();
 	}else{
 		$('#form-panel').hide();
 		$('#table-panel').show();
+		$('#adjustment-panel').hide();
+	}
+}
+
+function show_hide_form1(bShow){
+	if(bShow==true){
+		$('#form-panel').hide();
+		$('#table-panel').hide();
+		$('#adjustment-panel').show();
+	}else{
+		$('#form-panel').show();
+		$('#table-panel').hide();
+		$('#adjustment-panel').hide();
 	}
 }
 
@@ -155,14 +176,15 @@ function save_data(){
 function edit(id){
 	action = "Edit";
 	$.ajax({
-			url : site_url+"material_inventory/get_by_id/"+id,
+			url : site_url+"material_inventory/get_material_inventory/"+id,
 			type: "GET",
 			dataType: "JSON",
 			success: function(data)
 			{
 				form_jsgrid(id);
 				$('#jsGrid').jsGrid('loadData');
-				$('#name').val(data.name);
+				$('#materials').val(data.name);
+				$('#materials_id').val(data.id);
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				show_hide_form(true);

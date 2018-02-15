@@ -13,8 +13,10 @@ class Material_inventory extends MY_Controller {
         $table = new TableField();
         $table->addColumn('id', '', 'ID');
         $table->addColumn('no', '', 'No');
-        $table->addColumn('name', '', 'Name');        
-        $table->addColumn('qty', '', 'Qty');        
+        $table->addColumn('name', '', 'Name');       
+        $table->addColumn('debit', '', 'Debit');       
+        $table->addColumn('credit', '', 'Credit');       
+        $table->addColumn('qty', '', 'Balance');        
         $table->addColumn('actions', '', 'Actions');        
         return $table->getColumns();
     }
@@ -60,15 +62,17 @@ class Material_inventory extends MY_Controller {
 	}
 
 	public function view_data(){
-		$result = $this->mi->get_material_stock();
+		$result = $this->mi->get_output_data();
         $data = array();
         $count = 0;
-        foreach($result as $value){
+        foreach($result['data'] as $value){
             $count++;
             $row = array();
             $row['id'] = $value->id;
 			$row['name'] = $value->name;
 			$row['no'] = $count;
+			$row['debit'] = $value->debit;
+			$row['credit'] = $value->credit;
 			$row['qty'] = $value->qty;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button">View Detail</button>';
             $data[] = $row;
@@ -79,28 +83,18 @@ class Material_inventory extends MY_Controller {
         echo json_encode($result);
 	}
 
-	public function view_data1($id){
+	public function get_material_inventory($id){
 		$result = $this->mi->get_material_inventory($id);
-        $data = array();
-        $count = 0;
-        foreach($result as $value){
-            $count++;
-            $row = array();
-            $row['id'] = $value->id;
-			$row['date'] = $value->date;
-			$row['type'] = $type;
-			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button">View Detail</button>';
-            $data[] = $row;
-        }
-
-        $result['data'] = $data;
-
         echo json_encode($result);
 	}
 
 	function add(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name'))
+			'materials_id' => $this->normalize_text($this->input->post('materials_id')),
+			'type' => $this->normalize_text($this->input->post('type')),
+			'date' => date("Y-m-d H:i:s"),
+			'qty' => $this->normalize_text($this->input->post('qty')),
+			'adjustment' => 1
 		);
 		$inserted = $this->mi->add($data);
 		echo json_encode(array('status' => $inserted));
@@ -127,7 +121,7 @@ class Material_inventory extends MY_Controller {
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->mi->get_material_inventory($id);
+			$result = $this->mi->get_material_inventories($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
@@ -145,6 +139,8 @@ class Material_inventory extends MY_Controller {
 					$row['status'] = "pickup";
 				} elseif ($value->material_return_detail_id) {
 					$row['status'] = "return";
+				} elseif ($value->adjustment) {
+					$row['status'] = "adjustment";
 				}
 				$data[] = $row;
 				$count++;
