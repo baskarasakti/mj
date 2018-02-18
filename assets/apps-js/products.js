@@ -305,6 +305,7 @@ function edit(id){
 			}
 			$('#name').val(data.name);
 			$('#code').val(data.code);
+			$('#uom_id').val(data.uom_id);
 			$('#product_categories_id').val(data.product_categories_id);
 			$("#form").validator();
 			$('#form-title').text('Edit Form');

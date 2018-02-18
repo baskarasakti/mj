@@ -67,4 +67,10 @@ class Products_model extends MY_Model {
 		}
 	}
 
+	public function populate_autocomplete(){
+		$this->db->like('code', $this->input->get('term'), 'both');
+		$this->db->or_like('name', $this->input->get('term'), 'both');
+		return $this->db->get($this->_t)->result();
+	}
+
 }

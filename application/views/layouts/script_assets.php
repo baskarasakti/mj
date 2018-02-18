@@ -1,6 +1,7 @@
 	<!-- jQuery -->
 	<script src="<?= asset_url('plugins/bower_components/jquery/dist/jquery.min.js');?>"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="<?= asset_url('plugins/bower_components/jqueryui/jquery-ui.min.js');?>"></script>
+	<script src="<?= asset_url('plugins/bower_components/jqueryui/jquery.ui.autocomplete.scroll.min.js');?>"></script>
 	<script src="<?= asset_url('plugins/bower_components/jquery-validation/dist/jquery.validate.min.js');?>"></script>	
     <!-- Bootstrap Core JavaScript -->
     <script src="<?= asset_url('bootstrap/dist/js/tether.min.js');?>"></script>

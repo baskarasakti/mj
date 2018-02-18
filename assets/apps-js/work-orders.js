@@ -3,11 +3,73 @@ var action;
 
 $(document).ready(function() {
 
-	$('#startdate').datepicker({
+	$("#jsGrid").jsGrid({ 
+    	width: "100%", 
+    	height: "400px", 
+
+    	// inserting: true, 
+    	// editing: true, 
+    	sorting: true, 
+    	paging: true, 
+
+        // data: lists, 
+        controller: {
+        	loadData: function(filter) {
+        		return $.ajax({
+        			type: "GET",
+        			url: "work_orders/jsgrid_functions/"+$('[name="projects_id"]').val(),
+        			data: filter,
+        			dataType:"JSON"
+        		});
+        	},
+        	insertItem: function(item) {
+        		item["csrf_token"] = $("[name='csrf_token']").val();
+        		console.log(item)
+        		return $.ajax({
+        			type: "POST",
+        			url: "projects/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: item
+        		});
+        	},
+        	updateItem: function(item) {
+        		return $.ajax({
+        			type: "PUT",
+        			url: "projects/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: item
+        		});
+        	},
+        	deleteItem: function(item) {
+        		return $.ajax({
+        			type: "DELETE",
+        			url: "projects/jsgrid_functions",
+        			data: item
+        		});
+        	}
+        },
+
+        fields: [ 
+		{ name: "id", title:"ID", visible:false }, 
+		{ name: "name", title:"Product", width: 150 }, 
+        { name: "qty", title:"Qty", type: "number", width: 50 }
+        ] 
+	}); 
+
+	$( "#projects_code" ).autocomplete({
+		maxShowItems: 5,
+		source: site_url+"projects/populate_autocomplete",
+		minLength: 2,
+		select: function( event, ui ) {
+		  $('[name="projects_id"]').val(ui.item.id);
+		  $('#jsGrid').jsGrid('loadData');
+		  generateID();	
+		}
+	  });
+
+	$('#start_date').datepicker({
 		format: 'yyyy-mm-dd' 
 	});
 
-	$('#enddate').datepicker({
+	$('#end_date').datepicker({
 		format: 'yyyy-mm-dd' 
 	});
 
@@ -39,7 +101,8 @@ $(document).ready(function() {
 		},
 		columns: columns,
 		columnDefs: [ 
-		{ className: "dt-body-right", targets: right_align } 
+		{ className: "dt-body-right", targets: right_align },
+		{ visible: false, targets: [1]},
 		]
 	});
 	
@@ -47,7 +110,8 @@ $(document).ready(function() {
 
 	$('#add-btn').click(function(){
 		action = "Add";
-		generateID();
+		$('[name="projects_id"]').val("");
+		$('#jsGrid').jsGrid('loadData');
 		$('#form-title').text('Add Form');
 		$("#form").validator();
 		show_hide_form(true);
@@ -128,75 +192,11 @@ function save_data(){
 	});
 }
 
-function form_jsgrid(id){
-	var products;
-	$.ajax({
-		url: site_url+'projects/populate_product_select/'+id,
-		type: "GET",
-		async: false,
-		success : function(text)
-		{
-			products = JSON.parse(text);
-		}
-	});
-
-	$("#jsGrid").jsGrid({ 
-    	width: "100%", 
-    	height: "400px", 
-
-    	// inserting: true, 
-    	// editing: true, 
-    	sorting: true, 
-    	paging: true, 
-
-        // data: lists, 
-        controller: {
-        	loadData: function(filter) {
-        		return $.ajax({
-        			type: "GET",
-        			url: "projects/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: filter,
-        			dataType:"JSON"
-        		});
-        	},
-        	insertItem: function(item) {
-        		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
-        		return $.ajax({
-        			type: "POST",
-        			url: "projects/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
-        		});
-        	},
-        	updateItem: function(item) {
-        		return $.ajax({
-        			type: "PUT",
-        			url: "projects/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
-        		});
-        	},
-        	deleteItem: function(item) {
-        		return $.ajax({
-        			type: "DELETE",
-        			url: "projects/jsgrid_functions",
-        			data: item
-        		});
-        	}
-        },
-
-        fields: [ 
-        { name: "id", title:"ID" }, 
-        { name: "qty", title:"Qty", type: "number", width: 50 }, 
-        { name: "products_id", title:"Product", type: "select", items: products, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
-        { type: "control", editButton: false, deleteButton: false } 
-        ] 
-	}); 
-}
-
 function generateID(){
 	$.ajax({
 		url : site_url+"work_orders/generate_id",
 		type: "GET",
+		data: {projects_id: $('[name="projects_id"]').val()},
 		dataType: "JSON",
 		success: function(data)
 		{
@@ -223,13 +223,13 @@ function edit(id){
 				$("#saveBtn").prop('disabled', false);
 				action = "Add";
 			}
-			form_jsgrid(id);
-			$('#startdate').val(data.start_date);
-			$('#enddate').val(data.end_date);
+			$('[name="projects_code"]').val(data.projects_code);
+			$('[name="projects_id"]').val(data.projects_id);
+			$('[name="code"]').val(data.code);
+			$('[name="start_date"]').val(data.start_date);
+			$('[name="end_date"]').val(data.end_date);
 			$("#form").validator();
 			$('#form-title').text('Edit Form');
-			$('[name="asd"]').val(id);
-			generateID();
 			$('#jsGrid').jsGrid('loadData');
 			show_hide_form(true);
 		}

@@ -3,13 +3,105 @@ var action;
 
 $(document).ready(function() {
 
-	$('#usage_date').datepicker({
+	$('#date').datepicker({
 		format: 'yyyy-mm-dd' 
 	});
 
-	$('#inlineFormCustomSelect').select2({
+
+    var materials;
+    $.ajax({
+    	url: site_url+'purchasing/get_materials',
+    	type: "GET",
+    	async: false,
+    	success : function(text)
+    	{
+    		materials = JSON.parse(text);
+    	}
+    });
+
+	$("#jsGrid").jsGrid({ 
+    	width: "100%", 
+    	height: "400px", 
+
+    	inserting: false, 
+    	editing: true, 
+    	sorting: true, 
+    	paging: true, 
+
+		rowClick: function(args) {
+			alert(args.item);
+			$.extend(args.item, {id:2, name:"Test23", qty:93, note:"OKOK"});
+			
+	$("#jsGrid").jsGrid("updateItem",  args.item);
+        },
+        controller: {
+        	loadData: function(filter) {
+        		return $.ajax({
+        			type: "GET",
+        			url: "pickup_material/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: filter,
+        			dataType:"JSON"
+        		});
+        	},
+        	deleteItem: function(item) {
+        		return $.ajax({
+        			type: "DELETE",
+        			url: "pickup_material/jsgrid_functions",
+        			data: item
+        		});
+        	}
+        },
+
+        fields: [ 
+        { name: "id" }, 
+        { name: "name", title:"Item Name", type: "text", width: 150 }, 
+        { name: "qty", title:"Qty", type: "number", width: 50 }, 
+        { name: "note", title:"Note", type: "textarea", width: 200 },  
+		{ 
+			type: "control",
+			modeSwitchButton: false,
+			editButton: false 
+		} 
+        ] 
+	}); 
+	
+	var jsadd = function(){
+		var data = {id:1, name:"Test", qty:9, note:"OK"};
+		var data2 = {id:2, name:"Test2", qty:92, note:"OK2"};
+		$("#jsGrid").jsGrid("insertItem", data);
+		$("#jsGrid").jsGrid("insertItem", data2);
+	}
+	jsadd();
+	
+	var data2 = {id:2, name:"Test2", qty:92, note:"OK2"};
+	var data = {id:2, name:"Test23", qty:93, note:"OKOK"};
+	$("#jsGrid").jsGrid("updateItem", data2, data);
+	
+
+	
+	$( "#work_orders_code" ).autocomplete({
+		maxShowItems: 5,
+		source: site_url+"work_orders/populate_autocomplete",
+		minLength: 2,
+		select: function( event, ui ) {
+		  $('[name="work_orders_id"]').val(ui.item.id);
+		  $('#jsGrid').jsGrid('loadData');
+		  generateID();	
+		}
 	});
 
+	function generateID(){
+		$.ajax({
+			url : site_url+"pickup_material/generate_id",
+			type: "GET",
+			dataType: "JSON",
+			success: function(data)
+			{
+				$("#code").val(data.id);
+			}
+		});	
+	}
+	  
 	var columns = [];
     var right_align = [];
     $("#datatable").find('th').each(function(i, th){
@@ -66,70 +158,8 @@ $(document).ready(function() {
          }
 	 });
 
-    var materials;
-    $.ajax({
-    	url: site_url+'purchasing/get_materials',
-    	type: "GET",
-    	async: false,
-    	success : function(text)
-    	{
-    		materials = JSON.parse(text);
-    	}
-    });
 
-    $("#jsGrid").jsGrid({ 
-    	width: "100%", 
-    	height: "400px", 
-
-    	inserting: true, 
-    	editing: true, 
-    	sorting: true, 
-    	paging: true, 
-
-        // data: lists, 
-        controller: {
-        	loadData: function(filter) {
-        		return $.ajax({
-        			type: "GET",
-        			url: "pickup_material/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: filter,
-        			dataType:"JSON"
-        		});
-        	},
-        	insertItem: function(item) {
-        		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
-        		return $.ajax({
-        			type: "POST",
-        			url: "pickup_material/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item,
-        			dataType:"JSON"
-        		});
-        	},
-        	updateItem: function(item) {
-        		return $.ajax({
-        			type: "PUT",
-        			url: "pickup_material/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
-        		});
-        	},
-        	deleteItem: function(item) {
-        		return $.ajax({
-        			type: "DELETE",
-        			url: "pickup_material/jsgrid_functions",
-        			data: item
-        		});
-        	}
-        },
-
-        fields: [ 
-        { name: "id" }, 
-        { name: "name", title:"Item Name", type: "select", items: materials, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
-        { name: "qty", title:"Qty", type: "number", width: 50 }, 
-        { name: "note", title:"Note", type: "textarea", width: 200 },  
-        { type: "control" } 
-        ] 
-    }); 
+   
 	
 });
 

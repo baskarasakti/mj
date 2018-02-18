@@ -1,7 +1,7 @@
 	<!-- Bootstrap Core CSS -->
 	<link href="<?= asset_url('bootstrap/dist/css/bootstrap.min.css');?>" rel="stylesheet">
 	<link href="<?= asset_url('plugins/bower_components/bootstrap-extension/css/bootstrap-extension.css');?>" rel="stylesheet">
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="<?= asset_url('plugins/bower_components/jqueryui/jquery-ui.min.css');?>">
 	<!--DataTables -->
 	<link href="<?= asset_url('plugins/bower_components/datatables/jquery.dataTables.min.css" rel="stylesheet');?>" type="text/css" />
 	<link href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />

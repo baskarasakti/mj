@@ -100,7 +100,7 @@
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="date" class="control-label">File Upload</label>
+							<label for="date" class="control-label">Delivery</label>
 							<input type="file" id="file" name="file">
 							<div class="help-block with-errors"></div>
 						</div>

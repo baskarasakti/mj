@@ -87,6 +87,18 @@
 							<input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
 							<div class="help-block with-errors"></div>
 						</div>
+						<div class="form-group">
+							<label for="uom_id" class="control-label">Unit</label>
+							<select class="custom-select col-sm-12" id="uom_id" name="uom_id" required>
+								<option selected="">Choose...</option>
+								<?php
+									foreach($uom as $item){
+										echo '<option value="'.$item->id.'">'.$item->symbol.'</option>';
+									}
+								?>
+							</select>
+							<div class="help-block with-errors"></div>
+						</div>
 						<div class="form-group text-right">
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>

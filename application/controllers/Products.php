@@ -11,6 +11,7 @@ class Products extends MY_Controller {
 		$this->load->model('product_materials_model', 'pmm');
 		$this->load->model('product_process_model', 'ppm');
 		$this->load->model('colors_model', 'cm');
+		$this->load->model('uom_model', 'um');
 	}
 	
 	private function get_column_attr(){
@@ -54,6 +55,7 @@ class Products extends MY_Controller {
 		$data['columns']    = $this->get_column_attr();	
 		$data['p_categories'] = $this->pcm->get_all_data();	
 		$data['colors'] = $this->cm->get_all_data();		
+		$data['uom'] = $this->um->get_all_data();		
 		$data['csrf'] = $this->csrf;		
 		$data['menu'] = $this->get_menu();					
 		$this->load->view('layouts/master', $data);
@@ -69,6 +71,20 @@ class Products extends MY_Controller {
 			$row['Id'] = $value->id;
 			$data[] = $row;
 			$count++;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
+	public function populate_autocomplete(){
+		$result = $this->pm->populate_autocomplete();
+		$data = array();
+		foreach($result as $value){
+			$row = array();
+			$row['value'] = $value->code." - ".$value->name;
+			$row['id'] = $value->id;
+			$data[] = $row;
 		}
 
 		$result = $data;
@@ -99,7 +115,8 @@ class Products extends MY_Controller {
 		$data = array(
 			'name' => $this->normalize_text($this->input->post('name')),
 			'code' => $this->input->post('code'),
-			'product_categories_id' =>$this->input->post('product_categories_id')
+			'product_categories_id' =>$this->input->post('product_categories_id'),
+			'uom_id' =>$this->input->post('uom_id'),
 		);
 		$inserted = $this->pm->add_id($data);
 		echo json_encode(array('id' => $inserted));
@@ -114,7 +131,8 @@ class Products extends MY_Controller {
 		$data = array(
 			'name' => $this->normalize_text($this->input->post('name')),
 			'code' => $this->input->post('code'),
-			'product_categories_id' => $this->input->post('product_categories_id')
+			'product_categories_id' => $this->input->post('product_categories_id'),
+			'uom_id' =>$this->input->post('uom_id'),
 		);
 		$status = $this->pm->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));

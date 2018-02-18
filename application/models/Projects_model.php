@@ -50,19 +50,19 @@ class Projects_model extends MY_Model {
 	}
 
 	public function generate_id(){
-		$vat = "P";
-		if($this->input->get('vat') == 0){
-			$vat = "NP";
-		}
-		$seg1 = "/MC-".$vat; 
-		$seg2 = "/MKT-".$this->get_roman_number(date("n")); 
-		$seg3 = "/".date("Y"); 
-		$this->db->select("MAX(LEFT(`code`, 3)) as 'maxID'");
-        $this->db->like('code', $seg1.$seg2.$seg3, 'before');
+		$prefix = "SO-";
+		$infix = date("Ymd-");
+		$this->db->select("MAX(RIGHT(`code`, 4)) as 'maxID'");
+        $this->db->like('code', $prefix.$infix, 'after');
         $result = $this->db->get($this->_t);
         $code = $result->row(0)->maxID;
         $code++; 
-        return sprintf("%03s", $code).$seg1.$seg2.$seg3;
+        return $prefix.$infix.sprintf("%04s", $code);
+	}
+
+	public function populate_autocomplete(){
+		$this->db->like('code', $this->input->get('term'), 'both');
+		return $this->db->get($this->_t)->result();
 	}
 
 }

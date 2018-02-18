@@ -39,19 +39,25 @@
 				<div class="panel-wrapper collapse in block-div" aria-expanded="true">
 					<div class="panel-body">
 					<form id="form" data-toggle="validator">
-						 <div class="form-group">
-							<label for="name" class="control-label">Code</label>
+						<input type="hidden" name="projects_id">
+						<div class="form-group">
+							<label for="projects_code" class="control-label">Choose Sales Order</label>
+							<input type="text" class="form-control" id="projects_code" name="projects_code" placeholder="Type Sales Order Code" >
+							<div class="help-block with-errors"></div>
+						</div>
+						<div class="form-group">
+							<label for="code" class="control-label">Code</label>
 							<input type="text" class="form-control" id="code" name="code" placeholder="Code" readonly>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label">Start Date</label>
-							<input type="text" class="form-control" id="startdate" name="start_date" placeholder="Start Date" required>
+							<label for="start_date" class="control-label">Start Date</label>
+							<input type="text" class="form-control" id="start_date" name="start_date" placeholder="Start Date" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label">End Date</label>
-							<input type="text" class="form-control" id="enddate" name="end_date" placeholder="End Date" required>
+							<label for="end_date" class="control-label">End Date</label>
+							<input type="text" class="form-control" id="end_date" name="end_date" placeholder="End Date" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group text-right">
@@ -61,7 +67,7 @@
 						<input type="hidden" name="asd" value="">
 						<input type="hidden" name="change_id">
 					</form>
-					<h3 class="box-title">Project Work Orders</h3>
+					<h3 class="box-title">Work Order Detail</h3>
                     <hr>
 					<div class="table-responsive"> 
 						<div id="jsGrid"></div> 

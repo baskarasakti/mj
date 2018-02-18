@@ -31,6 +31,24 @@ class Invoice extends MY_Controller {
 		$this->load->view('layouts/master', $data);
 	}
 
+	public function print_sales_order($id)
+	{
+		$data['so'] = $this->prm->get_by_id('id', $id);
+		$data['so_detail'] = $this->pdm->get_project_details($id);
+
+		$customer_id = $data['so']->customers_id;
+		$data['customer'] = $this->cm->get_by_id('id', $customer_id);
+
+		$data['title'] = "ERP | Invoice";
+		$data['page_title'] = "Invoice";
+		$data['breadcumb']  = array("Invoice");
+		$data['page_view']  = "invoice/invoice_sales";		
+		$data['js_asset']   = "invoice";	
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();							
+		$this->load->view('layouts/master', $data);
+	}
+
 	public function print_purchasing($id)
 	{
 		$data['purchasing'] = $this->prc->get_by_id('id', $id);
@@ -87,9 +105,8 @@ class Invoice extends MY_Controller {
 
 	public function print_wo($id)
 	{
-		$data['work_orders'] = $this->wom->get_by_id('projects_id',$id);
-		$data['project_details'] = $this->pdm->get_project_details($id);
-
+		$data['work_orders'] = $this->wom->get_by_id('id',$id);
+		$data['project_details'] = $this->pdm->get_project_details($data['work_orders']->projects_id);
 		$data['title'] = "ERP | Invoice";
 		$data['page_title'] = "Invoice";
 		$data['breadcumb']  = array("Invoice");

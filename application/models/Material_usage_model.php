@@ -3,9 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Material_usage_model extends MY_Model {
 
-	protected $_t = 'material_usage';
+	protected $_t = 'material_usages';
 		
-	var $table = 'material_usage';
+	var $table = 'material_usages';
 	var $column = array('id','usage_date', 'production_details_id', 'usage_categories_id'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
@@ -50,6 +50,14 @@ class Material_usage_model extends MY_Model {
 
 	public function get_data(){
 		return $this->db->get('roles')->result();
+	}
+
+	public function generate_id(){
+		$this->db->select("MAX(`code_pick`) as 'maxID'");
+        $result = $this->db->get($this->_t);
+        $code = $result->row(0)->maxID;
+        $code++; 
+        return sprintf("%08s", $code);
 	}
 
 }

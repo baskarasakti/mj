@@ -49,4 +49,10 @@ class Machine_model extends MY_Model {
 		}
 	}
 
+	public function populate_select(){
+		$this->db->select('mc.id as id, mc.code as code, p.name as name');
+		$this->db->join("processes p", "mc.processes_id = p.id", "left");
+		return $this->db->get($this->table." mc")->result();
+	}
+
 }

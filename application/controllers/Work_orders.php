@@ -13,11 +13,11 @@ class Work_orders extends MY_Controller {
 	
 	private function get_column_attr(){
 		$table = new TableField();
+		$table->addColumn('no', '', 'No');
 		$table->addColumn('id', '', 'ID');
-		$table->addColumn('code', '', 'Code');        
-		$table->addColumn('name', '', 'Name');        
-		$table->addColumn('description', '', 'Description');        
-		$table->addColumn('customer', '', 'Customer');        
+		$table->addColumn('code', '', 'Code');         
+		$table->addColumn('projects_code', '', 'Sales Order');        
+		$table->addColumn('ppn', '', 'VAT');        
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
 	}
@@ -57,18 +57,34 @@ class Work_orders extends MY_Controller {
 		echo json_encode($result);
 	}
 
+	public function populate_autocomplete(){
+		$result = $this->wom->populate_autocomplete();
+		$data = array();
+		foreach($result as $value){
+			$row = array();
+			$row['value'] = $value->code;
+			$row['id'] = $value->id;
+			$data[] = $row;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
 
 	public function view_data(){
-		$result = $this->pm->get_output_data();
+		$result = $this->wom->get_output_data();
 		$data = array();
 		$count = 0;
 		foreach($result['data'] as $value){
+			$count++;
 			$row = array();
+			$row['no'] = $count;
 			$row['id'] = $value->id;
 			$row['code'] = $value->code;
-			$row['name'] = $value->name;
-			$row['description'] = $value->description;
-			$row['customer'] = $value->customer;
+			$row['projects_code'] = $value->projects_code;
+			$vat = ($value->ppn == 1) ? "VAT" : "Non VAT";
+			$row['ppn'] = $vat;
 			$row['actions'] = '<a href=invoice/print_wo/'.$value->id.'><button class="btn btn-sm btn-success" type="button">Print</button></a>
 			<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
@@ -82,30 +98,32 @@ class Work_orders extends MY_Controller {
 	}
 
 	function add(){
+		$temp = explode("/",$this->input->post('code'));
+		$type = explode("-", $temp[1]);
+		$vat = ( $type[1] == "P" ) ? 1 : 0 ;
 		$data = array(
+			'ppn' => $vat,
 			'code' => $this->input->post('code'),
 			'start_date' =>$this->input->post('start_date'),
 			'end_date' => $this->input->post('end_date'),
-			'project_details_id' => $this->input->post('asd'),
-			'created_at' => date("Y-m-d H:m:s")
+			'projects_id' => $this->input->post('projects_id'),
 		);
+		$data = $this->add_adding_detail($data);
 		$inserted = $this->wom->add_id($data);
 		echo json_encode(array('id' => $inserted));
 	}
 
 	function get_by_id($id){
-		$detail = $this->wom->get_by_id('id', $id);
+		$detail = $this->wom->get_detail($id);
 		echo json_encode($detail);
 	}
 
 	function update(){
 		$data = array(
-			'code' => $this->input->post('code'),
 			'start_date' =>$this->input->post('start_date'),
-			'end_date' => $this->input->post('end_date'),
-			'project_details_id' => $this->input->post('asd'),
-			'created_at' => date("Y-m-d H:m:s")
+			'end_date' => $this->input->post('end_date')
 		);
+		$data = $this->add_updating_detail($data);
 		$status = $this->wom->update_id('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('id' => $status));
 	}
@@ -118,16 +136,13 @@ class Work_orders extends MY_Controller {
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->wom->get_work_orders($id);
+			$result = $this->pdm->get_project_details($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['pd_id'] = $value->pd_id;
-				$row['code'] = $value->code;
-				$row['start_date'] = $value->start_date;
-				$row['end_date'] = $value->end_date;
+				$row['name'] = $value->name;
 				$row['qty'] = $value->qty;
 				$data[] = $row;
 				$count++;
@@ -139,21 +154,15 @@ class Work_orders extends MY_Controller {
 
 			case "POST":
 			$data = array(
-				'code' => $this->input->post('code'),
-				'start_date' =>$this->input->post('start_date'),
-				'end_date' => $this->input->post('end_date'),
 				'qty' => $this->input->post('qty'),
-				'project_details_id' => $this->input->post('pd_id'),
-				'created_at' => date("Y-m-d H:m:s")
+				'products_id' => $this->input->post('products_id'),
+				'projects_id' => $id
 			);
-			$result = $this->wom->add($data);
+			$insert = $this->pdm->add_id($data);
 
 			$row = array();
 			$row['id'] = $insert;
-			$row['pd_id'] = $this->input->post('pd_id');
-			$row['code'] = $this->input->post('code');
-			$row['start_date'] = $this->input->post('start_date');
-			$row['end_date'] = $this->input->post('end_date');
+			$row['products_id'] = $this->input->post('products_id');
 			$row['qty'] = $this->input->post('qty');
 
 			echo json_encode($row);
@@ -162,19 +171,15 @@ class Work_orders extends MY_Controller {
 			case "PUT":
 			$this->input->raw_input_stream;
 			$data = array(
-				'code' => $this->input->input_stream('code'),
-				'start_date' =>$this->input->input_stream('start_date'),
-				'end_date' => $this->input->input_stream('end_date'),
 				'qty' => $this->input->input_stream('qty'),
-				'project_details_id' => $this->input->input_stream('pd_id'),
-				'updated_at' =>  date("Y-m-d H:m:s")
+				'products_id' => $this->input->input_stream('products_id')
 			);
-			$result = $this->wom->update('id',$this->input->input_stream('id'),$data);
+			$result = $this->pdm->update('id',$this->input->input_stream('id'),$data);
 			break;
 
 			case "DELETE":
 			$this->input->raw_input_stream;
-			$status = $this->wom->delete('id', $this->input->input_stream('id'));
+			$status = $this->pdm->delete('id', $this->input->input_stream('id'));
 			break;
 		}
 	}

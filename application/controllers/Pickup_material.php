@@ -13,6 +13,7 @@ class Pickup_material extends MY_Controller {
 			$this->load->model('material_usage_cat_model', 'muc');
 			$this->load->model('material_usage_det_model', 'mud');
 			$this->load->model('material_inventory_model', 'mi');
+			$this->load->model('machine_model', 'mm');
 	}
 	
 	private function get_column_attr(){
@@ -35,6 +36,7 @@ class Pickup_material extends MY_Controller {
 		$data['csrf'] = $this->csrf;					
 		$data['menu'] = $this->get_menu();		
 		$data['u_categories']    = $this->uc->get_all_data();		
+		$data['machines']    = $this->mm->populate_select();		
 		$this->load->view('layouts/master', $data);
 	}
 
@@ -54,6 +56,10 @@ class Pickup_material extends MY_Controller {
 		echo json_encode($result);
 	}
 	
+	public function generate_id(){
+		$id = $this->mu->generate_id();
+		echo json_encode(array('id' => $id));
+	}
 
 	public function view_data(){
 		$result = $this->pm->get_output_data();

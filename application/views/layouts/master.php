@@ -10,6 +10,14 @@
     <link rel="icon" type="image/png" sizes="16x16" href="<?= asset_url($this->session->userdata('logo_path'));?>">
     <title><?=$title;?></title>
     <?php $this->load->view('layouts/css_assets.php'); ?>
+	<style>
+		.ui-autocomplete{
+			max-height: 600px;
+			overflow-y: auto;   /* prevent horizontal scrollbar */
+			overflow-x: hidden; /* add padding to account for vertical scrollbar */
+			z-index:1000 !important;
+		}
+	</style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>

@@ -21,6 +21,16 @@ class Projects extends MY_Controller {
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
 	}
+
+	private function get_column_attr2(){
+		$table = new TableField();
+		$table->addColumn('id', '', 'ID');
+		$table->addColumn('name', '', 'Product');        
+		$table->addColumn('qty', '', 'Qty');              
+		$table->addColumn('uom', '', 'Unit');              
+		$table->addColumn('actions', '', 'Actions');        
+		return $table->getColumns();
+	}
 	
 	public function index()
 	{
@@ -28,9 +38,10 @@ class Projects extends MY_Controller {
 		$data['page_title'] = "Sales Order";
 		$data['table_title'] = "List Sales Order";		
 		$data['breadcumb']  = array("Sales", "Sales Order");
-		$data['page_view']  = "sales/projects";		
-		$data['js_asset']   = "projects";	
+		$data['page_view']  = "sales/sales";		
+		$data['js_asset']   = "sales";	
 		$data['columns']    = $this->get_column_attr();
+		$data['columns2']    = $this->get_column_attr2();
 		$data['customers'] = $this->cm->get_all_data();	
 		$data['csrf'] = $this->csrf;	
 		$data['menu'] = $this->get_menu();						
@@ -74,6 +85,20 @@ class Projects extends MY_Controller {
 		echo json_encode($result);
 	}
 
+	public function populate_autocomplete(){
+		$result = $this->pm->populate_autocomplete();
+		$data = array();
+		foreach($result as $value){
+			$row = array();
+			$row['value'] = $value->code;
+			$row['id'] = $value->id;
+			$data[] = $row;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
 	public function view_data(){
 		$result = $this->pm->get_output_data();
 		$data = array();
@@ -89,7 +114,8 @@ class Projects extends MY_Controller {
 			$row['vat'] = $vat;
 			$row['description'] = $value->description;
 			$row['customer'] = $value->customer;
-			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
+			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="prints('.$value->id.')" type="button"><i class="fa fa-print"></i></button>
+							   <button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
 			$count++;

@@ -98,6 +98,62 @@ $(document).ready(function() {
     	}
     });
 
+
+	var availableTags = [
+		{id:0, text:"ActionScript0"},
+		{id:1, text:"ActionScript"},
+		{id:2, text:"ActionScript1"},
+		{id:3, text:"ActionScript2"},
+		{id:4, text:"ActionScript3"},
+		{id:5, text:"ActionScript4"},
+	  ];
+	
+	var selected = "";  
+
+	//CUSTOM FIELD
+    var MyDateField = function(config) {
+        jsGrid.Field.call(this, config);
+    };
+     
+    MyDateField.prototype = new jsGrid.Field({
+     
+        css: "date-field",            // redefine general property 'css'
+        align: "center",              // redefine general property 'align'
+     
+        myCustomProperty: "foo",      // custom property
+     
+        sorter: function(value) {
+            return value;
+        },
+     
+        itemTemplate: function(value, item) {
+			console.log(item);
+            return value;
+        },
+     
+        insertTemplate: function(value) {
+            return this._insertPicker = $("<input>").select2({ 
+				data: availableTags
+			});
+        },
+     
+        editTemplate: function(value) {
+            return this._editPicker = $("<input>").autocomplete({ source: availableTags });
+        },
+     
+        insertValue: function() {
+			//console.log(selected);
+            return selected.value;
+        },
+     
+        editValue: function() {
+            return this._editPicker.on( "autocompletechange", function( event, ui ) {return ui.item.value} );
+        }
+    });
+     
+    jsGrid.fields.date = MyDateField;
+
+
     $("#jsGrid").jsGrid({ 
     	width: "100%", 
     	height: "400px", 
@@ -119,7 +175,7 @@ $(document).ready(function() {
         	},
         	insertItem: function(item) {
         		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
+        		//console.log(item)
         		return $.ajax({
         			type: "POST",
         			url: "projects/jsgrid_functions/"+$('[name="asd"]').val(),
@@ -128,11 +184,12 @@ $(document).ready(function() {
         		});
         	},
         	updateItem: function(item) {
-        		return $.ajax({
-        			type: "PUT",
-        			url: "projects/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
-        		});
+				return true;
+        		// return $.ajax({
+        		// 	type: "PUT",
+        		// 	url: "projects/jsgrid_functions/"+$('[name="asd"]').val(),
+        		// 	data: item
+        		// });
         	},
         	deleteItem: function(item) {
         		return $.ajax({
@@ -145,7 +202,9 @@ $(document).ready(function() {
 
         fields: [ 
 		{ name: "id", title:"ID", visible:false}, 
-		{ name: "products_id", title:"Product", type: "select", items: products, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
+		{ name: "products_id", title:"Product", type: "date", 
+		//items: products, valueField: "Id", textField: "Name", 
+		width: 150, validate: "required" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
         { type: "control" } 
         ] 
