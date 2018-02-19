@@ -11,48 +11,52 @@ $(document).ready(function() {
     	// editing: true, 
     	sorting: true, 
     	paging: true, 
-
+		rowClick: function(args) {
+			fillForm2(args.item);
+        },
         // data: lists, 
         controller: {
         	loadData: function(filter) {
         		return $.ajax({
         			type: "GET",
-        			url: "work_orders/jsgrid_functions/"+$('[name="projects_id"]').val(),
+        			url: "work_orders/jsgrid_functions/"+$('[name="asd"]').val(),
         			data: filter,
         			dataType:"JSON"
         		});
         	},
-        	insertItem: function(item) {
-        		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
-        		return $.ajax({
-        			type: "POST",
-        			url: "projects/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
-        		});
-        	},
-        	updateItem: function(item) {
-        		return $.ajax({
-        			type: "PUT",
-        			url: "projects/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
-        		});
-        	},
+        	
         	deleteItem: function(item) {
         		return $.ajax({
         			type: "DELETE",
-        			url: "projects/jsgrid_functions",
+        			url: "work_order/jsgrid_functions",
         			data: item
         		});
         	}
         },
 
         fields: [ 
+		{ name: "no", title:"No" }, 
 		{ name: "id", title:"ID", visible:false }, 
 		{ name: "name", title:"Product", width: 150 }, 
-        { name: "qty", title:"Qty", type: "number", width: 50 }
+		{ name: "qty", title:"Qty", type: "number", width: 50 },
+		{ name: "symbol", title:"Unit", type: "text", width: 50 },
+		{ 
+			type: "control",
+			modeSwitchButton: false,
+			editButton: false 
+		} 
         ] 
 	}); 
+
+	var fillForm2 = function(data){
+		$('[name="details_id"]').val(data.id);
+		$('[name="product_name"]').val(data.name);
+		$('[name="qty"]').val(data.qty);
+	}
+
+	var saveDetail = function(data){
+
+	}
 
 	$( "#projects_code" ).autocomplete({
 		maxShowItems: 5,
@@ -60,7 +64,6 @@ $(document).ready(function() {
 		minLength: 2,
 		select: function( event, ui ) {
 		  $('[name="projects_id"]').val(ui.item.id);
-		  $('#jsGrid').jsGrid('loadData');
 		  generateID();	
 		}
 	  });
@@ -111,6 +114,7 @@ $(document).ready(function() {
 	$('#add-btn').click(function(){
 		action = "Add";
 		$('[name="projects_id"]').val("");
+		$('[name="asd"]').val("");
 		$('#jsGrid').jsGrid('loadData');
 		$('#form-title').text('Add Form');
 		$("#form").validator();
@@ -184,6 +188,7 @@ function save_data(){
 				$('div.block-div').unblock();
 				$('[name="asd"]').val(data.id);
 				show_hide_form(true);
+				$('#jsGrid').jsGrid('loadData');
 				// $('#form')[0].reset();
 			}else{
 				alert('Fail');
@@ -207,6 +212,7 @@ function generateID(){
 
 function edit(id){	
 	$('[name="change_id"]').val(id);
+	$('[name="asd"]').val(id);
 	$.ajax({
 		url : site_url+"work_orders/get_by_id/"+id,
 		type: "GET",

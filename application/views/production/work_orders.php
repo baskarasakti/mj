@@ -69,6 +69,35 @@
 					</form>
 					<h3 class="box-title">Work Order Detail</h3>
                     <hr>
+					<form id="form2" data-toggle="validator">
+						<div class="row">
+							<div class="col-md-2">
+								<div class="form-group">
+									<span class="form-control"><strong>Add / Edit Item</strong></span> </div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<input id="product_name" name="product_name" class="form-control" placeholder="Type Product Name" type="text" readonly>
+									<span class="help-block"> </span> </div>
+							</div>
+							<!--/span-->
+							<div class="col-md-2">
+								<div class="form-group">
+									<input id="qty" name="qty" class="form-control" placeholder="Quantity" type="number" required>
+									<span class="help-block"> </span> </div>
+							</div>
+							<input type="hidden" name="details_id">
+							<div class="col-md-1">
+								<div class="form-group">
+								<button type="button" id="saveBtn2" class="btn btn-success form-control">Save</button></div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+								<button type="button" id="cancelBtn2" class="btn btn-danger form-control">Clear</button></div>
+							</div>
+							<!--/span-->
+						</div>
+						</form> 
 					<div class="table-responsive"> 
 						<div id="jsGrid"></div> 
 					</div> 

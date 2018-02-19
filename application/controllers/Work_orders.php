@@ -8,6 +8,7 @@ class Work_orders extends MY_Controller {
 		$this->load->helper('tablefield');
 		$this->load->model('projects_model', 'pm');
 		$this->load->model('work_orders_model', 'wom');		
+		$this->load->model('work_order_detail_model', 'wodm');		
 		$this->load->model('project_details_model', 'pdm');
 	}
 	
@@ -110,6 +111,10 @@ class Work_orders extends MY_Controller {
 		);
 		$data = $this->add_adding_detail($data);
 		$inserted = $this->wom->add_id($data);
+		if($inserted){
+			$detail = $this->pdm->get_project_details( $this->input->post('projects_id'));
+			$status = $this->wodm->add_wo_details($inserted, $detail);
+		}
 		echo json_encode(array('id' => $inserted));
 	}
 
@@ -136,14 +141,16 @@ class Work_orders extends MY_Controller {
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->pdm->get_project_details($id);
+			$result = $this->wodm->get_work_order_details($id);
 			$data = array();
-			$count = 0;
+			$count = 1;
 			foreach($result as $value){
 				$row = array();
+				$row['no'] = $count;
 				$row['id'] = $value->id;
 				$row['name'] = $value->name;
 				$row['qty'] = $value->qty;
+				$row['symbol'] = $value->symbol;
 				$data[] = $row;
 				$count++;
 			}
