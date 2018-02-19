@@ -10,16 +10,27 @@ class Product_movement extends MY_Controller {
 		$this->load->model('product_movement_det_model', 'pmdm');
 		$this->load->model('processes_model', 'prcm');
 		$this->load->model('work_orders_model', 'wom');
+		$this->load->model('work_order_detail_model', 'wodm');
 	}
-	
+
 	private function get_column_attr(){
 		$table = new TableField();
+		$table->addColumn('no', '', 'No');
 		$table->addColumn('id', '', 'ID');
-		$table->addColumn('code', '', 'Receive Date');         
-		$table->addColumn('start_date', '', 'Start Date');         
-		$table->addColumn('end_date', '', 'End Date');         
-		$table->addColumn('qty', '', 'Qty');         
+		$table->addColumn('code', '', 'Code');         
+		$table->addColumn('projects_code', '', 'Sales Order');        
+		$table->addColumn('ppn', '', 'VAT');        
 		$table->addColumn('actions', '', 'Actions');        
+		return $table->getColumns();
+	}
+	
+	private function get_column_attr1(){
+		$table = new TableField();
+		$table->addColumn('id', '', 'ID');
+		$table->addColumn('qty', '', 'Qty');         
+		$table->addColumn('note', '', 'Note');         
+		$table->addColumn('products_id', '', 'Products');     
+		$table->addColumn('actions', '', 'Actions');  
 		return $table->getColumns();
 	}
 	
@@ -27,28 +38,29 @@ class Product_movement extends MY_Controller {
 	{
 		$data['title'] = "ERP | Product Movement";
 		$data['page_title'] = "Product Movement";
-		$data['table_title'] = "List Item";		
+		$data['table_title'] = "List Work Orders";		
+		$data['table_title1'] = "List Products";		
 		$data['breadcumb']  = array("Production", "Product Movement");
 		$data['page_view']  = "production/product_movement";		
 		$data['js_asset']   = "product-movement";	
 		$data['columns']    = $this->get_column_attr();	
+		$data['columns1']    = $this->get_column_attr1();	
 		$data['process'] = $this->prcm->get_all_data();	
 		$data['menu'] = $this->get_menu();					
 		$data['csrf'] = $this->csrf;		
 		$this->load->view('layouts/master', $data);
 	}
 
-	public function view_data(){
-		$result = $this->pmm->get_output_data();
+	public function view_data($id){
+		$result = $this->wodm->get_where_id('work_orders_id',$id);
 		$data = array();
 		$count = 0;
-		foreach($result['data'] as $value){
+		foreach($result as $value){
 			$row = array();
 			$row['id'] = $value->id;
-			$row['code'] = $value->code;
-			$row['start_date'] = $value->start_date;
-			$row['end_date'] = $value->end_date;
 			$row['qty'] = $value->qty;
+			$row['note'] = $value->note;
+			$row['products_id'] = $value->products_id;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;

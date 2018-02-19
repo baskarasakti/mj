@@ -1,13 +1,12 @@
 var table;
+var table1;
+var id_wo = -1;
 var action;
 
 $(document).ready(function() {
 
 	$('#receive_date').datepicker({
 		format: 'yyyy-mm-dd' 
-	});
-
-	$('#inlineFormCustomSelect').select2({
 	});
 
 	var columns = [];
@@ -18,6 +17,16 @@ $(document).ready(function() {
         columns.push({data: field, name: field});
         if(align == "right")
             right_align.push(i);
+	});
+	
+	var columns1 = [];
+    var right_align1 = [];
+    $("#datatable1").find('th').each(function(i, th){
+        var field = $(th).attr('data-field');
+        var align = $(th).attr('data-align');
+        columns1.push({data: field, name: field});
+        if(align == "right")
+            right_align1.push(i);
     });
 
 	table = $('#datatable').DataTable({
@@ -29,7 +38,7 @@ $(document).ready(function() {
         deferRender: true,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         ajax: {
-            url: site_url+'product_movement/view_data',
+            url: site_url+'work_orders/view_data',
             type: "POST",
             dataSrc : 'data',
             data: function ( d ) {
@@ -39,11 +48,51 @@ $(document).ready(function() {
         columns: columns,
         columnDefs: [ 
 			{ className: "dt-body-right", targets: right_align },
-			{ "orderable": false, targets : [-1]  } 
+			{ "orderable": false, targets : [-1]  },
+			{ "visible": false, targets : [0, -1]  } 
         ]
 	});
+
+	table1 = $('#datatable1').DataTable({
+        dom: 'lrftip',
+        responsive: true,
+        pageLength: 10,
+        deferRender: true,
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        ajax: {
+            url: site_url+'product_movement/view_data/'+id_wo,
+            type: "POST",
+            dataSrc : 'data',
+            data: function ( d ) {
+                d.csrf_token = $("[name='csrf_token']").val();
+            }
+        },
+        columns: columns1,
+        columnDefs: [ 
+			{ className: "dt-body-right", targets: right_align1 },
+            { "orderable": false, targets : [-1]  } ,
+			{ "visible": false, targets : [0]  } 
+        ]
+	});
+
+    $('#datatable tbody').on( 'click', 'tr', function () {
+
+        if ( $(this).hasClass('active') ) {
+            $(this).removeClass('active');
+        }
+        else {
+            table.$('tr.active').removeClass('active');
+            $(this).addClass('active');
+        }
+        var id = table.row( this ).data().id;
+        id_wo = id;
+        table1.ajax.url(site_url+'product_movement/view_data/'+id_wo).load();
+        $('#add-btn').show();
+        $('#nopo').text(table.row( this ).data().code);
+    } );
 	
 	$('#form-panel').hide();
+    $('#add-btn').hide();
 
 	$('#add-btn').click(function(){
 		action = "Add";

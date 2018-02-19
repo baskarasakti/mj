@@ -5,6 +5,8 @@ class Work_order_detail_model extends MY_Model {
 
 	protected $_t = 'work_order_detail';
 
+	var $table = 'work_order_detail';
+
 	function add_wo_details($id_wo, $details){
 		$data = array();
 		foreach($details as $item){
