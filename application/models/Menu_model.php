@@ -94,8 +94,8 @@ class Menu_model extends MY_Model {
 				'Return Material' => array(
 					'link' => 'return_material',
 				),
-				'Product Receiving' => array(
-					'link' => 'product_receiving',
+				'Product Movement' => array(
+					'link' => 'product_movement',
 				),
 				'HPP' => array(
 					'link' => 'hpp',

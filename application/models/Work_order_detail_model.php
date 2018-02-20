@@ -48,4 +48,12 @@ class Work_order_detail_model extends MY_Model {
 		return $this->db->get($this->_t)->result();
 	}
 
+	public function populate_product_select($id){
+		$this->db->select('p.id as id, p.code as code, p.name as name');		
+        $this->db->where('wod.work_orders_id', $id);		
+        $this->db->join('products p', 'wod.products_id = p.id', 'left');		
+        $result = $this->db->get($this->_t.' wod');
+        return $result->result();
+	}
+
 }

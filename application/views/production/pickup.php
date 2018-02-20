@@ -55,17 +55,23 @@
 							<input type="text" class="form-control" id="date" name="date" placeholder="Picking Date" required>
 							<div class="help-block with-errors"></div>
 						</div>
-						<!-- <div class="form-group">
-							<label for="category" class="control-label">Usage Categories</label>
+						<div class="form-group">
+							<label for="usage_categories" class="control-label">Usage Categories</label>
 							<select class="custom-select col-sm-12" id="usage_categories" name="usage_categories" required>
 								<option selected="">Choose...</option>
 								<?php
-									// foreach($u_categories as $item){
-									// 	echo '<option value="'.$item->id.'">'.$item->name.'</option>';
-									// }
+									foreach($u_categories as $item){
+										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
+									}
 								?>
 							</select>
-						</div> -->
+						</div>
+						<div class="form-group">
+							<label for="products_id" class="control-label">Products</label>
+							<select class="custom-select col-sm-12" id="products_id" name="products_id" required>
+								<option selected="">Choose...</option>
+							</select>
+						</div>
 						<div class="form-group">
 							<label for="machine_id" class="control-label">Machine</label>
 							<select class="custom-select col-sm-12" id="machine_id" name="machine_id" required>

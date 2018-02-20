@@ -3,6 +3,8 @@ var action;
 
 $(document).ready(function() {
 
+	var edit_data;	
+
 	$("#jsGrid").jsGrid({ 
     	width: "100%", 
     	height: "400px", 
@@ -40,22 +42,36 @@ $(document).ready(function() {
 		{ name: "name", title:"Product", width: 150 }, 
 		{ name: "qty", title:"Qty", type: "number", width: 50 },
 		{ name: "symbol", title:"Unit", type: "text", width: 50 },
-		{ 
-			type: "control",
-			modeSwitchButton: false,
-			editButton: false 
-		} 
         ] 
 	}); 
 
 	var fillForm2 = function(data){
+		edit_data = data;
 		$('[name="details_id"]').val(data.id);
 		$('[name="product_name"]').val(data.name);
 		$('[name="qty"]').val(data.qty);
 	}
 
 	var saveDetail = function(data){
+		var input = $("#form2").serializeArray();
+		input.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
 
+		$.ajax({
+			url : site_url+"work_orders/update_detail",
+			type: "POST",
+			data: input,
+			dataType: "JSON",
+			success: function(resp){
+				if(resp.status){
+					$.extend(data, {
+						qty: $('[name="qty"]').val()
+					});
+					$('#form2')[0].reset();
+					$("#jsGrid").jsGrid("updateItem", data);
+				}
+			}
+		});
+		
 	}
 
 	$( "#projects_code" ).autocomplete({
@@ -129,6 +145,13 @@ $(document).ready(function() {
 		$("#saveBtn").prop('disabled', false);
 	});
 
+	$('#cancelBtn2').click(function(){
+		$("#form2").validator('destroy');
+		$('#form2')[0].reset();
+		$("#saveBtn2").text("Save");
+		$("#saveBtn2").prop('disabled', false);
+	});
+
 	$("#saveBtn").click(function (e) {
 		var validator = $("#form").data("bs.validator");
 		validator.validate();
@@ -136,6 +159,15 @@ $(document).ready(function() {
 			save_data();
 		}
 	});
+
+	$("#saveBtn2").click(function (e) {
+		var validator = $("#form2").data("bs.validator");
+		validator.validate();
+		if (!validator.hasErrors()){
+			saveDetail(edit_data);
+		}
+	});
+
 
 });
 
@@ -266,3 +298,4 @@ function remove(id){
 		});	
 	});
 }
+

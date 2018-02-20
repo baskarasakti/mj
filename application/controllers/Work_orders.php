@@ -58,6 +58,11 @@ class Work_orders extends MY_Controller {
 		echo json_encode($result);
 	}
 
+	public function populate_product_select($id){
+		$result = $this->wodm->populate_product_select($id);
+		echo json_encode($result);
+	}
+
 	public function populate_autocomplete(){
 		$result = $this->wom->populate_autocomplete();
 		$data = array();
@@ -191,5 +196,12 @@ class Work_orders extends MY_Controller {
 		}
 	}
 
+	public function update_detail(){
+		$data = array(
+			'qty' =>$this->input->post('qty')
+		);
+		$status = $this->wodm->update('id', $this->input->post('details_id'), $data);
+		echo json_encode(array('status' => $status));
+	}
 
 }

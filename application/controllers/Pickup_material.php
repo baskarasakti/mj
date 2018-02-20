@@ -6,8 +6,6 @@ class Pickup_material extends MY_Controller {
 	function  __construct() {
 		parent::__construct();
 			$this->load->helper('tablefield');
-			$this->load->model('productions_model', 'pm');
-			$this->load->model('production_details_model', 'pdm');
 			$this->load->model('usage_cat_model', 'uc');
 			$this->load->model('material_usage_model', 'mu');
 			$this->load->model('material_usage_cat_model', 'muc');
@@ -19,7 +17,10 @@ class Pickup_material extends MY_Controller {
 	private function get_column_attr(){
         $table = new TableField();
         $table->addColumn('id', '', 'ID');
-		$table->addColumn('production_date', '', 'Production Date');            
+		$table->addColumn('date', '', 'Date');            
+		$table->addColumn('code', '', 'Code');            
+		$table->addColumn('wocode', '', 'WO Code');            
+		$table->addColumn('name', '', 'Product');            
 		$table->addColumn('actions', '', 'Actions');       
         return $table->getColumns();
     }
@@ -62,15 +63,19 @@ class Pickup_material extends MY_Controller {
 	}
 
 	public function view_data(){
-		$result = $this->pm->get_output_data();
+		$result = $this->mu->get_output_data();
 		$data = array();
 		$count = 0;
 		foreach($result['data'] as $value){
 			$row = array();
 			$row['id'] = $value->id;
-			$row['production_date'] = $value->production_date;
-			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="add('.$value->id.')" type="button">Pick Materials</button>';
-			$data[] = $row;
+			$row['date'] = $value->date;
+			$row['code'] = $value->code;
+			$row['wocode'] = $value->wocode;
+			$row['name'] = $value->name;
+			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
+							  .<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
+            $data[] = $row;
 			$count++;
 		}
 

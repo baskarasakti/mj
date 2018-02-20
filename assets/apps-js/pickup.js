@@ -283,3 +283,17 @@ function remove(id){
 			});	
 	});
 }
+
+
+function populate_product_select(wo_id){
+	$.ajax({
+		url : site_url+"work_orders/populate_product_select/"+id,
+		type: "GET",
+		dataType: "JSON",
+		success: function(data)
+		{
+			
+		}
+	});	
+}
+
