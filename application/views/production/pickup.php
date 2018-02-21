@@ -56,20 +56,20 @@
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="usage_categories" class="control-label">Usage Categories</label>
-							<select class="custom-select col-sm-12" id="usage_categories" name="usage_categories" required>
+							<label for="products_id" class="control-label">Products</label>
+							<select class="custom-select col-sm-12" id="products_id" name="products_id">
+								<option selected="">Choose...</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="usage_categories_id" class="control-label">Usage Categories</label>
+							<select class="custom-select col-sm-12" id="usage_categories_id" name="usage_categories_id" required>
 								<option selected="">Choose...</option>
 								<?php
 									foreach($u_categories as $item){
 										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
 									}
 								?>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="products_id" class="control-label">Products</label>
-							<select class="custom-select col-sm-12" id="products_id" name="products_id" required>
-								<option selected="">Choose...</option>
 							</select>
 						</div>
 						<div class="form-group">
@@ -89,10 +89,48 @@
 						</div>
 						<input type="hidden" name="change_id">
 						<input type="hidden" name="asd" value="">
+					</form>	
+					<h3 class="box-title">Material List</h3>
+                    <hr>	
+						<form id="form2" data-toggle="validator">
+						<div class="row">
+							<div class="col-md-1">
+								<div class="form-group">
+									<span class="form-control"><strong>Item</strong></span> </div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<select class="form-control" id="materials_id" name="materials_id" required>
+										<option selected="">Choose Material...</option>
+									</select>
+								</div>
+							</div>
+							<!--/span-->
+							<div class="col-md-2">
+								<div class="form-group">
+									<input id="qty" name="qty" class="form-control" placeholder="Quantity" type="number" required>
+									<span class="help-block"> </span> </div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<input id="note" name="note" class="form-control" placeholder="Note" type="text">
+									<span class="help-block"> </span> </div>
+							</div>
+							<input type="hidden" name="details_id">
+							<div class="col-md-1">
+								<div class="form-group">
+								<button type="button" id="saveBtn2" class="btn btn-success form-control">Save</button></div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+								<button type="button" id="cancelBtn2" class="btn btn-danger form-control">Clear</button></div>
+							</div>
+							<!--/span-->
+						</div>
+						</form>
 						<div class="table-responsive"> 
 			              <div id="jsGrid"></div> 
 			            </div> 
-					</form>
 					</div>
 				</div>
 			</div>

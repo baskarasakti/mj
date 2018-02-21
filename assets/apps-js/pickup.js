@@ -1,5 +1,6 @@
 var table;
 var action;
+var method;
 
 $(document).ready(function() {
 
@@ -7,32 +8,19 @@ $(document).ready(function() {
 		format: 'yyyy-mm-dd' 
 	});
 
-
-    var materials;
-    $.ajax({
-    	url: site_url+'purchasing/get_materials',
-    	type: "GET",
-    	async: false,
-    	success : function(text)
-    	{
-    		materials = JSON.parse(text);
-    	}
-    });
-
 	$("#jsGrid").jsGrid({ 
     	width: "100%", 
     	height: "400px", 
 
     	inserting: false, 
-    	editing: true, 
+    	editing: false, 
     	sorting: true, 
     	paging: true, 
 
 		rowClick: function(args) {
-			alert(args.item);
-			$.extend(args.item, {id:2, name:"Test23", qty:93, note:"OKOK"});
-			
-	$("#jsGrid").jsGrid("updateItem",  args.item);
+			method = "Edit";
+			editedRow = args.item;
+			get_pick_detail(args.item);
         },
         controller: {
         	loadData: function(filter) {
@@ -53,10 +41,12 @@ $(document).ready(function() {
         },
 
         fields: [ 
-        { name: "id" }, 
+        { name: "id", visible: false }, 
+        { name: "materias_id", type: "text", visible:false }, 
         { name: "name", title:"Item Name", type: "text", width: 150 }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
-        { name: "note", title:"Note", type: "textarea", width: 200 },  
+        { name: "note", title:"Note", type: "text", width: 200 },  
+        { name: "symbol", title:"Unit", type: "text" },  
 		{ 
 			type: "control",
 			modeSwitchButton: false,
@@ -65,20 +55,6 @@ $(document).ready(function() {
         ] 
 	}); 
 	
-	var jsadd = function(){
-		var data = {id:1, name:"Test", qty:9, note:"OK"};
-		var data2 = {id:2, name:"Test2", qty:92, note:"OK2"};
-		$("#jsGrid").jsGrid("insertItem", data);
-		$("#jsGrid").jsGrid("insertItem", data2);
-	}
-	jsadd();
-	
-	var data2 = {id:2, name:"Test2", qty:92, note:"OK2"};
-	var data = {id:2, name:"Test23", qty:93, note:"OKOK"};
-	$("#jsGrid").jsGrid("updateItem", data2, data);
-	
-
-	
 	$( "#work_orders_code" ).autocomplete({
 		maxShowItems: 5,
 		source: site_url+"work_orders/populate_autocomplete",
@@ -86,6 +62,7 @@ $(document).ready(function() {
 		select: function( event, ui ) {
 		  $('[name="work_orders_id"]').val(ui.item.id);
 		  $('#jsGrid').jsGrid('loadData');
+		  populate_product_select("");
 		  generateID();	
 		}
 	});
@@ -141,6 +118,7 @@ $(document).ready(function() {
 		action = "Add";
 		$('#form-title').text('Add Form');
 		$("#form").validator();
+		$("#saveBtn").prop('disabled', false);
 		show_hide_form(true);
 	});
 
@@ -150,17 +128,60 @@ $(document).ready(function() {
 		$('#form')[0].reset();
 	});
 
+	$('#cancelBtn2').click(function(){
+		method = "";
+		$('#form2')[0].reset();
+	});
+
     $("#saveBtn").click(function (e) {
          var validator = $("#form").data("bs.validator");
          validator.validate();
          if (!validator.hasErrors()){
-            save_data();
+			save_data();
          }
 	 });
 
+	 $("#saveBtn2").click(function (e) {
+		var validator = $("#form2").data("bs.validator");
+		validator.validate();
+		if (!validator.hasErrors()){
+			save_pick_detail()
+		}
+	});
 
-   
-	
+	var save_pick_detail = function(){
+		var data = $("#form2").serializeArray();
+		data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
+		data.push({name: 'material_usages_id',value: $("[name='asd']").val()});
+		var url = site_url+"pickup_material/update_detail";
+		if(method != "Edit"){
+			url = site_url+"pickup_material/add_detail";
+		}
+		$.ajax({
+			url : url,
+			type: "POST",
+			data: data,
+			dataType: "JSON",
+			success: function(data)
+			{
+				if(data.status){
+					method = "";
+					$('#form2')[0].reset();
+					$('#jsGrid').jsGrid('loadData');
+				}
+			}
+		}); 
+		
+	 }
+
+	 var get_pick_detail = function(data){
+		$('[name="details_id"]').val(data.id);
+		$('[name="materials_id"]').val(data.materials_id);
+		$('[name="qty"]').val(data.qty);
+		$('[name="note"]').val(data.note);
+	 }
+
+
 });
 
 function show_hide_form(bShow){
@@ -248,12 +269,18 @@ function edit(id){
 			dataType: "JSON",
 			success: function(data)
 			{
-				$('#date').val(data.usage_date);			
-				$('#usage_categories').val(data.usage_categories_id);			
+				$('#date').val(data.date);			
+				$('#code').val(data.usage_categories_id);			
+				$('#work_orders_code').val(data.work_orders_code);			
+				$('#work_orders_id').val(data.work_orders_id);			
+				$('#machine_id').val(data.machine_id);			
+				$('#usage_categories_id').val(data.usage_categories_id);	
+				populate_product_select(data.products_id);	
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				$('[name="asd"]').val(id);
 				$('#jsGrid').jsGrid('loadData');
+				$("#saveBtn").prop('disabled', true);
 				show_hide_form(true);
 			}
 		});
@@ -285,14 +312,43 @@ function remove(id){
 }
 
 
-function populate_product_select(wo_id){
+function populate_product_select(selected){
 	$.ajax({
-		url : site_url+"work_orders/populate_product_select/"+id,
+		url : site_url+"work_orders/populate_product_select/"+$('[name="work_orders_id"]').val(),
 		type: "GET",
 		dataType: "JSON",
 		success: function(data)
 		{
-			
+			var option = "<option value=''>Choose Product</option>";
+			for(let i=0; i<data.length; i++){
+				option += "<option value='"+data[i].id+"'>"+data[i].code+" "+data[i].name+"</option>";
+			}
+			console.log(option);
+			$('[name="products_id"]').html(option);
+			$('[name="products_id"]').val(selected);
+			populate_product_materials("");
+		}
+	});	
+}
+
+function populate_product_materials(selected){
+	$.ajax({
+		url : site_url+"products/get_product_materials/"+$('[name="products_id"]').val(),
+		type: "GET",
+		data: {
+			products_id:$('[name="products_id"]').val(),
+			usage_categories_id: $('[name="usage_categories_id"]').val()
+		},
+		dataType: "JSON",
+		success: function(data)
+		{
+			var option = "<option value=''>Choose Materials</option>";
+			for(let i=0; i<data.length; i++){
+				option += "<option value='"+data[i].id+"'>"+data[i].code+" - "+data[i].name+"</option>";
+			}
+			console.log(option);
+			$('[name="materials_id"]').html(option);
+			$('[name="materials_id"]').val(selected);
 		}
 	});	
 }

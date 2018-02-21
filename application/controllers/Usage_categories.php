@@ -77,7 +77,7 @@ class Usage_categories extends MY_Controller {
 		echo json_encode(array('status' => $status));
 	}
 
-	function jsgrid_functions($id){
+	function jsgrid_functions($id=-1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
 			$result = $this->muc->get_material_usage_categories($id);
@@ -100,25 +100,27 @@ class Usage_categories extends MY_Controller {
 				'material_categories_id' => $this->normalize_text($this->input->post('name')),
 				'usage_categories_id' => $id
 			);
-			$result = $this->muc->add($data);
+			$result = $this->muc->add_id($data);
 
 			$row = array();
-			$row['id'] = $insert;
+			$row['id'] = $result;
 			$row['name'] = $this->input->post('name');
 
 			echo json_encode($row);
 			break;
 
 			case "PUT":
+			$this->input->raw_input_stream;
 			$data = array(
-				'material_categories_id' => $this->normalize_text($this->input->post('name')),
+				'material_categories_id' => $this->normalize_text($this->input->input_stream('name')),
 				'usage_categories_id' => $id
 			);
 			$result = $this->muc->update('id',$this->input->post('id'),$data);
 			break;
 
 			case "DELETE":
-			$status = $this->muc->delete('id', $this->input->post('id'));
+			$this->input->raw_input_stream;
+			$status = $this->muc->delete('id', $this->input->input_stream('id'));
 			break;
 		}
 	}

@@ -3,9 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Material_usage_det_model extends MY_Model {
 
-	protected $_t = 'material_usage_details';
+	protected $_t = 'material_usages_detail';
 		
-	var $table = 'material_usage_details';
+	var $table = 'material_usage_detail';
 	var $column = array('id','qty', 'note', 'material_usage_id', 'materials_id'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
@@ -55,10 +55,11 @@ class Material_usage_det_model extends MY_Model {
 
 	public function get_material_usage_details($id)
 	{
-		$this->db->select(array('mud.id as id','m.id as id_materials','qty','note','materials_id','m.name as name'));
-        $this->db->where('material_usage_id', $id);
+		$this->db->select('mud.id as id, materials_id, m.name as name, qty_pick as qty, pick_note as note, u.symbol as symbol');
+        $this->db->where('material_usages_id', $id);
         $this->db->join('materials m', 'm.id = mud.materials_id', 'LEFT');
-        $result = $this->db->get('material_usage_details mud');
+        $this->db->join('uom u', 'm.uom_id = u.id', 'LEFT');
+        $result = $this->db->get('material_usages_detail mud');
         return $result->result();
 	}
 

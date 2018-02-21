@@ -11,6 +11,7 @@ class Pickup_material extends MY_Controller {
 			$this->load->model('material_usage_cat_model', 'muc');
 			$this->load->model('material_usage_det_model', 'mud');
 			$this->load->model('material_inventory_model', 'mi');
+			$this->load->model('work_orders_model', 'wom');
 			$this->load->model('machine_model', 'mm');
 	}
 	
@@ -86,16 +87,22 @@ class Pickup_material extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'usage_date' => $this->normalize_text($this->input->post('date')),
-			'production_details_id' => $this->input->post('asd'),
-			'usage_categories_id' => $this->input->post('usage_categories')
+			'code_pick' => $this->input->post('code'),
+			'date' => $this->input->post('date'),
+			'machine_id' => $this->input->post('machine_id'),
+			'products_id' => $this->input->post('products_id'),
+			'work_orders_id' => $this->input->post('work_orders_id'),
+			'usage_categories_id' => $this->input->post('usage_categories_id')
 		);
+		$data = $this->add_adding_detail($data);
 		$inserted = $this->mu->add_id($data);
 		echo json_encode(array('id' => $inserted));
 	}
 
 	function get_by_id($id){
 		$detail = $this->mu->get_by_id('id', $id);
+		$wo = $this->wom->get_by_id('id', $detail->work_orders_id);
+		$detail->work_orders_code = $wo->code;
 		echo json_encode($detail);
 	}
 
@@ -114,7 +121,7 @@ class Pickup_material extends MY_Controller {
 		echo json_encode(array('status' => $status));
 	}
 
-	function jsgrid_functions($id){
+	function jsgrid_functions($id=-1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
 			$result = $this->mud->get_material_usage_details($id);
@@ -123,9 +130,11 @@ class Pickup_material extends MY_Controller {
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['name'] = $value->id_materials;
+				$row['materials_id'] = $value->materials_id;
+				$row['name'] = $value->name;
 				$row['qty'] = $value->qty;
 				$row['note'] = $value->note;
+				$row['symbol'] = $value->symbol;
 				$data[] = $row;
 				$count++;
 			}
@@ -134,57 +143,31 @@ class Pickup_material extends MY_Controller {
 			echo json_encode($result);
 			break;
 
-			case "POST":
-			$data = array(
-				'materials_id' => $this->normalize_text($this->input->post('name')),
-				'qty' => $this->normalize_text($this->input->post('qty')),
-				'note' => $this->normalize_text($this->input->post('note')),
-				'material_usage_id' => $id
-			);
-			$insert = $this->mud->add_id($data);
-
-			$data2 = array(
-				'date' => $this->mysql_time_now(),
-				'type' => 'out',
-				'material_usage_details_id' => $insert,
-				'qty' => $this->normalize_text($this->input->post('qty')),
-				'materials_id' => $this->normalize_text($this->input->post('name'))
-			);
-
-			$this->mi->add_id($data2);
-
-			$row = array();
-			$row['id'] = $insert;
-			$row['name'] = $this->normalize_text($this->input->post('name'));
-			$row['qty'] = $this->normalize_text($this->input->post('qty'));
-			$row['note'] = $this->normalize_text($this->input->post('note'));
-
-			echo json_encode($row);
-			break;
-
-			case "PUT":
-			$this->input->raw_input_stream;
-			$data = array(
-				'materials_id' => $this->normalize_text($this->input->input_stream('name')),
-				'qty' => $this->normalize_text($this->input->input_stream('qty')),
-				'note' => $this->normalize_text($this->input->input_stream('note'))
-			);
-			$insert = $this->mud->update_id('id',$this->input->input_stream('id'),$data);
-
-			$data2 = array(
-				'date' => $this->mysql_time_now(),
-				'type' => 'out',
-				'qty' => $this->normalize_text($this->input->input_stream('qty')),
-				'materials_id' => $this->normalize_text($this->input->input_stream('name')) 
-			);
-
-			$this->mi->update_id('material_usage_details_id',$this->input->input_stream('id'),$data2);
-			break;
-
 			case "DELETE":
+			$this->input->raw_input_stream;
 			$status = $this->mud->delete('id', $this->input->input_stream('id'));
 			break;
 		}
+	}
+
+	public function add_detail(){
+		$data = array(
+			'material_usages_id' => $this->input->post('material_usages_id'),
+			'materials_id' => $this->input->post('materials_id'),
+			'pick_note' => $this->normalize_text($this->input->post('note')),
+			'qty_pick' => $this->input->post('qty')
+		);
+		$status = $this->mud->add($data);
+		echo json_encode(array('status'=> $status));
+	}
+
+	public function update_detail(){
+		$data = array(
+			'pick_note' => $this->normalize_text($this->input->post('note')),
+			'qty_pick' => $this->input->post('qty')
+		);
+		$status = $this->mud->update_id('id',$this->input->post('details_id'),$data);
+		echo json_encode(array('status'=> $status));
 	}
 
 }

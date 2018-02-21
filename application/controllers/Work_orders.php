@@ -58,7 +58,7 @@ class Work_orders extends MY_Controller {
 		echo json_encode($result);
 	}
 
-	public function populate_product_select($id){
+	public function populate_product_select($id=-1){
 		$result = $this->wodm->populate_product_select($id);
 		echo json_encode($result);
 	}

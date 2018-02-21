@@ -6,23 +6,23 @@ class Return_material extends MY_Controller {
 	function  __construct() {
 		parent::__construct();
 			$this->load->helper('tablefield');
-			$this->load->model('products_model', 'pm');
-			$this->load->model('product_cat_model', 'pcm');
-			$this->load->model('processes_model', 'psm');
-			$this->load->model('materials_model', 'mm');
-			$this->load->model('material_usage_model', 'mu');
-			$this->load->model('material_usage_det_model', 'mud');
-			$this->load->model('material_return_model', 'mr');
-			$this->load->model('material_return_det_model', 'mrd');
-			$this->load->model('material_inventory_model', 'mi');
 			$this->load->model('usage_cat_model', 'uc');
+			$this->load->model('material_usage_model', 'mu');
+			$this->load->model('material_usage_cat_model', 'muc');
+			$this->load->model('material_usage_det_model', 'mud');
+			$this->load->model('material_inventory_model', 'mi');
+			$this->load->model('work_orders_model', 'wom');
+			$this->load->model('machine_model', 'mm');
 	}
 	
 	private function get_column_attr(){
         $table = new TableField();
         $table->addColumn('id', '', 'ID');
-        $table->addColumn('usage_date', '', 'Date');      
-        $table->addColumn('actions', '', 'Actions');        
+		$table->addColumn('date', '', 'Date');            
+		$table->addColumn('code', '', 'Code');            
+		$table->addColumn('wocode', '', 'WO Code');            
+		$table->addColumn('name', '', 'Product');            
+		$table->addColumn('actions', '', 'Actions');       
         return $table->getColumns();
     }
 	
@@ -43,22 +43,24 @@ class Return_material extends MY_Controller {
 
 	public function view_data(){
 		$result = $this->mu->get_output_data();
-        $data = array();
-        $count = 0;
-        foreach($result['data'] as $value){
-            $row = array();
-            $row['id'] = $value->id;
-			$row['usage_date'] = $value->usage_date;
-			$row['actions'] = '<a class="btn btn-sm btn-info" href="'.site_url('products/detail_index/'.$value->id).'" type="button"><i class="fa  fa-info-circle"></i></a>
-							   <button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
-							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
+		$data = array();
+		$count = 0;
+		foreach($result['data'] as $value){
+			$row = array();
+			$row['id'] = $value->id;
+			$row['date'] = $value->date;
+			$row['code'] = $value->code;
+			$row['wocode'] = $value->wocode;
+			$row['name'] = $value->name;
+			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
+							  .<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
             $data[] = $row;
-            $count++;
-        }
+			$count++;
+		}
 
-        $result['data'] = $data;
+		$result['data'] = $data;
 
-        echo json_encode($result);
+		echo json_encode($result);
 	}
 
 	function add(){

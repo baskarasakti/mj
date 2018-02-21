@@ -91,6 +91,11 @@ class Products extends MY_Controller {
 		echo json_encode($result);
 	}
 
+	public function get_product_materials($id){
+		$result = $this->pmm->get_product_materials2($id);
+		echo json_encode($result);
+	}
+
 	public function view_data(){
 		$result = $this->pm->get_output_data();
 		$data = array();
