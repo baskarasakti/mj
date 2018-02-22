@@ -12,8 +12,11 @@ class Return_material extends MY_Controller {
 			$this->load->model('material_usage_cat_model', 'muc');
 			$this->load->model('material_return_det_model', 'mrd');
 			$this->load->model('material_inventory_model', 'mi');
+			$this->load->model('materials_model', 'mtm');
 			$this->load->model('work_orders_model', 'wom');
 			$this->load->model('machine_model', 'mm');
+			$this->load->model('uom_model', 'uom');
+			$this->load->model('product_materials_model', 'pmm');
 	}
 	
 	private function get_column_attr(){
@@ -42,6 +45,7 @@ class Return_material extends MY_Controller {
 		$data['u_categories']    = $this->uc->get_all_data();	
 		$data['categories']    = $this->mcm->get_all_data();	
 		$data['machines']    = $this->mm->populate_select();					
+		$data['uom']    = $this->uom->get_all_data();					
 		$this->load->view('layouts/master', $data);
 	}
 
@@ -140,6 +144,40 @@ class Return_material extends MY_Controller {
 			'qty_return' => $this->input->post('qty')
 		);
 		$status = $this->mrd->update_id('id',$this->input->post('details_id'),$data);
+		$detail = $this->mrd->get_by_id('id',$this->input->post('details_id'));
+		if(isset($status)){
+			$status = $this->mi->material_usage_change($this->input->post('details_id'), $this->input->post('materials_id'), $detail);
+		}
+		echo json_encode(array('status'=> $status));
+	}
+
+	public function add_new_material(){
+		$data = array(
+			'name' => $this->normalize_text($this->input->post('material_name')),
+			'material_categories_id' => $this->input->post('material_categories_id'),
+			'uom_id' => $this->input->post('uom_id'),
+			'min_stock' => 0,
+			'created_at' => date("Y-m-d H:m:s")
+		);
+		$id = $this->mtm->add_id($data);
+		$data = array(
+			'products_id' => $this->input->post('products_id'),
+			'materials_id' => $id,
+			'qty' => 0,
+		);
+		$status = $this->pmm->add($data);
+		$data = array(
+			'qty_pick' => 0,
+			'qty_return' => $this->input->post('return_qty'),
+			'return_note' => $this->input->post('return_note'),
+			'materials_id' => $id,
+			'material_usages_id' => $this->input->post('material_usages_id'),
+		);
+		$status = $this->mrd->add_id($data);
+		$detail = $this->mrd->get_by_id('id',$status);
+		if(isset($status)){
+			$status = $this->mi->material_usage_change($status, $this->input->post('materials_id'), $detail);
+		}
 		echo json_encode(array('status'=> $status));
 	}
 

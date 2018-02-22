@@ -145,6 +145,7 @@ class Pickup_material extends MY_Controller {
 
 			case "DELETE":
 			$this->input->raw_input_stream;
+			$this->mi->material_usage_delete();
 			$status = $this->mud->delete('id', $this->input->input_stream('id'));
 			break;
 		}
@@ -157,8 +158,12 @@ class Pickup_material extends MY_Controller {
 			'pick_note' => $this->normalize_text($this->input->post('note')),
 			'qty_pick' => $this->input->post('qty')
 		);
-		$status = $this->mud->add($data);
-		echo json_encode(array('status'=> $status));
+		$id = $this->mud->add_id($data);
+		$detail = $this->mud->get_by_id('id',$id);
+		if(isset($id)){
+			$status = $this->mi->material_usage_change($id, $this->input->post('materials_id'), $detail);
+		}
+		echo json_encode(array('id'=> $id));
 	}
 
 	public function update_detail(){
@@ -167,7 +172,11 @@ class Pickup_material extends MY_Controller {
 			'qty_pick' => $this->input->post('qty')
 		);
 		$status = $this->mud->update_id('id',$this->input->post('details_id'),$data);
-		echo json_encode(array('status'=> $status));
+		$detail = $this->mrd->get_by_id('id',$this->input->post('details_id'));
+		if(isset($status)){
+			$status = $this->mi->material_usage_change($this->input->post('details_id'), $this->input->post('materials_id'), $detail);
+		}
+		echo json_encode(array('id'=> $status));
 	}
 
 }
