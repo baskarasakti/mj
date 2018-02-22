@@ -77,7 +77,7 @@
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<input id="product_name" name="product_name" class="form-control" placeholder="Type Product Name" type="text" readonly>
+									<input id="product_name" name="product_name" class="form-control" placeholder="Choose Product Name" type="text" readonly>
 									<span class="help-block"> </span> </div>
 							</div>
 							<!--/span-->

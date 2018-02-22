@@ -19,7 +19,7 @@ class Pickup_material extends MY_Controller {
         $table = new TableField();
         $table->addColumn('id', '', 'ID');
 		$table->addColumn('date', '', 'Date');            
-		$table->addColumn('code', '', 'Code');            
+		$table->addColumn('code', '', 'Pick Code');           
 		$table->addColumn('wocode', '', 'WO Code');            
 		$table->addColumn('name', '', 'Product');            
 		$table->addColumn('actions', '', 'Actions');       
@@ -117,7 +117,7 @@ class Pickup_material extends MY_Controller {
    }
 
 	function delete($id){        
-		$status = $this->pm->delete('id', $id);
+		$status = $this->mu->delete('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 

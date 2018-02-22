@@ -44,9 +44,9 @@ $(document).ready(function() {
         { name: "id", visible: false }, 
         { name: "materias_id", type: "text", visible:false }, 
         { name: "name", title:"Item Name", type: "text", width: 150 }, 
-        { name: "qty", title:"Qty", type: "number", width: 50 }, 
+		{ name: "qty", title:"Qty", type: "number", width: 50 }, 
+		{ name: "symbol", title:"Unit", type: "text" },  
         { name: "note", title:"Note", type: "text", width: 200 },  
-        { name: "symbol", title:"Unit", type: "text" },  
 		{ 
 			type: "control",
 			modeSwitchButton: false,
@@ -232,6 +232,7 @@ function save_data(){
 					$("#saveBtn").prop('disabled', true);
 					$('div.block-div').unblock();
 					$('[name="asd"]').val(data.id);
+					populate_product_materials("");
 					show_hide_form(true);
 					// $('#form')[0].reset();
 			   }else{
@@ -270,7 +271,7 @@ function edit(id){
 			success: function(data)
 			{
 				$('#date').val(data.date);			
-				$('#code').val(data.usage_categories_id);			
+				$('#code').val(data.code_pick);			
 				$('#work_orders_code').val(data.work_orders_code);			
 				$('#work_orders_id').val(data.work_orders_id);			
 				$('#machine_id').val(data.machine_id);			

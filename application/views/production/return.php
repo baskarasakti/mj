@@ -6,7 +6,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading"> <?=$table_title;?>         
 					<div class="pull-right">
-						<a href="javascript:void(0);" id="add-btn"><i class="ti-plus"></i> Add Data</a> 
+						<!-- <a href="javascript:void(0);" id="add-btn"><i class="ti-plus"></i> Add Data</a>  -->
 					</div>
 				</div>
 				<div class="panel-wrapper collapse in" aria-expanded="true">
@@ -41,8 +41,8 @@
 					<form id="form" data-toggle="validator">
 						<input type="hidden" name="work_orders_id" id="work_orders_id">					
 						<div class="form-group">
-							<label for="work_orders_code" class="control-label">Choose WO</label>
-							<input type="text" class="form-control" id="work_orders_code" name="work_orders_code" placeholder="Type Work Orders Code" required>
+							<label for="work_orders_code" class="control-label">WO</label>
+							<input type="text" class="form-control" id="work_orders_code" name="work_orders_code" placeholder="Type Work Orders Code" readonly>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
@@ -51,19 +51,19 @@
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="date" class="control-label">Picking Date</label>
-							<input type="text" class="form-control" id="date" name="date" placeholder="Picking Date" required>
+							<label for="date" class="control-label">Return Date</label>
+							<input type="text" class="form-control" id="date" name="date" placeholder="Picking Date" disabled>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
 							<label for="products_id" class="control-label">Products</label>
-							<select class="custom-select col-sm-12" id="products_id" name="products_id">
+							<select class="custom-select col-sm-12" id="products_id" name="products_id" disabled>
 								<option selected="">Choose...</option>
 							</select>
 						</div>
 						<div class="form-group">
 							<label for="usage_categories_id" class="control-label">Usage Categories</label>
-							<select class="custom-select col-sm-12" id="usage_categories_id" name="usage_categories_id" required>
+							<select class="custom-select col-sm-12" id="usage_categories_id" name="usage_categories_id" disabled>
 								<option selected="">Choose...</option>
 								<?php
 									foreach($u_categories as $item){
@@ -74,7 +74,7 @@
 						</div>
 						<div class="form-group">
 							<label for="machine_id" class="control-label">Machine</label>
-							<select class="custom-select col-sm-12" id="machine_id" name="machine_id" required>
+							<select class="custom-select col-sm-12" id="machine_id" name="machine_id" disabled>
 								<option selected="">Choose...</option>
 								<?php
 									foreach($machines as $item){
@@ -84,7 +84,7 @@
 							</select>
 						</div>
 						<div class="form-group text-right">
-							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
+							<!-- <button type="button" id="saveBtn" class="btn btn-success">Save</button> -->
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
 						</div>
 						<input type="hidden" name="change_id">
@@ -96,12 +96,12 @@
 						<div class="row">
 							<div class="col-md-1">
 								<div class="form-group">
-									<span class="form-control"><strong>Item</strong></span> </div>
+									<button type="button" id="newItemBtn" class="btn btn-success form-control">Add</button></div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<select class="form-control" id="materials_id" name="materials_id" required>
-										<option selected="">Choose Material...</option>
+									<select class="form-control" id="materials_id" name="materials_id" required disabled>
+										<option selected="">Choose Material in Table...</option>
 									</select>
 								</div>
 							</div>
@@ -137,4 +137,48 @@
 		</div>
 	</div>
 	<!-- /.row -->
+</div>
+
+<div id="dialog" title="New Item">
+	<form id="form3">
+		<div class="form-body">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="control-label">Material Name</label>
+						<input type="text" name="material_name" class="form-control" placeholder="Material Name">
+						<span class="help-block"></span> </div>
+				</div>
+				<!--/span-->
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="control-label">Categories</label>
+						<select class="custom-select col-sm-12" name="material_categories_id">
+							<option selected="">Choose...</option>
+							<?php
+								foreach($categories as $item){
+									echo '<option value="'.$item->id.'">'.$item->name.'</option>';
+								}
+							?>
+						</select>
+						<span class="help-block"></span> </div>
+				</div>
+				<!--/span-->
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="control-label">Qty</label>
+						<input type="text" name="return_qty" class="form-control" placeholder="Qty">
+						<span class="help-block"></span> </div>
+				</div>
+				<!--/span-->
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="control-label">Note</label>
+						<input type="text" name="return_note" class="form-control" placeholder="Note">
+						<span class="help-block"></span> </div>
+				</div>
+				<!--/span-->
+			</div>
+		</div>
+	</form>
 </div>

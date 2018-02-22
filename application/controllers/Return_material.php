@@ -7,9 +7,10 @@ class Return_material extends MY_Controller {
 		parent::__construct();
 			$this->load->helper('tablefield');
 			$this->load->model('usage_cat_model', 'uc');
-			$this->load->model('material_usage_model', 'mu');
+			$this->load->model('material_cat_model', 'mcm');
+			$this->load->model('material_return_model', 'mu');
 			$this->load->model('material_usage_cat_model', 'muc');
-			$this->load->model('material_usage_det_model', 'mud');
+			$this->load->model('material_return_det_model', 'mrd');
 			$this->load->model('material_inventory_model', 'mi');
 			$this->load->model('work_orders_model', 'wom');
 			$this->load->model('machine_model', 'mm');
@@ -19,7 +20,8 @@ class Return_material extends MY_Controller {
         $table = new TableField();
         $table->addColumn('id', '', 'ID');
 		$table->addColumn('date', '', 'Date');            
-		$table->addColumn('code', '', 'Code');            
+		$table->addColumn('code_pick', '', 'Pick Code');            
+		$table->addColumn('code_return', '', 'Return Code');            
 		$table->addColumn('wocode', '', 'WO Code');            
 		$table->addColumn('name', '', 'Product');            
 		$table->addColumn('actions', '', 'Actions');       
@@ -37,7 +39,9 @@ class Return_material extends MY_Controller {
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;
 		$data['menu'] = $this->get_menu();	
-		$data['u_categories']    = $this->uc->get_all_data();					
+		$data['u_categories']    = $this->uc->get_all_data();	
+		$data['categories']    = $this->mcm->get_all_data();	
+		$data['machines']    = $this->mm->populate_select();					
 		$this->load->view('layouts/master', $data);
 	}
 
@@ -49,7 +53,8 @@ class Return_material extends MY_Controller {
 			$row = array();
 			$row['id'] = $value->id;
 			$row['date'] = $value->date;
-			$row['code'] = $value->code;
+			$row['code_pick'] = $value->code_pick;
+			$row['code_return'] = $value->code_return;
 			$row['wocode'] = $value->wocode;
 			$row['name'] = $value->name;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
@@ -108,9 +113,11 @@ class Return_material extends MY_Controller {
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['name'] = $value->id_materials;
+				$row['materials_id'] = $value->materials_id;
+				$row['name'] = $value->name;
 				$row['qty'] = $value->qty;
 				$row['note'] = $value->note;
+				$row['symbol'] = $value->symbol;
 				$data[] = $row;
 				$count++;
 			}
@@ -119,48 +126,21 @@ class Return_material extends MY_Controller {
 			echo json_encode($result);
 			break;
 
-			case "POST":
-			$data = array(
-				'materials_id' => $this->normalize_text($this->input->post('name')),
-				'qty' => $this->normalize_text($this->input->post('qty')),
-				'note' => $this->normalize_text($this->input->post('note')),
-				'material_return_id' => $id
-			);
-			$insert = $this->mrd->add($data);
-
-			$data2 = array(
-				'date' => $this->mysql_time_now(),
-				'type' => 'in',
-				'material_usage_details_id' => $insert,
-				'qty' => $this->normalize_text($this->input->post('qty')),
-				'materials_id' => $this->normalize_text($this->input->post('name'))
-			);
-
-			$this->mi->add_id($data2);
-
-			$row = array();
-			$row['id'] = $insert;
-			$row['name'] = $this->input->post('name');
-			$row['qty'] = $this->input->post('qty');
-			$row['note'] = $this->input->post('note');
-
-			echo json_encode($row);
-			break;
-
-			case "PUT":
-			$data = array(
-				'materials_id' => $this->normalize_text($this->input->post('name')),
-				'qty' => $this->normalize_text($this->input->post('qty')),
-				'note' => $this->normalize_text($this->input->post('note'))
-			);
-			$result = $this->mrd->update('id',$this->input->post('id'),$data);
-			break;
-
 			case "DELETE":
 			$status = $this->mrd->delete('id', $this->input->post('id'));
 			break;
 		}
 	}
 
+
+	public function update_detail(){
+		$this->mu->generate_id($this->input->post('details_id'));
+		$data = array(
+			'return_note' => $this->normalize_text($this->input->post('note')),
+			'qty_return' => $this->input->post('qty')
+		);
+		$status = $this->mrd->update_id('id',$this->input->post('details_id'),$data);
+		echo json_encode(array('status'=> $status));
+	}
 
 }

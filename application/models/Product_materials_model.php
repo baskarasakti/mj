@@ -14,7 +14,7 @@ class Product_materials_model extends MY_Model {
 	}
 
 	function get_product_materials2($id){
-		$allowed_material_ctg = array(); 
+		$allowed_material_ctg = array(-1); 
 		$this->db->where('usage_categories_id', $this->input->get('usage_categories_id'));
 		$result = $this->db->get('material_usage_categories')->result();
 		foreach($result as $item){

@@ -3,17 +3,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Material_return_det_model extends MY_Model {
 
-	protected $_t = 'material_return_details';
+	protected $_t = 'material_usages_detail';
 		
-	var $table = 'material_return_details';
-	var $column = array('id','qty', 'note', 'materials_id'); //set column field database for order and search
+	var $table = 'material_usage_detail';
+	var $column = array('id','qty', 'note', 'material_usage_id', 'materials_id'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('m.id, m.qty, m.note, m.materials_id, m.material_return_id, m.name as name');
-		$this->db->from($this->table. "mrd");
-		$this->db->join('materials m', 'm.id = mrd.materials_id');
+		$this->db->select('md.id as id, md.qty, md.note, md.material_usage_id, md.mateirals_id, m.name');
+		$this->db->from($this->table. " md");
+		$this->db->join('materials m', 'md.materials_id = m.id', 'left');
  
 		$i = 0;
 	 
@@ -49,16 +49,13 @@ class Material_return_det_model extends MY_Model {
 		}
 	}
 
-	public function get_data(){
-		return $this->db->get('roles')->result();
-	}
-
 	public function get_material_return_details($id)
 	{
-		$this->db->select(array('mrd.id as id','m.id as id_materials','qty','note','materials_id','m.name as name'));
-        $this->db->where('material_return_id', $id);
-        $this->db->join('materials m', 'm.id = mrd.materials_id', 'LEFT');
-        $result = $this->db->get('material_return_detail mrd');
+		$this->db->select('mud.id as id, materials_id, m.name as name, qty_return as qty, return_note as note, u.symbol as symbol');
+        $this->db->where('material_usages_id', $id);
+        $this->db->join('materials m', 'm.id = mud.materials_id', 'LEFT');
+        $this->db->join('uom u', 'm.uom_id = u.id', 'LEFT');
+        $result = $this->db->get('material_usages_detail mud');
         return $result->result();
 	}
 

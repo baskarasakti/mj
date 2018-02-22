@@ -4,6 +4,41 @@ var method;
 
 $(document).ready(function() {
 
+	$( "#dialog" ).dialog({ 
+		autoOpen: false,
+		modal: true,
+		height: 500, 
+		width: 500,
+		buttons: [
+			{
+			  text: "Save",
+			  icon: "ui-icon-save",
+			  click: function() {
+				var data = $("#form3").serializeArray();
+				data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});  
+				data.push({name: 'material_usages_id',value: $("[name='asd']").val()});  
+				$.ajax({
+					type: "GET",
+        			url: "return_material/add_new_material",
+        			data: filter,
+        			dataType:"JSON"
+				});
+			  }
+			},
+			{
+				text: "Cancel",
+				icon: "ui-icon-close",
+				click: function() {
+				  $( this ).dialog( "close" );
+				}	
+			}
+		  ] 
+	})
+
+	$("#newItemBtn").click(function(){
+		$( "#dialog" ).dialog("open");
+	});
+
 	$('#date').datepicker({
 		format: 'yyyy-mm-dd' 
 	});
@@ -26,7 +61,7 @@ $(document).ready(function() {
         	loadData: function(filter) {
         		return $.ajax({
         			type: "GET",
-        			url: "pickup_material/jsgrid_functions/"+$('[name="asd"]').val(),
+        			url: "return_material/jsgrid_functions/"+$('[name="asd"]').val(),
         			data: filter,
         			dataType:"JSON"
         		});
@@ -34,24 +69,19 @@ $(document).ready(function() {
         	deleteItem: function(item) {
         		return $.ajax({
         			type: "DELETE",
-        			url: "pickup_material/jsgrid_functions",
+        			url: "return_material/jsgrid_functions",
         			data: item
         		});
         	}
         },
 
         fields: [ 
-        { name: "id", visible: false }, 
-        { name: "materias_id", type: "text", visible:false }, 
-        { name: "name", title:"Item Name", type: "text", width: 150 }, 
-        { name: "qty", title:"Qty", type: "number", width: 50 }, 
-        { name: "note", title:"Note", type: "text", width: 200 },  
-        { name: "symbol", title:"Unit", type: "text" },  
-		{ 
-			type: "control",
-			modeSwitchButton: false,
-			editButton: false 
-		} 
+			{ name: "id", visible: false }, 
+			{ name: "materias_id", type: "text", visible:false }, 
+			{ name: "name", title:"Item Name", type: "text", width: 150 }, 
+			{ name: "qty", title:"Qty", type: "number", width: 50 }, 
+			{ name: "symbol", title:"Unit", type: "text" },  
+			{ name: "note", title:"Note", type: "text", width: 200 },  
         ] 
 	}); 
 	
@@ -153,25 +183,23 @@ $(document).ready(function() {
 		var data = $("#form2").serializeArray();
 		data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
 		data.push({name: 'material_usages_id',value: $("[name='asd']").val()});
-		var url = site_url+"pickup_material/update_detail";
-		if(method != "Edit"){
-			url = site_url+"pickup_material/add_detail";
-		}
-		$.ajax({
-			url : url,
-			type: "POST",
-			data: data,
-			dataType: "JSON",
-			success: function(data)
-			{
-				if(data.status){
-					method = "";
-					$('#form2')[0].reset();
-					$('#jsGrid').jsGrid('loadData');
+		if(method == "Edit"){
+			var url = site_url+"return_material/update_detail";
+			$.ajax({
+				url : url,
+				type: "POST",
+				data: data,
+				dataType: "JSON",
+				success: function(data)
+				{
+					if(data.status){
+						method = "";
+						$('#form2')[0].reset();
+						$('#jsGrid').jsGrid('loadData');
+					}
 				}
-			}
-		}); 
-		
+			}); 
+		}
 	 }
 
 	 var get_pick_detail = function(data){
@@ -270,7 +298,7 @@ function edit(id){
 			success: function(data)
 			{
 				$('#date').val(data.date);			
-				$('#code').val(data.usage_categories_id);			
+				$('#code').val(data.code_return);			
 				$('#work_orders_code').val(data.work_orders_code);			
 				$('#work_orders_id').val(data.work_orders_id);			
 				$('#machine_id').val(data.machine_id);			
@@ -342,7 +370,7 @@ function populate_product_materials(selected){
 		dataType: "JSON",
 		success: function(data)
 		{
-			var option = "<option value=''>Choose Materials</option>";
+			var option = "<option value=''>Choose Material in Table</option>";
 			for(let i=0; i<data.length; i++){
 				option += "<option value='"+data[i].id+"'>"+data[i].code+" - "+data[i].name+"</option>";
 			}

@@ -91,7 +91,7 @@ class Products extends MY_Controller {
 		echo json_encode($result);
 	}
 
-	public function get_product_materials($id){
+	public function get_product_materials($id=-1){
 		$result = $this->pmm->get_product_materials2($id);
 		echo json_encode($result);
 	}

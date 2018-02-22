@@ -6,7 +6,7 @@ class Material_usage_model extends MY_Model {
 	protected $_t = 'material_usages';
 		
 	var $table = 'material_usages';
-	var $column = array('mu.id','mu.date', 'mu.code', 'wo.code', 'p.name'); //set column field database for order and search
+	var $column = array('mu.id','mu.date', 'mu.code_pick', 'wo.code', 'p.name'); //set column field database for order and search
     var $order = array('mu.id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
