@@ -164,7 +164,7 @@ $(document).ready(function() {
 			dataType: "JSON",
 			success: function(data)
 			{
-				if(data.status){
+				if(data.id){
 					method = "";
 					$('#form2')[0].reset();
 					$('#jsGrid').jsGrid('loadData');
@@ -324,7 +324,6 @@ function populate_product_select(selected){
 			for(let i=0; i<data.length; i++){
 				option += "<option value='"+data[i].id+"'>"+data[i].code+" "+data[i].name+"</option>";
 			}
-			console.log(option);
 			$('[name="products_id"]').html(option);
 			$('[name="products_id"]').val(selected);
 			populate_product_materials("");
@@ -347,7 +346,6 @@ function populate_product_materials(selected){
 			for(let i=0; i<data.length; i++){
 				option += "<option value='"+data[i].id+"'>"+data[i].code+" - "+data[i].name+"</option>";
 			}
-			console.log(option);
 			$('[name="materials_id"]').html(option);
 			$('[name="materials_id"]').val(selected);
 		}

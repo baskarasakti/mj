@@ -17,11 +17,19 @@ $(document).ready(function() {
 				var data = $("#form3").serializeArray();
 				data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});  
 				data.push({name: 'material_usages_id',value: $("[name='asd']").val()});  
+				data.push({name: 'products_id',value: $("[name='products_id']").val()});  
 				$.ajax({
-					type: "GET",
+					type: "POST",
         			url: "return_material/add_new_material",
-        			data: filter,
-        			dataType:"JSON"
+        			data: data,
+					dataType:"JSON",
+					success:function(resp){
+						if(resp){
+							$('#jsGrid').jsGrid('loadData');
+							populate_product_materials("");
+							$( "#dialog" ).dialog("close");
+						}
+					}
 				});
 			  }
 			},
@@ -77,7 +85,7 @@ $(document).ready(function() {
 
         fields: [ 
 			{ name: "id", visible: false }, 
-			{ name: "materias_id", type: "text", visible:false }, 
+			{ name: "materials_id", type: "text", visible:false }, 
 			{ name: "name", title:"Item Name", type: "text", width: 150 }, 
 			{ name: "qty", title:"Qty", type: "number", width: 50 }, 
 			{ name: "symbol", title:"Unit", type: "text" },  
@@ -180,6 +188,7 @@ $(document).ready(function() {
 	});
 
 	var save_pick_detail = function(){
+		$('[name="materials_id"]').prop('disabled', false);
 		var data = $("#form2").serializeArray();
 		data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
 		data.push({name: 'material_usages_id',value: $("[name='asd']").val()});
@@ -200,6 +209,7 @@ $(document).ready(function() {
 				}
 			}); 
 		}
+		$('[name="materials_id"]').prop('disabled', true);
 	 }
 
 	 var get_pick_detail = function(data){
@@ -351,7 +361,6 @@ function populate_product_select(selected){
 			for(let i=0; i<data.length; i++){
 				option += "<option value='"+data[i].id+"'>"+data[i].code+" "+data[i].name+"</option>";
 			}
-			console.log(option);
 			$('[name="products_id"]').html(option);
 			$('[name="products_id"]').val(selected);
 			populate_product_materials("");
@@ -374,7 +383,6 @@ function populate_product_materials(selected){
 			for(let i=0; i<data.length; i++){
 				option += "<option value='"+data[i].id+"'>"+data[i].code+" - "+data[i].name+"</option>";
 			}
-			console.log(option);
 			$('[name="materials_id"]').html(option);
 			$('[name="materials_id"]').val(selected);
 		}

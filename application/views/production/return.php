@@ -173,6 +173,20 @@
 				<!--/span-->
 				<div class="col-md-12">
 					<div class="form-group">
+						<label class="control-label">Unit</label>
+						<select class="custom-select col-sm-12" name="uom_id">
+							<option selected="">Choose...</option>
+							<?php
+								foreach($uom as $item){
+									echo '<option value="'.$item->id.'">'.$item->name.'</option>';
+								}
+							?>
+						</select>
+						<span class="help-block"></span> </div>
+				</div>
+				<!--/span-->
+				<div class="col-md-12">
+					<div class="form-group">
 						<label class="control-label">Note</label>
 						<input type="text" name="return_note" class="form-control" placeholder="Note">
 						<span class="help-block"></span> </div>

@@ -68,4 +68,43 @@ class Material_inventory_model extends MY_Model {
 		return $this->db->get()->row();
 	}
 
+	public function material_usage_change($id, $material_id, $detail){
+		$this->db->where('material_usages_detail_id', $id);
+		$this->db->where('materials_id', $material_id);
+		$row = $this->db->get($this->_t)->row();
+		if(isset($row)){
+			$type = "in";
+			if($detail->qty_pick > $detail->qty_return){
+				$type = "out";
+			}
+			$data = array(
+				'type' => $type,
+				'qty' => abs($detail->qty_pick - $detail->qty_return),
+			);
+			$this->db->where('id', $row->id);
+			$status = $this->db->update($this->_t, $data);
+		}else{
+			$type = "in";
+			if($detail->qty_pick > $detail->qty_return){
+				$type = "out";
+			}
+			$data = array(
+				'date' => date("Y-m-d h:m:s"),
+				'type' => $type,
+				'material_usages_detail_id' => $id,
+				'qty' => abs($detail->qty_pick - $detail->qty_return),
+				'materials_id' => $detail->materials_id
+			);
+			$status = $this->db->insert($this->_t, $data);
+		}
+		return true;
+	}
+
+	public function material_usage_delete()
+	{
+		$this->db->where('material_usages_detail_id', $this->input->input_stream('id'));
+		$this->db->where('materials_id', $this->input->input_stream('materials_id'));
+		$this->db->delete($this->_t);
+	}
+
 }

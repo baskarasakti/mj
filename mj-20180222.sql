@@ -591,7 +591,7 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`product_movement` (
   `updated_by` VARCHAR(100) NULL,
   `work_orders_id` INT UNSIGNED NOT NULL,
   `products_id` INT UNSIGNED NOT NULL,
-  `machine_id` INT UNSIGNED NOT NULL,
+  `machine_id` INT UNSIGNED NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_product_movement_work_orders1_idx` (`work_orders_id` ASC),
   INDEX `fk_product_movement_products1_idx` (`products_id` ASC),
@@ -622,19 +622,13 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`product_movement_details` (
   `code` VARCHAR(50) NULL,
   `date` DATETIME NULL,
   `product_movement_id` INT UNSIGNED NULL,
-  `processes_id` INT UNSIGNED NOT NULL,
   `qty` FLOAT NULL,
+  `processes_id` INT(2) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_product_movement_details_product_movement1_idx` (`product_movement_id` ASC),
-  INDEX `fk_product_movement_details_processes1_idx` (`processes_id` ASC),
   CONSTRAINT `fk_product_movement_details_product_movement1`
     FOREIGN KEY (`product_movement_id`)
     REFERENCES `megahjaya2`.`product_movement` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_product_movement_details_processes1`
-    FOREIGN KEY (`processes_id`)
-    REFERENCES `megahjaya2`.`processes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
