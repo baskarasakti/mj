@@ -11,7 +11,7 @@ class Product_movement_model extends MY_Model {
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('pm.id as id, p.name as name');
+		$this->db->select('pm.id as id, p.name as name, pm.created_at as time');
 		$this->db->join('work_orders wo', 'wo.id = pm.work_orders_id', 'left');
 		$this->db->join('products p', 'p.id = pm.products_id', 'left');
 		$this->db->from($this->table." pm");
@@ -52,5 +52,21 @@ class Product_movement_model extends MY_Model {
 
 	public function get_data(){
 		return $this->db->get('roles')->result();
+	}
+
+	public function get_product_movement($woid, $pid)
+	{
+		$this->db->from('product_movement');
+		$this->db->where('work_orders_id', $woid);
+		$this->db->where('products_id', $pid);
+		return $this->db->get()->result();
+	}
+
+	public function count_product_movement($woid, $pid)
+	{
+		$this->db->from('product_movement');
+		$this->db->where('work_orders_id', $woid);
+		$this->db->where('products_id', $pid);
+		return $this->db->count_all_results();
 	}
 }

@@ -95,8 +95,7 @@ class Receiving extends MY_Controller {
 			$row['id'] = $value->purchasing_id;
 			$row['code'] = $value->code;
 			$row['receive_date'] = $value->receive_date;
-			$row['actions'] = '<button class="btn btn-sm btn-default" onclick="details('.$value->id.')" type="button">details</button> <a href=invoice/print_receiving/'.$value->id.'><button class="btn btn-sm btn-success" type="button">print</button></a>
-			';
+			$row['actions'] = '<button class="btn btn-sm btn-default" onclick="details('.$value->id.')" type="button">details</button> <a href=invoice/print_receiving/'.$value->id.'><button class="btn btn-sm btn-success" type="button">print</button></a>';
 			$data[] = $row;
 			$count++;
 		}

@@ -27,9 +27,8 @@ class Product_movement extends MY_Controller {
 	private function get_column_attr1(){
 		$table = new TableField();
 		$table->addColumn('id', '', 'ID');
-		$table->addColumn('qty', '', 'Qty');         
-		$table->addColumn('note', '', 'Note');         
-		$table->addColumn('products_id', '', 'Products');     
+		$table->addColumn('qty', '', 'Qty');    
+		$table->addColumn('name', '', 'Products');     
 		$table->addColumn('actions', '', 'Actions');  
 		return $table->getColumns();
 	}
@@ -52,17 +51,15 @@ class Product_movement extends MY_Controller {
 	}
 
 	public function view_data($id){
-		$result = $this->wodm->get_where_id('work_orders_id',$id);
+		$result = $this->wodm->get_work_order_details($id);
 		$data = array();
 		$count = 0;
 		foreach($result as $value){
 			$row = array();
 			$row['id'] = $value->id;
 			$row['qty'] = $value->qty;
-			$row['note'] = $value->note;
-			$row['products_id'] = $value->products_id;
-			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
-							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
+			$row['name'] = $value->name;
+			$row['actions'] = '<a href=product_movement_detail/details/'.$value->woid.'/'.$value->pid.'><button class="btn btn-sm btn-info" type="button">Details</button></a>';
 			$data[] = $row;
 			$count++;
 		}

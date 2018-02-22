@@ -20,7 +20,7 @@ class Work_order_detail_model extends MY_Model {
 	}
 
 	function get_work_order_details($id){
-        $this->db->select('wod.id as id, p.name as name, wod.qty as qty, u.symbol as symbol');		
+        $this->db->select('wod.id as id, p.name as name, wod.qty as qty, u.symbol as symbol, products_id as pid, work_orders_id as woid');		
         $this->db->where('wod.work_orders_id', $id);		
         $this->db->join('products p', 'wod.products_id = p.id', 'left');		
         $this->db->join('uom u', 'p.uom_id = u.id', 'left');		
