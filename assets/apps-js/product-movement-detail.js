@@ -1,4 +1,8 @@
 var table;
+var table1;
+var woid = -1;
+var pid = -1;
+var prid = -1;
 var action;
 
 $(document).ready(function() {
@@ -17,7 +21,17 @@ $(document).ready(function() {
             right_align.push(i);
 	});
 
-	table = $('#datatable').DataTable({
+    var columns1 = [];
+    var right_align1 = [];
+    $("#datatable1").find('th').each(function(i, th){
+        var field = $(th).attr('data-field');
+        var align = $(th).attr('data-align');
+        columns1.push({data: field, name: field});
+        if(align == "right")
+            right_align1.push(i);
+    });
+
+    table = $('#datatable').DataTable({
         dom: 'lrftip',
         responsive: true,
         pageLength: 10,
@@ -33,13 +47,54 @@ $(document).ready(function() {
         },
         columns: columns,
         columnDefs: [ 
-			{ className: "dt-body-right", targets: right_align },
-			{ "orderable": false, targets : [-1]  },
-			{ "visible": false, targets : [0]  } 
+            { className: "dt-body-right", targets: right_align },
+            { "orderable": false, targets : [-1]  },
+            { "visible": false, targets : [0]  } 
         ]
-	});
+    });
+
+    table1 = $('#datatable1').DataTable({
+        dom: 'lrftip',
+        responsive: true,
+        pageLength: 10,
+        deferRender: true,
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        ajax: {
+            url: site_url+'product_movement_detail/view_data1/'+woid+'/'+pid+'/'+prid,
+            type: "POST",
+            dataSrc : 'data',
+            data: function ( d ) {
+                d.csrf_token = $("[name='csrf_token']").val();
+            }
+        },
+        columns: columns1,
+        columnDefs: [ 
+            { className: "dt-body-right", targets: right_align1 },
+            { "orderable": false, targets : [-1]  } ,
+            { "visible": false, targets : [0]  } 
+        ]
+    });
+
+    $('#datatable tbody').on( 'click', 'tr', function () {
+
+        if ( $(this).hasClass('active') ) {
+            $(this).removeClass('active');
+        }
+        else {
+            table.$('tr.active').removeClass('active');
+            $(this).addClass('active');
+        }
+        var id = table.row( this ).data().id;
+        woid = $("[name='woid']").val();
+        pid = $("[name='pid']").val();
+        prid = id;
+        table1.ajax.url(site_url+'product_movement_detail/view_data1/'+woid+'/'+pid+'/'+prid).load();
+        $('#add-btn').show();
+        $('#nopo').text(table.row( this ).data().code);
+    } );
 	
-	$('#form-panel').hide();
+    $('#form-panel').hide();
+	$('#form-panel1').hide();
 
 	$('#add-btn').click(function(){
 		action = "Add";
@@ -72,9 +127,30 @@ $(document).ready(function() {
          var validator = $("#form1").data("bs.validator");
          validator.validate();
          if (!validator.hasErrors()){
-            save_data();
+            saveSelectedItems();
          }
 	 });
+
+    $("#processes_id").change(function (e) {
+        $.ajax({
+            url: site_url+'machine/populate_select',
+            type: "GET",
+            data: {
+                processes_id: this.value
+            },
+            dataType:"JSON",
+            success : function(resp)
+            {
+                var option = "<option value='' selected>Choose..</option>";
+                $.each(resp, function(k, v){
+                    option += "<option value='"+v.code+"'>"+v.code+"</option>";
+                });
+                $("#machine_id").html(option);
+                // $("#machine_id").val();
+            }
+        });
+    })
+
 
     var processes;
     $.ajax({
@@ -91,8 +167,8 @@ $(document).ready(function() {
     	width: "100%", 
     	height: "400px", 
 
-    	inserting: true, 
-    	editing: true, 
+    	inserting: false, 
+    	editing: false, 
     	sorting: true, 
     	paging: true, 
 
@@ -101,44 +177,74 @@ $(document).ready(function() {
         	loadData: function(filter) {
         		return $.ajax({
         			type: "GET",
-        			url: site_url+"product_movement_detail/jsgrid_functions/"+$('[name="woid"]').val()+"/"+$('[name="pid"]').val(),
+        			url: site_url+"product_movement_detail/jsgrid_functions/"+$('[name="woid"]').val()+"/"+$('[name="pid"]').val()+"/"+$('[name="prid"]').val(),
         			data: filter,
         			dataType:"JSON"
-        		});
-        	},
-        	insertItem: function(item) {
-        		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
-        		return $.ajax({
-        			type: "POST",
-        			url: "product_movement_detail/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item,
-        			dataType:"JSON"
-        		});
-        	},
-        	updateItem: function(item) {
-        		return $.ajax({
-        			type: "PUT",
-        			url: "product_movement_detail/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
-        		});
-        	},
-        	deleteItem: function(item) {
-        		return $.ajax({
-        			type: "DELETE",
-        			url: "product_movement_detail/jsgrid_functions",
-        			data: item
         		});
         	}
         },
 
         fields: [ 
+        {
+            headerTemplate: function() {
+                return "Choose";
+            },
+            itemTemplate: function(_, item) {
+                return $("<input>").attr("type", "checkbox")
+                .prop("checked", $.inArray(item.id, selectedItems) > -1)
+                .on("change", function () {
+                    $(this).is(":checked") ? selectItem(item.id) : unselectItem(item.id);
+                });
+            },
+            align: "center",
+            width: 50
+        },
         { name: "id", visible:false }, 
         { name: "code", title:"Code", type: "text", width: 50 }, 
-        { name: "processes_id", title:"Process", type: "select", items: processes, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
-        { type: "control" } 
+        { type: "control", editButton: false, deleteButton: false } 
         ] 
     });
+
+    var selectedItems = [];
+ 
+    var selectItem = function(item) {
+        selectedItems.push(item);
+    };
+ 
+    var unselectItem = function(item) {
+        selectedItems = $.grep(selectedItems, function(i) {
+            return i !== item;
+        });
+    };
+ 
+    var saveSelectedItems = function() { 
+        saveClients(selectedItems);
+        console.log(selectedItems);
+        selectedItems = [];
+    };
+ 
+    var saveClients = function(item) {
+        $.ajax({
+            url : site_url+"product_movement_detail/update_process",
+            data: {
+                csrf_token: $("[name='csrf_token']").val(),
+                item: item,
+                process_id: $("[name='processes_id']").val(),
+                machine_id: $("[name='machine_id']").val(),
+                pm_id: $("[name='pm_id']").val()
+            },
+            type: "post",
+            dataType: "JSON",
+            success:function(data){
+                if (data.status) {
+                    alert("Success");
+                    var $grid = $("#jsGrid");
+                    $grid.jsGrid("option", "pageIndex", 1);
+                    $grid.jsGrid("loadData");
+                }
+            }
+        });
+    };
 	
 });
 
@@ -213,23 +319,14 @@ function save_data(){
 	   });
    }
 
-function edit(id){
+function edit(woid, pid, prid, pmid){
     action = "Edit";
-    $('[name="change_id"]').val(id);
-    $.ajax({
-            url : site_url+"product_movement_detail/get_by_id/"+id,
-            type: "GET",
-            dataType: "JSON",
-            success: function(data)
-            {
-                $('#processes_id').val(id);               
-                $("#form").validator();
-                $('#form-title').text('Edit Form');
-                $('[name="asd"]').val(id);
-                $('#jsGrid').jsGrid('loadData');
-                show_hide_form1(true);
-            }
-        });
+    $('[name="prid"]').val(prid);
+    $('[name="pm_id"]').val(pmid);
+    $("#form").validator();
+    $('#form-title').text('Edit Form');
+    $('#jsGrid').jsGrid('loadData');
+    show_hide_form1(true);
 }
 
 function remove(id){

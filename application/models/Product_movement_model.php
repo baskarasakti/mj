@@ -54,11 +54,15 @@ class Product_movement_model extends MY_Model {
 		return $this->db->get('roles')->result();
 	}
 
-	public function get_product_movement($woid, $pid)
+	public function get_product_movement($woid, $pid, $prid)
 	{
-		$this->db->from('product_movement');
-		$this->db->where('work_orders_id', $woid);
-		$this->db->where('products_id', $pid);
+		$this->db->select('pm.created_by, pm.id as id, pmd.code as code');
+		$this->db->from('product_movement pm');
+		$this->db->join('product_movement_details pmd', 'pm.id = pmd.product_movement_id', 'left');
+		$this->db->where('pm.work_orders_id', $woid);
+		$this->db->where('pmd.processes_id', $prid);
+		$this->db->where('pm.products_id', $pid);
+		$this->db->group_by('pm.id');
 		return $this->db->get()->result();
 	}
 

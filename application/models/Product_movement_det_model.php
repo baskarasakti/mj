@@ -54,15 +54,16 @@ class Product_movement_det_model extends MY_Model {
 		return $this->db->get('roles')->result();
 	}
 
-	public function get_product_movement_details($woid, $pid)
+	public function get_product_movement_detail($woid, $pid, $prid)
 	{
 		$this->db->select(array('pmd.id as id', 'pmd.code as code', 'pc.id as processes_id'));
 		$this->db->from($this->table." pmd");
-		$this->db->join('processes pc', 'pc.id = pmd.processes_id');
-		$this->db->join('product_movement pm', 'pm.id = pmd.product_movement_id');
-		$this->db->join('products p', 'p.id = pm.products_id');
+		$this->db->join('processes pc', 'pmd.processes_id = pc.id', 'left');
+		$this->db->join('product_movement pm', 'pmd.product_movement_id = pm.id', 'left');
+		$this->db->join('products p', 'pm.products_id = p.id', 'left');
 		$this->db->where('pm.work_orders_id', $woid);
-		$this->db->where('pmd.processes_id', $pid);
+		$this->db->where('pm.products_id', $pid);
+		$this->db->where('pmd.processes_id', $prid);
 		return $this->db->get()->result();
 	}
 }

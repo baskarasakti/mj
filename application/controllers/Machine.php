@@ -54,6 +54,24 @@ class Machine extends MY_Controller {
         echo json_encode($result);
 	}
 
+	public function populate_select(){
+		$result = $this->mm->get_all_data();
+		$data = array();
+		$count = 0;
+		foreach($result as $value){
+			if ($value->processes_id == $this->input->get('processes_id')) {
+				$row = array();
+				$row['code'] = $value->code;
+				$row['processes_id'] = $value->processes_id;
+				$data[] = $row;
+				$count++;
+			}
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
 	function add(){
 		$data = array(
 			'code' => strtoupper($this->input->post('code')),
