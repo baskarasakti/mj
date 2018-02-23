@@ -74,7 +74,8 @@ class Pickup_material extends MY_Controller {
 			$row['code'] = $value->code;
 			$row['wocode'] = $value->wocode;
 			$row['name'] = $value->name;
-			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
+			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="printEvidence('.$value->id.')" type="button"><i class="fa fa-print"></i></button>
+							  .<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							  .<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
             $data[] = $row;
 			$count++;
@@ -152,18 +153,23 @@ class Pickup_material extends MY_Controller {
 	}
 
 	public function add_detail(){
-		$data = array(
-			'material_usages_id' => $this->input->post('material_usages_id'),
-			'materials_id' => $this->input->post('materials_id'),
-			'pick_note' => $this->normalize_text($this->input->post('note')),
-			'qty_pick' => $this->input->post('qty')
-		);
-		$id = $this->mud->add_id($data);
-		$detail = $this->mud->get_by_id('id',$id);
-		if(isset($id)){
-			$status = $this->mi->material_usage_change($id, $this->input->post('materials_id'), $detail);
+		$stock_status = $this->mi->check_material_stock($this->input->post('materials_id'), $this->input->post('qty'));
+		if($stock_status['status']){
+			$data = array(
+				'material_usages_id' => $this->input->post('material_usages_id'),
+				'materials_id' => $this->input->post('materials_id'),
+				'pick_note' => $this->normalize_text($this->input->post('note')),
+				'qty_pick' => $this->input->post('qty')
+			);
+			$id = $this->mud->add_id($data);
+			$detail = $this->mud->get_by_id('id',$id);
+			if(isset($id)){
+				$status = $this->mi->material_usage_change($id, $this->input->post('materials_id'), $detail);
+			}
+			echo json_encode(array('id'=> $id));
+		}else{
+			echo json_encode($stock_status);
 		}
-		echo json_encode(array('id'=> $id));
 	}
 
 	public function update_detail(){
@@ -172,7 +178,7 @@ class Pickup_material extends MY_Controller {
 			'qty_pick' => $this->input->post('qty')
 		);
 		$status = $this->mud->update_id('id',$this->input->post('details_id'),$data);
-		$detail = $this->mrd->get_by_id('id',$this->input->post('details_id'));
+		$detail = $this->mud->get_by_id('id',$this->input->post('details_id'));
 		if(isset($status)){
 			$status = $this->mi->material_usage_change($this->input->post('details_id'), $this->input->post('materials_id'), $detail);
 		}

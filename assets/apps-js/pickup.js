@@ -165,9 +165,12 @@ $(document).ready(function() {
 			success: function(data)
 			{
 				if(data.id){
+					
 					method = "";
 					$('#form2')[0].reset();
 					$('#jsGrid').jsGrid('loadData');
+				}else{
+					generate_info(data.msg);
 				}
 			}
 		}); 
@@ -181,6 +184,17 @@ $(document).ready(function() {
 		$('[name="note"]').val(data.note);
 	 }
 
+	 var generate_info = function(msg){
+		$.toast({
+			heading: 'Material out of stock',
+			text: msg,
+			position: 'top-right',
+			loaderBg:'#ff6849',
+			icon: 'error',
+			hideAfter: 10000, 
+			stack: 6
+		  });
+	 }
 
 });
 
@@ -350,5 +364,9 @@ function populate_product_materials(selected){
 			$('[name="materials_id"]').val(selected);
 		}
 	});	
+}
+
+function printEvidence(id){
+	window.open(site_url+"evidence");
 }
 

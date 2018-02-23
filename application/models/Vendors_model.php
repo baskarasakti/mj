@@ -50,7 +50,7 @@ class Vendors_model extends MY_Model {
 
 	public function get_vendor_materials($id)
 	{
-		$this->db->select(array('m.id as id','v.name as name', 'm.name as material_name', 'm.id as materials_id', 'mc.id as material_category', 'u.id as uom'));
+		$this->db->select(array('m.id as id','v.name as name', 'm.name as material_name', 'm.id as materials_id', 'mc.id as material_category', 'min_stock','u.id as uom'));
 		$this->db->where('v.id', $id);
 		$this->db->from($this->table." v");
 		$this->db->join('materials m', 'm.vendors_id = v.id', 'right');

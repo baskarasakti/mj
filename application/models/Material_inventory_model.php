@@ -107,4 +107,39 @@ class Material_inventory_model extends MY_Model {
 		$this->db->delete($this->_t);
 	}
 
+	public function check_material_stock($id, $pick_qty)
+	{
+		$min_stock = 0;
+		$this->db->select('m.name as name, min_stock, symbol');	
+		$this->db->join('uom u', 'm.uom_id = u.id', 'left');	
+		$this->db->where('m.id', $id);	
+		$material = $this->db->get('materials m')->row();
+		if(isset($material)){
+			$min_stock = $material->min_stock;
+		}
+
+		$this->db->select("COALESCE(SUM(case type
+			when 'in' then qty
+			when 'out' then -qty
+	    end), 0) as stock");
+		$this->db->where('materials_id', $id);
+		$stock = $this->db->get($this->_t)->row();
+		if($stock->stock - $pick_qty >= $min_stock){
+			$data = array(
+				'status' => true
+			); 
+			return $data;
+		}
+		return array(
+			'status' => false,
+			'msg' => $this->generate_material_stock_notif($material, $stock->stock, $min_stock, $pick_qty)
+		);
+	}
+
+	public function generate_material_stock_notif($material, $stock, $min_stock,  $pick_qty)
+	{
+		return $material->name." is out of stock.<br>Pick amount : ".$pick_qty." ".$material->symbol.".<br>
+		Available stock : ".$stock." ".$material->symbol."<br>Minimum stock : ".$min_stock." ".$material->symbol;
+	}
+
 }
