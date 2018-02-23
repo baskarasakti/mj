@@ -16,6 +16,9 @@ class Materials extends MY_Controller {
         $table->addColumn('id', '', 'ID');
         $table->addColumn('name', '', 'Name');        
         $table->addColumn('category', '', 'Category');        
+        $table->addColumn('min_stock', 'right', 'Min Stock');        
+        $table->addColumn('uom', '', 'Unit');        
+        $table->addColumn('vendor', '', 'Vendor');        
         $table->addColumn('actions', '', 'Actions');        
         return $table->getColumns();
     }
@@ -82,6 +85,9 @@ class Materials extends MY_Controller {
             $row['id'] = $value->id;
 			$row['name'] = $value->name;
 			$row['category'] = $value->category;
+			$row['min_stock'] = $value->min_stock;
+			$row['uom'] = $value->uom;
+			$row['vendor'] = $value->vendor;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							  .<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
             $data[] = $row;

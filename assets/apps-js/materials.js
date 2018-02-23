@@ -3,9 +3,6 @@ var action;
 
 $(document).ready(function() {
 
-	$('#inlineFormCustomSelect').select2({
-	});
-
 	var columns = [];
     var right_align = [];
     $("#datatable").find('th').each(function(i, th){

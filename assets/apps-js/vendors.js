@@ -130,7 +130,8 @@ $(document).ready(function() {
         { name: "id" }, 
         { name: "name", title:"Material Name", type: "text", width: 150, validate: "required" }, 
         { name: "category", title:"Category", type: "select", items: category, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
-        { name: "uom", title:"Uom", type: "select", items: uom, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
+		{ name: "min_stock", title:"Min Stock", type: "number", validate: "required" }, 
+		{ name: "uom", title:"Uom", type: "select", items: uom, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
         { type: "control" } 
         ] 
 	}); 

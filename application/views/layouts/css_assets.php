@@ -26,6 +26,8 @@
 	<link href="<?= asset_url('plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css');?>" rel="stylesheet">
 	<!-- morris CSS -->
 	<link href="<?= asset_url('plugins/bower_components/morrisjs/morris.css');?>" rel="stylesheet">
+	 <!-- toast CSS -->
+	 <link href="<?= asset_url('plugins/bower_components/toast-master/css/jquery.toast.css');?>" rel="stylesheet">
 	<!-- animation CSS -->
 	<link href="<?= asset_url('css/animate.css');?>" rel="stylesheet">
 	<!-- Custom CSS -->
