@@ -10,6 +10,7 @@ class Shipping extends MY_Controller {
 		$this->load->model('shipping_details_model', 'sdm');
 		$this->load->model('projects_model', 'prm');
 		$this->load->model('project_details_model', 'pdm');
+		$this->load->model('product_inventory_model', 'pim');
 	}
 
 	private function get_column_attr(){
@@ -110,6 +111,15 @@ class Shipping extends MY_Controller {
 				'product_shipping_id' => $inserted
 			);
 			$insert = $this->sdm->add_id($data);
+
+			$data1 = array(
+				'product_shipping_detail_id' => $insert,
+				'qty' => $value->qty,
+				'type' => 'out',
+				'date' => date('Y-m-d H:i:s'),
+				'products_id' => $value->products_id
+			);
+			$this->pim->add($data1);
 		}
 
 		echo json_encode(array('id' => $inserted));
@@ -158,25 +168,34 @@ class Shipping extends MY_Controller {
 			echo json_encode($result);
 			break;
 
-			// case "POST":
-			// $data = array(
-			// 	'products_id' => $this->input->post('products_id'),
-			// 	'qty' => $this->input->post('qty'),
-			// 	'unit_price' =>$this->input->post('unit_price'),
-			// 	'total_price' => $this->input->post('total_price'),
-			// 	'product_shipping_id' => $id
-			// );
-			// $insert = $this->sdm->add_id($data);
+			case "POST":
+			$data = array(
+				'products_id' => $this->input->post('products_id'),
+				'qty' => $this->input->post('qty'),
+				'unit_price' =>$this->input->post('unit_price'),
+				'total_price' => $this->input->post('total_price'),
+				'product_shipping_id' => $id
+			);
+			$insert = $this->sdm->add_id($data);
 
-			// $row = array();
-			// $row['id'] = $insert;
-			// $row['products_id'] = $this->input->post('products_id');
-			// $row['qty'] = $this->input->post('qty');
-			// $row['unit_price'] = $this->input->post('unit_price');
-			// $row['total_price'] = $this->input->post('total_price');
+			$row = array();
+			$row['id'] = $insert;
+			$row['products_id'] = $this->input->post('products_id');
+			$row['qty'] = $this->input->post('qty');
+			$row['unit_price'] = $this->input->post('unit_price');
+			$row['total_price'] = $this->input->post('total_price');
 
-			// echo json_encode($row);
-			// break;
+			echo json_encode($row);
+
+			$data1 = array(
+				'product_shipping_detail_id' => $insert,
+				'qty' => $this->input->post('qty'),
+				'type' => 'out',
+				'date' => date('Y-m-d H:i:s'),
+				'products_id' => $this->input->post('products_id')
+			);
+			$this->pim->add($data1);
+			break;
 
 			case "PUT":
 			$this->input->raw_input_stream;
@@ -186,7 +205,7 @@ class Shipping extends MY_Controller {
 				'unit_price' => $this->input->input_stream('unit_price'),
 				'total_price' => $this->input->input_stream('qty')*$this->input->input_stream('unit_price')
 			);
-			$result = $this->sdm->update('id',$this->input->input_stream('id'),$data);
+			$result = $this->sdm->update_id('id',$this->input->input_stream('id'),$data);
 
 			$row = array();
 			$row['id'] = $this->input->input_stream('id');
@@ -196,10 +215,17 @@ class Shipping extends MY_Controller {
 			$row['total_price'] = $this->input->input_stream('qty')*$this->input->input_stream('unit_price');
 
 			echo json_encode($row);
+
+			$data1 = array(
+				'qty' => $this->input->input_stream('qty'),
+				'date' => date('Y-m-d H:i:s')
+			);
+			$this->pim->update('product_shipping_detail_id',$this->input->input_stream('id'),$data1);
 			break;
 
 			case "DELETE":
 			$this->input->raw_input_stream;
+			$status = $this->pim->delete('product_shipping_detail_id', $this->input->input_stream('id'));
 			$status = $this->sdm->delete('id', $this->input->input_stream('id'));
 			break;
 		}

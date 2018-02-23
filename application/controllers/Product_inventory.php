@@ -6,15 +6,17 @@ class Product_inventory extends MY_Controller {
 	function  __construct() {
 		parent::__construct();
 			$this->load->helper('tablefield');
-			$this->load->model('material_inventory_model', 'mi');
+			$this->load->model('product_inventory_model', 'pi');
 	}
 	
 	private function get_column_attr(){
         $table = new TableField();
         $table->addColumn('id', '', 'ID');
         $table->addColumn('no', '', 'No');
-        $table->addColumn('name', '', 'Name');        
-        $table->addColumn('qty', '', 'Qty');        
+        $table->addColumn('name', '', 'Name');       
+        $table->addColumn('debit', '', 'Debit');       
+        $table->addColumn('credit', '', 'Credit');       
+        $table->addColumn('qty', '', 'Balance');        
         $table->addColumn('actions', '', 'Actions');        
         return $table->getColumns();
     }
@@ -28,8 +30,8 @@ class Product_inventory extends MY_Controller {
         return $table->getColumns();
     }
 
-    public function get_material_categories(){
-		$result = $this->mi->get_all_data();
+    public function get_product_categories(){
+		$result = $this->pi->get_all_data();
 		$data = array();
 		$count = 0;
 		foreach($result as $value){
@@ -50,8 +52,8 @@ class Product_inventory extends MY_Controller {
 		$data['page_title'] = "Product Inventory";
 		$data['table_title'] = "List Item";		
 		$data['breadcumb']  = array("Inventory", "Product Inventory");
-		$data['page_view']  = "inventory/material_inventory";		
-		$data['js_asset']   = "material-inventory";	
+		$data['page_view']  = "inventory/product_inventory";		
+		$data['js_asset']   = "product-inventory";	
 		$data['columns']    = $this->get_column_attr();
 		$data['columns1']    = $this->get_column_attr1();
 		$data['csrf'] = $this->csrf;		
@@ -60,15 +62,17 @@ class Product_inventory extends MY_Controller {
 	}
 
 	public function view_data(){
-		$result = $this->mi->get_material_stock();
+		$result = $this->pi->get_output_data();
         $data = array();
         $count = 0;
-        foreach($result as $value){
+        foreach($result['data'] as $value){
             $count++;
             $row = array();
             $row['id'] = $value->id;
 			$row['name'] = $value->name;
 			$row['no'] = $count;
+			$row['debit'] = $value->debit;
+			$row['credit'] = $value->credit;
 			$row['qty'] = $value->qty;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button">View Detail</button>';
             $data[] = $row;
@@ -79,35 +83,25 @@ class Product_inventory extends MY_Controller {
         echo json_encode($result);
 	}
 
-	public function view_data1($id){
-		$result = $this->mi->get_material_inventory($id);
-        $data = array();
-        $count = 0;
-        foreach($result as $value){
-            $count++;
-            $row = array();
-            $row['id'] = $value->id;
-			$row['date'] = $value->date;
-			$row['type'] = $type;
-			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button">View Detail</button>';
-            $data[] = $row;
-        }
-
-        $result['data'] = $data;
-
+	public function get_product_inventory($id){
+		$result = $this->pi->get_product_inventory($id);
         echo json_encode($result);
 	}
 
 	function add(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name'))
+			'products_id' => $this->normalize_text($this->input->post('products_id')),
+			'type' => $this->normalize_text($this->input->post('type')),
+			'date' => date("Y-m-d H:i:s"),
+			'qty' => $this->normalize_text($this->input->post('qty')),
+			'adjustment' => 1
 		);
-		$inserted = $this->mi->add($data);
+		$inserted = $this->pi->add($data);
 		echo json_encode(array('status' => $inserted));
 	}
 
 	function get_by_id($id){
-		$detail = $this->mi->get_by_id('materials_id', $id);
+		$detail = $this->pi->get_by_id('products_id', $id);
 		echo json_encode($detail);
 	}
 
@@ -115,19 +109,19 @@ class Product_inventory extends MY_Controller {
 		$data = array(
 			'name' => $this->normalize_text($this->input->post('name'))
 		);
-		$status = $this->mi->update('id', $this->input->post('change_id'), $data);
+		$status = $this->pi->update('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('status' => $status));
    }
 
 	function delete($id){        
-		$status = $this->mi->delete('id', $id);
+		$status = $this->pi->delete('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->mi->get_material_inventory($id);
+			$result = $this->pi->get_product_inventories($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
@@ -137,14 +131,14 @@ class Product_inventory extends MY_Controller {
 				$row['date'] = $value->date;
 				$row['type'] = $value->type;
 				$row['qty'] = $value->qty;
-				if ($value->receive_details_id != null) {
-					$row['status'] = "receiving";
-				} elseif ($value->p_return_details_id) {
+				if ($value->product_shipping_detail_id != null) {
+					$row['status'] = "shipping";
+				} elseif ($value->s_return_details_id) {
 					$row['status'] = "return";
-				} elseif ($value->material_usage_details_id) {
-					$row['status'] = "pickup";
-				} elseif ($value->material_return_detail_id) {
-					$row['status'] = "return";
+				} elseif ($value->product_movement_id) {
+					$row['status'] = "production";
+				} elseif ($value->adjustment) {
+					$row['status'] = "adjustment";
 				}
 				$data[] = $row;
 				$count++;

@@ -21,15 +21,6 @@ class Material_inventory extends MY_Controller {
         return $table->getColumns();
     }
 
-    private function get_column_attr1(){
-        $table = new TableField();
-        $table->addColumn('id', '', 'ID');
-        $table->addColumn('date', '', 'Date');
-        $table->addColumn('type', '', 'Type');      
-        $table->addColumn('actions', '', 'Actions');        
-        return $table->getColumns();
-    }
-
     public function get_material_categories(){
 		$result = $this->mi->get_all_data();
 		$data = array();
@@ -135,10 +126,8 @@ class Material_inventory extends MY_Controller {
 					$row['status'] = "receiving";
 				} elseif ($value->p_return_details_id) {
 					$row['status'] = "return";
-				} elseif ($value->material_usage_details_id) {
-					$row['status'] = "pickup";
-				} elseif ($value->material_return_detail_id) {
-					$row['status'] = "return";
+				} elseif ($value->material_usages_detail_id) {
+					$row['status'] = "pickup/return";
 				} elseif ($value->adjustment) {
 					$row['status'] = "adjustment";
 				}

@@ -230,9 +230,17 @@ class Receiving extends MY_Controller {
 			$row['total_price'] = $this->input->input_stream('price')*$this->input->input_stream('qty');
 
 			echo json_encode($row);
+
+			$data2 = array(
+				'date' => $this->mysql_time_now(),
+				'qty' => $this->input->input_stream('qty')
+			);
+
+			$this->mi->update('receive_details_id',$this->input->input_stream('id'),$data2);
 			break;
 
 			case "DELETE":
+			$status = $this->mi->delete('receive_details_id', $this->input->input_stream('id'));
 			$status = $this->rcvd->delete('id', $this->input->input_stream('id'));
 			break;
 		}

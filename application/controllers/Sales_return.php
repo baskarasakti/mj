@@ -10,6 +10,7 @@ class Sales_return extends MY_Controller {
 		$this->load->model('shipping_details_model', 'sdm');
 		$this->load->model('sales_return_model', 'srm');
 		$this->load->model('sales_return_detail_model', 'srdm');
+		$this->load->model('product_inventory_model', 'pim');
 	}
 	
 	private function get_column_attr(){
@@ -147,6 +148,15 @@ class Sales_return extends MY_Controller {
 			$row['note'] = $this->input->post('note');
 
 			echo json_encode($row);
+
+			$data1 = array(
+				's_return_details_id' => $insert,
+				'qty' => $this->input->post('qty'),
+				'type' => 'in',
+				'date' => date('Y-m-d H:i:s'),
+				'products_id' => $this->input->post('product_id')
+			);
+			$this->pim->add($data1);
 			break;
 
 			case "PUT":
@@ -157,10 +167,17 @@ class Sales_return extends MY_Controller {
 				'products_id' => $this->input->input_stream('product_id')
 			);
 			$result = $this->srdm->update('id',$this->input->input_stream('id'),$data);
+
+			$data1 = array(
+				'qty' => $this->input->input_stream('qty'),
+				'date' => date('Y-m-d H:i:s')
+			);
+			$this->pim->update('s_return_details_id',$this->input->input_stream('id'),$data1);
 			break;
 
 			case "DELETE":
 			$this->input->raw_input_stream;
+			$status = $this->pim->delete('s_return_details_id', $this->input->input_stream('id'));
 			$status = $this->srdm->delete('id', $this->input->input_stream('id'));
 			break;
 		}

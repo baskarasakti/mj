@@ -52,7 +52,7 @@ class Material_inventory_model extends MY_Model {
 
 	public function get_material_inventories($id)
 	{
-		$this->db->select(array('m.id as id', 'm.name as name', 'mi.date as date', 'mi.type as type', 'mi.qty as qty', 'mi.receive_details_id', 'mi.p_return_details_id', 'mi.material_usage_details_id', 'mi.material_return_detail_id', 'adjustment'),false);
+		$this->db->select(array('m.id as id', 'm.name as name', 'mi.date as date', 'mi.type as type', 'mi.qty as qty', 'mi.receive_details_id', 'mi.p_return_details_id', 'mi.material_usages_detail_id', 'adjustment'),false);
 		$this->db->from($this->table. " mi");
 		$this->db->join('materials m', 'm.id = mi.materials_id');
 		$this->db->where('mi.materials_id', $id);
@@ -61,7 +61,7 @@ class Material_inventory_model extends MY_Model {
 
 	public function get_material_inventory($id)
 	{
-		$this->db->select(array('m.id as id', 'm.name as name', 'mi.date as date', 'mi.type as type', 'mi.qty as qty', 'mi.receive_details_id', 'mi.p_return_details_id', 'mi.material_usage_details_id', 'mi.material_return_detail_id'),false);
+		$this->db->select(array('m.id as id', 'm.name as name', 'mi.date as date', 'mi.type as type', 'mi.qty as qty', 'mi.receive_details_id', 'mi.p_return_details_id', 'mi.material_usages_detail_id'),false);
 		$this->db->from($this->table. " mi");
 		$this->db->join('materials m', 'm.id = mi.materials_id');
 		$this->db->where('mi.materials_id', $id);

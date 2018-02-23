@@ -310,8 +310,8 @@ function save_data(){
 				   $("#saveBtn").prop('disabled', false);
 				   $('div.block-div').unblock();
 				   $('[name="asd"]').val(data.id);
-				   show_hide_form(true);
-				   // $('#form')[0].reset();
+				   show_hide_form(false);
+				   $('#form')[0].reset();
 			   }else{
 				   alert('Fail');
 			   }
@@ -323,7 +323,7 @@ function edit(woid, pid, prid, pmid){
     action = "Edit";
     $('[name="prid"]').val(prid);
     $('[name="pm_id"]').val(pmid);
-    $("#form").validator();
+    $("#form1").validator();
     $('#form-title').text('Edit Form');
     $('#jsGrid').jsGrid('loadData');
     show_hide_form1(true);
