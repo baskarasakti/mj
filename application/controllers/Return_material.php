@@ -61,7 +61,8 @@ class Return_material extends MY_Controller {
 			$row['code_return'] = $value->code_return;
 			$row['wocode'] = $value->wocode;
 			$row['name'] = $value->name;
-			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
+			$row['actions'] = '<a href=invoice/print_return/'.$value->id.'><button class="btn btn-sm btn-info" type="button"><i class="fa fa-print"></i></button></a>
+			<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							  .<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
             $data[] = $row;
 			$count++;

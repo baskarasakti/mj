@@ -18,6 +18,12 @@ class Invoice extends MY_Controller {
 		$this->load->model('work_orders_model', 'wom');		
 		$this->load->model('project_details_model', 'pdm');
 		$this->load->model('product_movement_det_model', 'pmdm');
+		$this->load->model('material_usage_model', 'mu');
+		$this->load->model('material_usage_cat_model', 'muc');
+		$this->load->model('material_usage_det_model', 'mud');
+		$this->load->model('material_return_model', 'mr');
+		$this->load->model('material_return_det_model', 'mrd');
+		$this->load->model('machine_model', 'mm');
 	}
                 
 	public function index()
@@ -132,6 +138,36 @@ class Invoice extends MY_Controller {
 		$data['page_title'] = "Invoice";
 		$data['breadcumb']  = array("Invoice");
 		$data['page_view']  = "invoice/invoice_production";		
+		$data['js_asset']   = "invoice";	
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();							
+		$this->load->view('layouts/master', $data);
+	}
+
+	public function print_pickup($id)
+	{
+		$data['material_usage'] = $this->mu->get_material_usage($id);
+		$data['material_usage_detail'] = $this->mud->get_material_usage_details($id);
+
+		$data['title'] = "ERP | Invoice";
+		$data['page_title'] = "Invoice";
+		$data['breadcumb']  = array("Invoice");
+		$data['page_view']  = "invoice/invoice_pickup";		
+		$data['js_asset']   = "invoice";	
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();							
+		$this->load->view('layouts/master', $data);
+	}
+
+	public function print_return($id)
+	{
+		$data['material_return'] = $this->mr->get_material_return($id);
+		$data['material_return_detail'] = $this->mrd->get_material_return_details($id);
+
+		$data['title'] = "ERP | Invoice";
+		$data['page_title'] = "Invoice";
+		$data['breadcumb']  = array("Invoice");
+		$data['page_view']  = "invoice/invoice_return";		
 		$data['js_asset']   = "invoice";	
 		$data['csrf'] = $this->csrf;	
 		$data['menu'] = $this->get_menu();							

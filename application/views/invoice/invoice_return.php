@@ -13,10 +13,11 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="text-center">
-							<h3>BUKTI PENERIMAAN BARANG <?= $process ?></h3>
-							<h4>No: ........</h4>
+							<h3>LAPORAN PENGEMBALIAN MATERIAL <?= $material_return->usage_categories ?></h3>
+							<h4>No: ......</h4>
 						</div>
-						<p>tanggal: <?= $date ?></p>
+						<p class="pull-left">tanggal: <?= $material_return->date ?></p>
+						<p class="pull-right">No. SPK: <?= $material_return->wocode ?></p>
 					</div>
 					<div class="col-md-12">
 						<div class="table-responsive m-t-40" style="clear: both;">
@@ -26,23 +27,21 @@
 										<th class="text-center">No. </th>
 										<th>NAMA BARANG</th>
 										<th class="text-right">Qty</th>
-										<th>Satuan</th>
-										<th>No. SPK</th>
-										<th>Keterangan</th>
+										<th class="text-right">Uom</th>
+										<th class="text-right">Keterangan</th>
 									</tr>
 								</thead>
 								<tbody>
 									<?php
 										$i = 1;
-										foreach ($product_movement_detail as $q) {
+										foreach ($material_return_detail as $q) {
 										 	?>
 										 	<tr>
 												<td class="text-center"><?= $i ?></td>
 												<td><?= $q->name ?></td>
 												<td class="text-right"><?= $q->qty ?></td>
-												<td><?= $q->uom ?></td>
-												<td><?= $q->wo ?></td>
-												<td></td>
+												<td class="text-right"><?= $q->symbol ?></td>
+												<td class="text-right"></td>
 											</tr>
 										 	<?php
 										$i++;}
@@ -51,28 +50,37 @@
 							</table>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<p class="text-center">
-							Diterima Oleh,<br>
-							Admin Gd. Barang Jadi
+							Diserahkan Oleh,<br>
+							Admin Gudang
 							<br>
 							<br>
 							<br>
 						</p>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<p class="text-center">
-							Mengetahui,<br>
+							Menyetujui,<br>
 							PPIC
 							<br>
 							<br>
 							<br>
 						</p>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-3">
+						<p class="text-center">
+							Mengetahui,<br>
+							Kepala Bagian
+							<br>
+							<br>
+							<br>
+						</p>
+					</div>
+					<div class="col-md-3">
 						<p class="text-center">
 							Dibuat Oleh,<br>
-							Kepala Bagian
+							Admin Produksi
 							<br>
 							<br>
 							<br>

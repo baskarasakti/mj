@@ -63,4 +63,16 @@ class Material_usage_model extends MY_Model {
         return sprintf("%08s", $code);
 	}
 
+	public function get_material_usage($id)
+	{
+		$this->db->select('mu.id as id, mu.date as date, mu.code_pick as code, wo.code as wocode, p.name as name, uc.name as usage_categories');
+		$this->db->from($this->_t.' mu');
+		$this->db->join('work_orders wo', 'mu.work_orders_id = wo.id', 'left');
+		$this->db->join('machine m', 'mu.machine_id = m.id', 'left');
+		$this->db->join('products p', 'mu.products_id = p.id', 'left');
+		$this->db->join('usage_categories uc', 'mu.usage_categories_id = uc.id', 'left');
+		$this->db->where('mu.id', $id);
+		return $this->db->get()->row();
+	}
+
 }

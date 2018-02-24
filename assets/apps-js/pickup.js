@@ -367,6 +367,6 @@ function populate_product_materials(selected){
 }
 
 function printEvidence(id){
-	window.open(site_url+"evidence/print_pickup_material/"+id);
+	window.open(site_url+"invoice/print_pickup/"+id);
 }
 
