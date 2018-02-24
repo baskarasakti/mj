@@ -1,8 +1,110 @@
 var table;
 var action;
+var method;
 
 $(document).ready(function() {
 
+	var form_drop_down = function(el, type) {
+		$.ajax({
+			url: site_url+"work_orders/populate_month_year/"+type,
+			type: "GET",
+			dataType: "JSON",
+			success:function(resp){
+				var option = "<option value='' selected>Choose..</option>";
+                $.each(resp, function(k, v){
+                    option += "<option value='"+v.id+"'>"+v.value+"</option>";
+                });
+				$(el).html(option);
+				if(type == "year"){
+					$(el).val(moment().format("Y"));
+				}
+			}
+		});
+	}
+
+	form_drop_down("#month", "month");
+	form_drop_down("#year", "year");
+
+	$("#month, #year").change(function(){
+		populate_product_select("");
+	});
+
+	$("#jsGrid").jsGrid({ 
+    	width: "100%", 
+    	height: "400px", 
+    	inserting: false, 
+    	editing: false, 
+    	sorting: true, 
+    	paging: true, 
+        controller: {
+        	loadData: function(filter) {
+        		return $.ajax({
+        			type: "GET",
+        			url: "hpp/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: filter,
+        			dataType:"JSON"
+        		});
+        	}
+        },
+
+        fields: [ 
+        { name: "category", title:"Category", type: "text", width: 150 },
+        { name: "name", title:"Item Name", type: "text", width: 150 },
+        { name: "pick", title:"Pick", type: "text" },
+        { name: "used", title:"Used", type: "text" },
+        { name: "return", title:"Return", type: "text" },
+        { name: "unit_price", title:"Price", type: "number" },
+        { name: "total_price", title:"Total", type: "number" }
+        ] 
+	}); 
+	
+
+	$("#jsGrid2").jsGrid({ 
+    	width: "100%", 
+    	height: "400px", 
+
+    	inserting: false, 
+    	editing: false, 
+    	sorting: true, 
+    	paging: true, 
+
+		rowClick: function(args) {
+			method = "Edit";
+			editedRow = args.item;
+			get_pick_detail(args.item);
+        },
+        controller: {
+        	loadData: function(filter) {
+        		return $.ajax({
+        			type: "GET",
+        			url: "btkl/jsgrid_functions/"+$('[name="asd"]').val(),
+        			data: filter,
+        			dataType:"JSON"
+        		});
+        	}
+        },
+
+        fields: [ 
+        { name: "id", visible: false }, 
+        { name: "processes_id", title:"Process", type: "text" }, 
+		{ name: "qty", title:"Qty", type: "number" }, 
+		{ name: "price", title:"Price", type: "number" },  
+        { name: "total_price", title:"Total", type: "number" }
+        ] 
+	}); 
+	
+	function generateID(){
+		$.ajax({
+			url : site_url+"pickup_material/generate_id",
+			type: "GET",
+			dataType: "JSON",
+			success: function(data)
+			{
+				$("#code").val(data.id);
+			}
+		});	
+	}
+	  
 	var columns = [];
     var right_align = [];
     $("#datatable").find('th').each(function(i, th){
@@ -42,104 +144,115 @@ $(document).ready(function() {
 		action = "Add";
 		$('#form-title').text('Add Form');
 		$("#form").validator();
+		$("#saveBtn").prop('disabled', false);
 		show_hide_form(true);
+		$("[name='asd']").val(-1);
+		$('#jsGrid').jsGrid('loadData');
+		$('#jsGrid2').jsGrid('loadData');
 	});
 
 	$('#cancelBtn').click(function(){
 		$("#form").validator('destroy');
 		show_hide_form(false);
 		$('#form')[0].reset();
+		$('#form3')[0].reset();
+		$("[name='asd']").val(-1);
+		$('#jsGrid').jsGrid('loadData');
+		$('#jsGrid2').jsGrid('loadData');
+	});
+
+	$('#cancelBtn2').click(function(){
+		method = "";
+		$('#form2')[0].reset();
 	});
 
     $("#saveBtn").click(function (e) {
          var validator = $("#form").data("bs.validator");
          validator.validate();
          if (!validator.hasErrors()){
-            save_data();
+			save_data();
          }
 	 });
 
-    var processes;
-    $.ajax({
-    	url: site_url+'processes/populate_select',
-    	type: "GET",
-    	async: false,
-    	success : function(text)
-    	{
-    		processes = JSON.parse(text);
-    	}
-    });
-
-    var materials;
-    $.ajax({
-    	url: site_url+'materials/populate_select',
-    	type: "GET",
-    	async: false,
-    	success : function(text)
-    	{
-    		materials = JSON.parse(text);
-    	}
-    });
-
-   
-	
-});
-
-function form_jsgrid(id){
-	 $("#jsGrid").jsGrid({ 
-    	width: "100%", 
-    	height: "400px", 
-
-    	inserting: true, 
-    	editing: true, 
-    	sorting: true, 
-    	paging: true, 
-
-        // data: lists, 
-        controller: {
-        	loadData: function(filter) {
-        		return $.ajax({
-        			type: "GET",
-        			url: "hpp/jsgrid_functions/"+id,
-        			data: filter,
-        			dataType:"JSON"
-        		});
-        	},
-        	insertItem: function(item) {
-        		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
-        		return $.ajax({
-        			type: "POST",
-        			url: "products/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item,
-        			dataType:"JSON"
-        		});
-        	},
-        	updateItem: function(item) {
-        		return $.ajax({
-        			type: "PUT",
-        			url: "products/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
-        		});
-        	},
-        	deleteItem: function(item) {
-        		return $.ajax({
-        			type: "DELETE",
-        			url: "products/jsgrid_functions",
-        			data: item
-        		});
-        	}
-        },
-
-        fields: [ 
-        { name: "id" }, 
-        { name: "material", title:"Material", type: "number", width: 50 }, 
-        { name: "qty", title:"Qty", type: "number", width: 100 }, 
-        { name: "unit_price", title:"unit_price", type: "number", width: 100 }, 
-        { type: "control" } 
-        ] 
+	 $("#saveBtn2").click(function (e) {
+		var validator = $("#form2").data("bs.validator");
+		validator.validate();
+		if (!validator.hasErrors()){
+			save_pick_detail()
+		}
 	});
-}
+
+	$("#saveBtn3").click(function (e) {
+		var validator = $("#form3").data("bs.validator");
+		validator.validate();
+		if (!validator.hasErrors()){
+			save_hpp_bop()
+		}
+	});
+
+	var save_pick_detail = function(){
+		var data = $("#form2").serializeArray();
+		data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
+		data.push({name: 'hpp_id',value: $("[name='asd']").val()});
+		var url = site_url+"btkl/update";
+		if(method != "Edit"){
+			url = site_url+"btkl/add";
+		}
+		$.ajax({
+			url : url,
+			type: "POST",
+			data: data,
+			dataType: "JSON",
+			success: function(data)
+			{
+				if(data.status){
+					method = "";
+					$('#form2')[0].reset();
+					$('#jsGrid2').jsGrid('loadData');
+				}
+			}
+		});
+	}	 
+
+	var save_hpp_bop = function(){
+			var data = $("#form3").serializeArray();
+			data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
+			data.push({name: 'hpp_id',value: $("[name='asd']").val()});
+			var url = site_url+"hpp/update_bop";
+			$.ajax({
+				url : url,
+				type: "POST",
+				data: data,
+				dataType: "JSON",
+				success: function(data)
+				{
+					if(data.status){
+						alert("Saved!");
+					}
+				}
+			}); 	
+	 }
+
+	 var get_pick_detail = function(data){
+		$('[name="details_id"]').val(data.id);
+		$('[name="process"]').val(data.processes_id);
+		$('[name="qty"]').val(data.qty);
+		$('[name="price"]').val(data.price);
+	 }
+
+	 var generate_info = function(msg){
+		$.toast({
+			heading: 'Material out of stock',
+			text: msg,
+			position: 'top-right',
+			loaderBg:'#ff6849',
+			icon: 'error',
+			hideAfter: 10000, 
+			stack: 6
+		  });
+	 }
+
+});
 
 function show_hide_form(bShow){
 	if(bShow==true){
@@ -183,19 +296,45 @@ function save_data(){
 		   },
 		   success: function(data)
 		   {
-			   if(data.status){
-				   reload_table();
-				   $("#saveBtn").text("Save");
-				   $("#saveBtn").prop('disabled', false);
-				   $('div.block-div').unblock();
-				   show_hide_form(false);
-				   $('#form')[0].reset();
+			   if(data.id){
+				   	reload_table();
+					$("#saveBtn").text("Saved");
+					$("#saveBtn").prop('disabled', true);
+					$('div.block-div').unblock();
+					$('[name="asd"]').val(data.id);
+					$('#jsGrid').jsGrid('loadData');
+				 	$('#jsGrid2').jsGrid('loadData');
+					if(action == "Add"){
+						$('[name="code"]').val(data.code);
+					}
+					populate_product_materials("");
+					show_hide_form(true);
+					// $('#form')[0].reset();
 			   }else{
 				   alert('Fail');
 			   }
 		   }
 	   });
    }
+
+function add(id){
+	action = "Add";
+	$('[name="change_id"]').val(id);
+	$.ajax({
+			url : site_url+"pickup_material/get_by_id/"+id,
+			type: "GET",
+			dataType: "JSON",
+			success: function(data)
+			{
+				// $('#date').val(data.usage_date);				
+				$("#form").validator();
+				$('#form-title').text('Edit Form');
+				$('[name="asd"]').val(id);
+				// $('#jsGrid2').jsGrid('loadData');
+				show_hide_form(true);
+			}
+		});
+}
 
 function edit(id){
 	action = "Edit";
@@ -206,12 +345,19 @@ function edit(id){
 			dataType: "JSON",
 			success: function(data)
 			{
-				$('#code').val(data.code);
-				$('#name').val(data.name);
+				$('#month').val(data.month);			
+				$('#year').val(data.year);			
+				$('#code').val(data.code);			
+				$('#penyusutan').val(data.penyusutan);			
+				$('#listrik').val(data.listrik);			
+				$('#lain_lain').val(data.lain_lain);			
+				populate_product_select(data.products_id);	
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
-				form_jsgrid(id);
+				$('[name="asd"]').val(id);
 				$('#jsGrid').jsGrid('loadData');
+				$('#jsGrid2').jsGrid('loadData');
+				$("#saveBtn").prop('disabled', true);
 				show_hide_form(true);
 			}
 		});
@@ -230,7 +376,7 @@ function remove(id){
 		},
 		function(){
 			$.ajax({
-				url : site_url+"hpp/delete/"+id,
+				url : site_url+"pickup_material/delete/"+id,
 				type: "GET",
 				dataType: "JSON",
 				success: function(data)
@@ -241,3 +387,33 @@ function remove(id){
 			});	
 	});
 }
+
+
+function populate_product_select(selected){
+	$.ajax({
+		url: site_url+"work_orders/get_product_by_month_year",
+		type: "GET",
+		data:{
+			month:$("#month").val(),
+			year:$("#year").val()
+		},
+		dataType: "JSON",
+		success:function(resp){
+			var option = "<option value='' selected>Choose..</option>";
+			$.each(resp, function(k, v){
+				option += "<option value='"+v.id+"'>"+v.code+" - "+v.name+"</option>";
+			});
+			$("#products_id").html(option);
+			$("#products_id").val(selected);
+		}
+	});
+}
+
+function getMateriaTotal(){
+	var total = 0;
+	var data = $("#jsGrid").jsGrid("option", "data");
+	console.log(data); 
+}
+
+
+

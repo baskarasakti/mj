@@ -46,7 +46,7 @@ class Material_inventory extends MY_Controller {
 		$data['page_view']  = "inventory/material_inventory";		
 		$data['js_asset']   = "material-inventory";	
 		$data['columns']    = $this->get_column_attr();
-		$data['columns1']    = $this->get_column_attr1();
+		//$data['columns1']    = $this->get_column_attr1();
 		$data['csrf'] = $this->csrf;		
 		$data['menu'] = $this->get_menu();					
 		$this->load->view('layouts/master', $data);

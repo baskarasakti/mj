@@ -204,4 +204,39 @@ class Work_orders extends MY_Controller {
 		echo json_encode(array('status' => $status));
 	}
 
+	public function get_product_by_month_year()
+	{
+		$result = $this->wodm->get_product_by_month_year();
+		$data = array();
+		foreach($result as $value){
+			$row = array();
+			$row['id'] = $value->id;
+			$row['code'] = $value->code;
+			$row['name'] = $value->name;
+			$data[] = $row;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
+	public function populate_month_year($type)
+	{
+		$result = $this->wom->populate_month_year($type);
+		$data = array();
+		foreach($result as $value){
+			$row = array();
+			if($type == "month"){
+				$row['value'] = date('F', mktime(0, 0, 0, $value->id, 10));
+			}else{
+				$row['value'] = $value->id;
+			}
+			$row['id'] = $value->id;
+			$data[] = $row;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
 }

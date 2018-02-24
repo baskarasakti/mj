@@ -38,8 +38,11 @@
 	<script src="<?= asset_url('plugins/bower_components/blockUI/jquery.blockUI.js');?>"></script>
 	<!-- Plugin JavaScript -->
     <script src="<?= asset_url('plugins/bower_components/moment/moment.js');?>"></script>
-	 <!-- Date Picker Plugin JavaScript -->
-	 <script src="<?= asset_url('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js');?>"></script>
+	<!-- Date Picker Plugin JavaScript -->
+	<script src="<?= asset_url('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js');?>"></script>
+	<!-- Date range Plugin JavaScript -->
+    <script src="<?= asset_url('plugins/bower_components/timepicker/bootstrap-timepicker.min.js');?>"></script>
+    <script src="<?= asset_url('plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js');?>"></script>
 	<!-- Form Validation -->
 	<script src="<?= asset_url('js/validator.js');?>"></script>
 	<!-- Sweet-Alert  -->

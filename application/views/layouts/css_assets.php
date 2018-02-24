@@ -14,6 +14,9 @@
 	<link href="<?= asset_url('plugins/bower_components/jstree/dist/themes/default/style.min.css');?>" rel="stylesheet" type="text/css">
 	<!-- Date picker plugins css -->
 	<link href="<?= asset_url('plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css');?>" rel="stylesheet" type="text/css" />
+	 <!-- Daterange picker plugins css -->
+	 <link href="<?= asset_url('plugins/bower_components/timepicker/bootstrap-timepicker.min.css');?>" rel="stylesheet">
+    <link href="<?= asset_url('plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css');?>" rel="stylesheet">
 	<!-- Typehead CSS -->
 	<link href="<?= asset_url('plugins/bower_components/typeahead.js-master/dist/typehead-min.css');?>" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />

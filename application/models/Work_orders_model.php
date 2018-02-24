@@ -97,4 +97,15 @@ class Work_orders_model extends MY_Model {
 		return $this->db->get($this->_t)->result();
 	}
 
+	public function populate_month_year($type)
+	{
+		if($type == "month"){
+			$this->db->select("DISTINCT(MONTH(start_date)) as id");
+		}else if($type == "year"){
+			$this->db->select("DISTINCT(YEAR(start_date)) as id");
+		}	
+		$result = $this->db->get($this->_t);
+		return $result->result();
+	}
+
 }
