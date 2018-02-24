@@ -99,58 +99,24 @@ class Product_movement extends MY_Controller {
 		echo json_encode(array('status' => $status));
 	}
 
-	function jsgrid_functions($id = -1){
+	function jsgrid_functions($date = -1, $prid = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->pmdm->get_product_movement_details($id);
+			$result = $this->pmdm->get_product_movement_detail_print($date, $prid);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['code'] = $value->code;
-				$row['processes_id'] = $value->processes_id;
+				$row['product'] = $value->name;
+				$row['qty'] = $value->qty;
+				$row['uom'] = $value->uom;
 				$data[] = $row;
 				$count++;
 			}
 
 			$result = $data;
 			echo json_encode($result);
-			break;
-
-			case "POST":
-			$temp = explode("-", $this->input->post('products_id'));
-			$data = array(
-				'products_id' => $temp[1],
-				'production_details_id' => $temp[0],
-				'qty' => $this->input->post('qty'),
-				'note' =>$this->input->post('note'),
-				'product_receiving_id' => $id
-			);
-			$insert = $this->prdm->add_id($data);
-
-			$row = array();
-			$row['id'] = $insert;
-			$row['products_id'] = $this->input->post('products_id');
-			$row['qty'] = $this->input->post('qty');
-			$row['note'] = $this->input->post('note');
-
-			echo json_encode($row);
-			break;
-
-			case "PUT":
-			$this->input->raw_input_stream;
-			$data = array(
-				'products_id' => $this->input->input_stream('products_id'),
-				'qty' => $this->input->input_stream('qty'),
-				'note' =>$this->input->input_stream('note')
-			);
-			$result = $this->prdm->update('id',$this->input->input_stream('id'),$data);
-			break;
-
-			case "DELETE":
-			$this->input->raw_input_stream;
-			$status = $this->prdm->delete('id', $this->input->input_stream('id'));
 			break;
 		}
 	}

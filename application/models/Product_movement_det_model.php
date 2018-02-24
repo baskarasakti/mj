@@ -66,4 +66,18 @@ class Product_movement_det_model extends MY_Model {
 		$this->db->where('pmd.processes_id', $prid);
 		return $this->db->get()->result();
 	}
+
+	public function get_product_movement_detail_print($date, $prid)
+	{
+		$this->db->select(array('pmd.id as id', 'p.id', 'p.name as name', 'COUNT(*) as qty','u.symbol as uom', 'pmd.date as date', 'wo.code as wo'));
+		$this->db->from($this->table." pmd");
+		$this->db->join('product_movement pm', 'pmd.product_movement_id = pm.id', 'left');
+		$this->db->join('work_orders wo', 'pm.work_orders_id = wo.id', 'left');
+		$this->db->join('products p', 'pm.products_id = p.id', 'left');
+		$this->db->join('uom u', 'p.uom_id = u.id', 'left');
+		$this->db->like('pmd.date', $date);
+		$this->db->where('pmd.processes_id', $prid);
+		$this->db->group_by('p.id');
+		return $this->db->get()->result();
+	}
 }

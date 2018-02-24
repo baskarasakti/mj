@@ -92,10 +92,9 @@ $(document).ready(function() {
     } );
 	
 	$('#form-panel').hide();
-    $('#add-btn').hide();
 
 	$('#add-btn').click(function(){
-		action = "Add";
+		action = "generate";
 		$('#form-title').text('Add Form');
 		$("#form").validator();
 		show_hide_form(true);
@@ -107,31 +106,28 @@ $(document).ready(function() {
 		$('#form')[0].reset();
 	});
 
-    $("#saveBtn").click(function (e) {
+    $("#generateBtn").click(function (e) {
          var validator = $("#form").data("bs.validator");
          validator.validate();
          if (!validator.hasErrors()){
-            save_data();
+            generate();
+         }
+     });
+
+    $("#printBtn").click(function (e) {
+         var validator = $("#form").data("bs.validator");
+         validator.validate();
+         if (!validator.hasErrors()){
+            window.location = site_url+"invoice/print_production/"+$('[name="receive_date"]').val()+"/"+$('[name="processes_id"]').val();
          }
 	 });
-
-    var processes;
-    $.ajax({
-    	url: site_url+'processes/populate_select',
-    	type: "GET",
-    	async: false,
-    	success : function(text)
-    	{
-    		processes = JSON.parse(text);
-    	}
-    });
 
     $("#jsGrid").jsGrid({ 
     	width: "100%", 
     	height: "400px", 
 
-    	inserting: true, 
-    	editing: true, 
+    	inserting: false, 
+    	editing: false, 
     	sorting: true, 
     	paging: true, 
 
@@ -140,42 +136,19 @@ $(document).ready(function() {
         	loadData: function(filter) {
         		return $.ajax({
         			type: "GET",
-        			url: "product_movement/jsgrid_functions/"+$('[name="asd"]').val(),
+        			url: "product_movement/jsgrid_functions/"+$('[name="receive_date"]').val()+"/"+$('[name="processes_id"]').val(),
         			data: filter,
         			dataType:"JSON"
-        		});
-        	},
-        	insertItem: function(item) {
-        		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
-        		return $.ajax({
-        			type: "POST",
-        			url: "product_movement/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item,
-        			dataType:"JSON"
-        		});
-        	},
-        	updateItem: function(item) {
-        		return $.ajax({
-        			type: "PUT",
-        			url: "product_movement/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
-        		});
-        	},
-        	deleteItem: function(item) {
-        		return $.ajax({
-        			type: "DELETE",
-        			url: "product_movement/jsgrid_functions",
-        			data: item
         		});
         	}
         },
 
         fields: [ 
         { name: "id", visible:false }, 
-        { name: "code", title:"Code", type: "text", width: 50 }, 
-        { name: "processes_id", title:"Process", type: "select", items: processes, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
-        { type: "control" } 
+        { name: "product", title:"Product", type: "text", width: 100 }, 
+        { name: "qty", title:"Qty", type: "text", width: 50 }, 
+        { name: "uom", title:"Uom", type: "text", width: 50 }, 
+        { type: "control", editButton: false, deleteButton: false } 
         ] 
     });
 	
@@ -195,6 +168,35 @@ function reload_table(){
 	table.ajax.reload(null,false); //reload datatable ajax 
 } 
 
+function generate() {
+    url = site_url+"product_movement/jsgrid_functions/"+$('[name="receive_date"]').val()+"/"+$('[name="processes_id"]').val();
+
+    var data = $("#form").serializeArray();
+    data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
+
+    $.ajax({
+        url : url,
+        type: "GET",
+        data: $.param(data),
+        dataType: "JSON",
+        beforeSend: function() { 
+            $('div.block-div').block({
+                message: '<h4><img src="'+base_url+'assets/plugins/images/busy.gif" /> Just a moment...</h4>',
+                css: {
+                    border: '1px solid #fff'
+                }
+            });
+        },
+        success: function(data){
+            reload_table();
+            $('#jsGrid').jsGrid('loadData');
+            $('div.block-div').unblock();
+            show_hide_form(true);
+            // $('#form')[0].reset();
+        }
+    });
+}
+
 function save_data(){
 	var url;
 	if(action == "Add"){
@@ -212,8 +214,6 @@ function save_data(){
 		   data: $.param(data),
 		   dataType: "JSON",
 		   beforeSend: function() { 
-			   $("#saveBtn").text("Saving...");
-			   $("#saveBtn").prop('disabled', true); // disable button
 			   $('div.block-div').block({
 					message: '<h4><img src="'+base_url+'assets/plugins/images/busy.gif" /> Just a moment...</h4>',
 					css: {
@@ -223,17 +223,16 @@ function save_data(){
 		   },
 		   success: function(data)
 		   {
-			   if(data.id){
-				   reload_table();
-				   $("#saveBtn").text("Save");
-				   $("#saveBtn").prop('disabled', false);
-				   $('div.block-div').unblock();
-				   $('[name="asd"]').val(data.id);
-				   show_hide_form(true);
-				   // $('#form')[0].reset();
-			   }else{
-				   alert('Fail');
-			   }
+                if(data.id){
+                    reload_table();
+                    $("#printBtn").text("Print");
+                    $("#printBtn").prop('disabled', false);
+                    $('div.block-div').unblock();
+                    show_hide_form(true);
+				    // $('#form')[0].reset();
+                }else{
+                    alert('Fail');
+                }
 		   }
 	   });
    }

@@ -17,6 +17,7 @@ class Invoice extends MY_Controller {
 		$this->load->model('projects_model', 'prm');
 		$this->load->model('work_orders_model', 'wom');		
 		$this->load->model('project_details_model', 'pdm');
+		$this->load->model('product_movement_det_model', 'pmdm');
 	}
                 
 	public function index()
@@ -111,6 +112,26 @@ class Invoice extends MY_Controller {
 		$data['page_title'] = "Invoice";
 		$data['breadcumb']  = array("Invoice");
 		$data['page_view']  = "invoice/invoice_wo";		
+		$data['js_asset']   = "invoice";	
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();							
+		$this->load->view('layouts/master', $data);
+	}
+
+	public function print_production($date, $prid)
+	{
+		$data['product_movement_detail'] = $this->pmdm->get_product_movement_detail_print($date, $prid);
+		if ($prid == 0) {
+			$data['process'] = "JADI";
+		} else {
+			$data['process'] = "SETENGAH JADI";
+		}
+		$data['date'] = $date;
+
+		$data['title'] = "ERP | Invoice";
+		$data['page_title'] = "Invoice";
+		$data['breadcumb']  = array("Invoice");
+		$data['page_view']  = "invoice/invoice_production";		
 		$data['js_asset']   = "invoice";	
 		$data['csrf'] = $this->csrf;	
 		$data['menu'] = $this->get_menu();							
