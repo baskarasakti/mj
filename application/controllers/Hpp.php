@@ -74,7 +74,7 @@ class Hpp extends MY_Controller {
 			$row['code'] = $value->code;
 			$row['pcode'] = $value->pcode;
 			$row['name'] = $value->name;
-			$row['material_cost'] = $this->hm->get_total_material_cost($value->id);
+			$row['material_cost'] = $this->get_material_cost($value->id);
 			$row['btkl'] = $this->hm->get_total_btkl($value->id);;
 			$row['bop'] = $this->hm->get_total_bop($value->id);
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="printEvidence('.$value->id.')" type="button"><i class="fa fa-print"></i></button>
@@ -160,6 +160,17 @@ class Hpp extends MY_Controller {
 		);
 		$status = $this->hm->update_id('id', $this->input->post('hpp_id'), $data);
 		echo json_encode(array('status' => $status));
+   }
+
+   public function get_material_cost($id)
+   {
+		$result = $this->hm->get_material_list($id);
+		$total = 0;
+		foreach($result as $value){
+			$unit_price = round($this->hm->get_per_pieces_price($value->id), 2);
+			$total += round(($value->pick-$value->return)*$unit_price, 2);
+		}
+		return $total;
    }
 
 }
