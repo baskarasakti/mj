@@ -59,19 +59,26 @@ class Hpp_model extends MY_Model {
         return sprintf("%02s", $code).$seg2.$seg3.$seg4;
 	}
 
-	public function get_total_material_cost($id)
-	{
-		return 10000;
-	}
-
 	public function get_total_btkl($id)
 	{
-		return 10000;
+		$this->db->select('SUM(qty*price) as `total`', false);
+		$this->db->where('hpp_id', $id);
+		$this->db->group_by('hpp_id');
+		$row = $this->db->get('btkl')->row();
+		if(isset($row)){
+			return $row->total;
+		}
+		return 0;
 	}
-
 	public function get_total_bop($id)
 	{
-		return 10000;
+		$this->db->select('penyusutan + listrik + lain_lain as `total`', false);
+		$this->db->where('id', $id);
+		$row = $this->db->get($this->_t)->row();
+		if(isset($row)){
+			return $row->total;
+		}
+		return 0;
 	}
 
 	public function get_material_list($id)
