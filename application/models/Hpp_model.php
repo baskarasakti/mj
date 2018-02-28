@@ -118,4 +118,77 @@ class Hpp_model extends MY_Model {
 		return 0;
 	}
 
+	public function get_all_wos($month, $year, $pid)
+	{
+		if(sizeof($month) == 1){
+			$month = "0".$month;
+		}
+
+		$this->db->select('DISTINCT(wo.id) as id', FALSE);
+		$this->db->join('work_orders wo', 'wod.work_orders_id = wo.id', 'left');
+		$this->db->where('DATE_FORMAT(wo.start_date, "%Y-%m") = ', $year."-".$month);
+		$this->db->where('wod.products_id', $pid);
+		$result = $this->db->get('work_order_detail wod')->result();
+		return $result;
+	}
+
+	public function get_product_result($wos, $pid)
+	{
+		$data = array();
+		$data['initital'] = $this->get_initial_amount($wos, $pid);
+		$data['intermediate'] = $this->get_intermediate_amount($wos, $pid);
+		$data['final'] = $this->get_final_amount($wos, $pid);
+		return $data;
+	}
+
+	public function get_initial_amount($wos, $pid)
+	{
+		$total = 0;
+		foreach($wos as $wo){
+			$this->db->select('COALESCE(SUM(qty),0) as qty', false);			
+			$this->db->where('work_orders_id', $wo->id);
+			$this->db->where('products_id', $pid);
+			$this->db->group_by('products_id');
+			$row = $this->db->get('work_order_detail')->row();
+			if(isset($row)){
+				$total += $row->qty;
+			}
+		}	
+		return $total;
+	}
+
+	public function get_intermediate_amount($wos, $pid)
+	{
+		$total = 0;
+		foreach($wos as $wo){
+			$this->db->select('COALESCE(COUNT(pmd.id),0) as qty', false);			
+			$this->db->join('product_movement pm', 'pmd.product_movement_id = pm.id', 'left');
+			$this->db->where('pm.work_orders_id', $wo->id);
+			$this->db->where('pm.products_id', $pid);
+			$this->db->where('pmd.processes_id', -1);
+			$row = $this->db->get('product_movement_details pmd')->row();
+			if(isset($row)){
+				$total += $row->qty;
+			}
+		}	
+		return $total;
+	}
+
+	public function get_final_amount($wos, $pid)
+	{
+		$total = 0;
+		foreach($wos as $wo){
+			$this->db->select('COALESCE(COUNT(pmd.id),0) as qty', false);			
+			$this->db->join('product_movement pm', 'pmd.product_movement_id = pm.id', 'left');
+			$this->db->where('pm.work_orders_id', $wo->id);
+			$this->db->where('pm.products_id', $pid);
+			$this->db->where('pmd.processes_id', 0);
+			$row = $this->db->get('product_movement_details pmd')->row();
+			if(isset($row)){
+				$total += $row->qty;
+			}
+		}	
+		return $total;
+	}
+
 }

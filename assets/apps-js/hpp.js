@@ -109,6 +109,32 @@ $(document).ready(function() {
         ] 
 	}); 
 	
+	$("#jsGrid3").jsGrid({ 
+    	width: "100%", 
+    	height: "400px", 
+    	inserting: false, 
+    	editing: false, 
+    	sorting: true, 
+		paging: true, 
+        controller: {
+        	loadData: function(filter) {
+        		return $.ajax({
+        			type: "GET",
+        			url: "hpp/jsgrid_functions3/"+$('[name="asd"]').val(),
+        			data: filter,
+        			dataType:"JSON"
+        		});
+        	}
+        },
+        fields: [ 
+        { name: "description", title:"Description", type: "text", width: 150 },
+        { name: "qty", title:"Qty", type: "text" },
+        { name: "unit", title:"Unit", type: "text" },
+        { name: "pct", title:"Percentage", type: "text" }
+        ] 
+	}); 
+
+
 	function generateID(){
 		$.ajax({
 			url : site_url+"pickup_material/generate_id",
@@ -165,6 +191,7 @@ $(document).ready(function() {
 		$("[name='asd']").val(-1);
 		$('#jsGrid').jsGrid('loadData');
 		$('#jsGrid2').jsGrid('loadData');
+		$('#jsGrid3').jsGrid('loadData');
 	});
 
 	$('#cancelBtn').click(function(){
@@ -175,6 +202,7 @@ $(document).ready(function() {
 		$("[name='asd']").val(-1);
 		$('#jsGrid').jsGrid('loadData');
 		$('#jsGrid2').jsGrid('loadData');
+		$('#jsGrid3').jsGrid('loadData');
 	});
 
 	$('#cancelBtn2').click(function(){
@@ -321,6 +349,7 @@ function save_data(){
 					$('[name="asd"]').val(data.id);
 					$('#jsGrid').jsGrid('loadData');
 				 	$('#jsGrid2').jsGrid('loadData');
+				 	$('#jsGrid3').jsGrid('loadData');
 					if(action == "Add"){
 						$('[name="code"]').val(data.code);
 					}
@@ -374,6 +403,7 @@ function edit(id){
 				$('[name="asd"]').val(id);
 				$('#jsGrid').jsGrid('loadData');
 				$('#jsGrid2').jsGrid('loadData');
+				$('#jsGrid3').jsGrid('loadData');
 				$("#saveBtn").prop('disabled', true);
 				sumBOP();
 				show_hide_form(true);

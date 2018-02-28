@@ -151,6 +151,48 @@ class Hpp extends MY_Controller {
 		}
 	}
 
+	function jsgrid_functions3($id=-1){
+		switch($_SERVER["REQUEST_METHOD"]) {
+			case "GET":
+			$status = array('initital', 'intermediate', 'final', 'waste');
+			$details = $this->hm->get_by_id('id', $id);
+			$data = array();
+			
+			if(isset($details->products_id)){
+				$wos = $this->hm->get_all_wos($details->month, $details->year, $details->products_id);
+				$product_result = $this->hm->get_product_result($wos, $details->products_id);
+				foreach($status as $value){
+					$row = array();
+					$row['description'] = ucfirst($value);
+					$row['qty'] = $this->get_qty($value, $product_result);
+					$row['unit'] = "roll";
+					$row['pct'] = number_format(($this->get_pct($value, $product_result) * 100), 2, ".", ","). " %";
+					$data[] = $row;
+				}
+			}
+
+			$result = $data;
+			echo json_encode($result);
+			break;
+		}
+	}
+
+	public function get_qty($val, $result)
+	{
+		if($val == 'waste'){
+			return $result['initital'] - $result['intermediate'] - $result['final'];  
+		}
+		return $result[$val];
+	}
+
+	public function get_pct($val, $result)
+	{
+		if($val == 'waste'){
+			return ($result['initital'] - $result['intermediate'] - $result['final']) / $result['initital'];  
+		}
+		return $result[$val]/$result['initital'];
+	}
+
 	public function update_bop()
 	{
 		$data = array(

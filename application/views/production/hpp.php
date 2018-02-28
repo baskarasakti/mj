@@ -163,6 +163,11 @@
 							<h3><b>Total :</b> <span id="ototal"></span> </h3>
 						</div>
 					</div>
+					<h3 class="box-title">Product Result</h3>
+                    <hr>	
+					<div class="table-responsive"> 
+						<div id="jsGrid3"></div> 
+					</div> 
 					</div>
 				</div>
 			</div>
