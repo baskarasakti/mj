@@ -14,10 +14,16 @@
 					<div class="col-md-12">
 						<div class="pull-left">
 							<address>
+								<?php
+									if ($so->vat == 1){
+								?>	
 								<h3> &nbsp;<b class="text-danger">PT. MEGAHJAYA CEMERLANG</b></h3>
 								<p class="text-muted m-l-5">Jl. Raya Mojosari - Trawas Km 7 No 88 Mojokerto
 									<br/> Kab. Mojokerto
 									<br/> NPWP : 02.297.175.6-6-2.000
+								<?php
+									}
+								?>	
 							</address>
 						</div>
 						<div class="pull-right text-right">

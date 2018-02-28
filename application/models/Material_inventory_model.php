@@ -6,14 +6,15 @@ class Material_inventory_model extends MY_Model {
 	protected $_t = 'material_inventory';
 		
 	var $table = 'material_inventory';
-	var $column = array('m.id', 'debit', 'credit','qty', 'name'); //set column field database for order and search
+	var $column = array('m.id', 'mc.name', 'm.name','m.name', 'm.name', 'm.name'); //set column field database for order and search
     var $order = array('m.id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select(array('m.id as id', 'SUM(CASE WHEN mi.type = "in" THEN mi.qty ELSE 0 END) as debit', 'SUM(CASE WHEN mi.type = "out" THEN mi.qty ELSE 0 END) as credit','SUM(CASE WHEN mi.type = "in" THEN mi.qty ELSE 0 END)-SUM(CASE WHEN mi.type = "out" THEN mi.qty ELSE 0 END) as qty', 'm.name as name'));
+		$this->db->select(array('m.id as id', 'mc.name as category','SUM(CASE WHEN mi.type = "in" THEN mi.qty ELSE 0 END) as debit', 'SUM(CASE WHEN mi.type = "out" THEN mi.qty ELSE 0 END) as credit','SUM(CASE WHEN mi.type = "in" THEN mi.qty ELSE 0 END)-SUM(CASE WHEN mi.type = "out" THEN mi.qty ELSE 0 END) as qty', 'm.name as name'));
 		$this->db->from($this->table. " mi");
 		$this->db->join('materials m', 'm.id = mi.materials_id');
+		$this->db->join('material_categories mc', 'm.material_categories_id = mc.id');
 		$this->db->group_by('m.id, m.name');
  
 		$i = 0;

@@ -32,8 +32,8 @@ $(document).ready(function() {
         columns: columns,
         columnDefs: [ 
 			{ className: "dt-body-right", targets: right_align },
-			{ "orderable": false, targets : [-1]  },
-			{ "visible": false, targets : [0]  } 
+			{ "orderable": false, targets : [0, 4, 5, 6, -1]  },
+			{ "visible": false, targets : [1]  } 
         ]
 	});
 	

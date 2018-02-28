@@ -246,4 +246,32 @@ class Receiving extends MY_Controller {
 		}
 	}
 
+	public function upload_doc()
+	{
+		$param = array(
+			'folder' => "delivery doc",
+			'file_name' => $this->input->post('id_rec'),
+			'field' => "doc_path"
+		);	
+		$upload = $this->upload_file($param);
+		if($upload['status'] == true){
+			$data = array(
+				'doc_path' => $upload['msg']
+			);
+			$status = $this->rcv->update_id('id', $this->input->post('id_rec'), $data);
+		}
+		echo json_encode($upload);
+	}
+
+	public function download_doc($id=-1)
+	{
+		$detail = $this->rcv->get_by_id('id', $id);
+		if(isset($detail) && $detail->doc_path != NULL ){
+			$this->load->helper('download');
+			force_download('./assets/'.$detail->doc_path, NULL);
+		}else{
+			echo "Wups, you haven't uploaded a document for this receiving yet.";
+		}
+	}
+
 }

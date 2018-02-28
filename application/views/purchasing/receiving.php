@@ -99,26 +99,51 @@
 							<input type="text" class="form-control" id="receive_date" name="receive_date" placeholder="Delivery Date" required>
 							<div class="help-block with-errors"></div>
 						</div>
-						<div class="form-group">
-							<label for="date" class="control-label">Delivery</label>
-							<input type="file" id="file" name="file">
-							<div class="help-block with-errors"></div>
-						</div>
 						<div class="form-group text-right">
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
 						</div>
 						<input type="hidden" name="asd">
-						<div class="table-responsive"> 
-			              <div id="jsGrid"></div> 
-			            </div> 
 						<input type="hidden" name="change_id">
 					</form>
+					<div class="table-responsive"> 
+						<div id="jsGrid"></div> 
+					</div> 
+					<h3 class="box-title">Upload Delivery Order</h3>
+                    <hr>
+					<form id="form2">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<div class="white-box">
+										<label for="input-file-max-fs">Max image file size 2 MB</label>
+										<input type="file" id="doc_path" name="doc_path" class="dropify" data-max-file-size="2M" data-allowed-file-extensions="png jpg jpeg"/>
+									</div>
+								</div>
+							</div>
+							<!--/span-->
+							<div class="col-md-6">
+								<label  class="control-label">Download Document</label>
+								<div class="form-group text-center">
+									<button type="button" id="downloadBtn" class="btn btn-success">Download</button>
+								</div>
+							</div>
+							<!--/span-->
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group text-right">
+									<button type="button" id="uploadBtn" class="btn btn-success">Upload</button>
+								</div>
+							</div>
+							<!--/span-->
+						</div>
+					</form>	
 					</div>
 				</div>
 			</div>
 		</div>
-		<div id="detail-panel" class="col-md-12">
+		<!-- <div id="detail-panel" class="col-md-12">
 			<div class="panel panel-info">
 				<div id="form-title" class="panel-heading"> Details Form</div>
 				<div class="panel-wrapper collapse in block-div" aria-expanded="true">
@@ -169,7 +194,8 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
+		
 	</div>
 	<!-- /.row -->
 </div>

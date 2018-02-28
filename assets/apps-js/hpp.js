@@ -4,6 +4,8 @@ var method;
 
 $(document).ready(function() {
 
+	sumBOP();
+
 	var form_drop_down = function(el, type) {
 		$.ajax({
 			url: site_url+"work_orders/populate_month_year/"+type,
@@ -35,7 +37,15 @@ $(document).ready(function() {
     	inserting: false, 
     	editing: false, 
     	sorting: true, 
-    	paging: true, 
+		paging: true, 
+		onRefreshed: function(args) {
+			var total = 0;
+			var items = args.grid.option("data");
+			$.each(items, function(k,v){
+				total += v.total_price;
+			});
+			$("#mtotal").text(total);
+		},
         controller: {
         	loadData: function(filter) {
         		return $.ajax({
@@ -46,7 +56,6 @@ $(document).ready(function() {
         		});
         	}
         },
-
         fields: [ 
         { name: "category", title:"Category", type: "text", width: 150 },
         { name: "name", title:"Item Name", type: "text", width: 150 },
@@ -67,7 +76,14 @@ $(document).ready(function() {
     	editing: false, 
     	sorting: true, 
     	paging: true, 
-
+		onRefreshed: function(args) {
+			var total = 0;
+			var items = args.grid.option("data");
+			$.each(items, function(k,v){
+				total += v.total_price;
+			});
+			$("#btotal").text(total);
+		},
 		rowClick: function(args) {
 			method = "Edit";
 			editedRow = args.item;
@@ -227,6 +243,7 @@ $(document).ready(function() {
 				success: function(data)
 				{
 					if(data.status){
+						sumBOP();
 						alert("Saved!");
 					}
 				}
@@ -358,6 +375,7 @@ function edit(id){
 				$('#jsGrid').jsGrid('loadData');
 				$('#jsGrid2').jsGrid('loadData');
 				$("#saveBtn").prop('disabled', true);
+				sumBOP();
 				show_hide_form(true);
 			}
 		});
@@ -409,11 +427,11 @@ function populate_product_select(selected){
 	});
 }
 
-function getMateriaTotal(){
+function sumBOP(){
 	var total = 0;
-	var data = $("#jsGrid").jsGrid("option", "data");
-	console.log(data); 
+	var dep = $("[name='penyusutan']").val() == isNaN() ? 0 : parseInt($("[name='penyusutan']").val());
+	var elc = $("[name='listrik']").val() == isNaN() ? 0 :  parseInt($("[name='listrik']").val());
+	var oth = $("[name='lain_lain']").val() == isNaN() ? 0 :  parseInt($("[name='lain_lain']").val());
+	total = total + dep + elc + oth;
+	$("#ototal").text(total);
 }
-
-
-

@@ -5,6 +5,8 @@ var action;
 
 $(document).ready(function() {
 
+	$('.dropify').dropify();
+
 	$('#receive_date').datepicker({
 		format: 'yyyy-mm-dd',
 		startDate: '-7d',
@@ -250,7 +252,41 @@ $(document).ready(function() {
         { name: "total_price", title:"Total Price", type: "number", width: 200, readOnly: true},
         { type: "control", deleteButton: false} 
         ] 
-    }); 
+	}); 
+	
+	$("#uploadBtn").click(function(){
+		var data = new FormData($("#form2")[0]);
+		data.append('csrf_token',$("[name='csrf_token']").val());
+		data.append('id_rec',$('[name="asd"]').val());
+		$.ajax({
+			url: site_url+"receiving/upload_doc", 
+			type: "POST",             
+			data: data,
+			contentType: false,       
+			cache: false,             
+			processData:false,        
+			success: function(data)   
+			{	
+				if(!data){
+					alert("Fail!");
+				}else{
+					swal("File Uploaded!");
+				}
+			}
+		});
+	});
+
+	$("#downloadBtn").click(function(){
+		window.open(site_url+"receiving/download_doc/"+ $('[name="asd"]').val());
+		// $.ajax({
+		// 	url: site_url+"receiving/download_doc", 
+		// 	type: "POST",             
+		// 	data: {
+		// 		'id_rec': $('[name="asd"]').val(),
+		// 		'csrf_token': $("[name='csrf_token']").val()
+		// 	}
+		// });
+	});
 	
 });
 

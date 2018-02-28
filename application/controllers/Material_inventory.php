@@ -10,9 +10,10 @@ class Material_inventory extends MY_Controller {
 	}
 	
 	private function get_column_attr(){
-        $table = new TableField();
+		$table = new TableField();
+		$table->addColumn('no', '', 'No');
         $table->addColumn('id', '', 'ID');
-        $table->addColumn('no', '', 'No');
+        $table->addColumn('category', '', 'Category');
         $table->addColumn('name', '', 'Name');       
         $table->addColumn('debit', '', 'Debit');       
         $table->addColumn('credit', '', 'Credit');       
@@ -58,10 +59,11 @@ class Material_inventory extends MY_Controller {
         $count = 0;
         foreach($result['data'] as $value){
             $count++;
-            $row = array();
-            $row['id'] = $value->id;
-			$row['name'] = $value->name;
+			$row = array();
 			$row['no'] = $count;
+            $row['id'] = $value->id;
+			$row['category'] = $value->category;
+			$row['name'] = $value->name;
 			$row['debit'] = $value->debit;
 			$row['credit'] = $value->credit;
 			$row['qty'] = $value->qty;
