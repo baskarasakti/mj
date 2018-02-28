@@ -14,7 +14,7 @@
 					<div class="col-md-12">
 						<div class="text-center">
 							<h3>LAPORAN PENGEMBALIAN MATERIAL <?= $material_return->usage_categories ?></h3>
-							<h4>No: ......</h4>
+							<h4>No:  <?= $material_return->code_return ?></h4>
 						</div>
 						<p class="pull-left">tanggal: <?= $material_return->date ?></p>
 						<p class="pull-right">No. SPK: <?= $material_return->wocode ?></p>

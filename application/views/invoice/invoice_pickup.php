@@ -14,7 +14,7 @@
 					<div class="col-md-12">
 						<div class="text-center">
 							<h3>BUKTI PENGAMBILAN MATERIAL <?= $material_usage->usage_categories ?></h3>
-							<h4>No: ......</h4>
+							<h4>No: <?= $material_usage->code ?></h4>
 						</div>
 						<p class="pull-left">tanggal: <?= $material_usage->date ?></p>
 						<p class="pull-right">No. SPK: <?= $material_usage->wocode ?></p>
