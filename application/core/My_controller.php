@@ -98,6 +98,7 @@ class MY_controller extends CI_Controller {
 			'actions' => "visit"
 		);
 		$status = $this->history_model->add($d);
+		$this->history_model->delete_old_history();	
 	}
 
 }

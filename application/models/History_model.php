@@ -47,4 +47,10 @@ class History_model extends MY_Model {
 		}
 	}
 
+	public function delete_old_history()
+	{
+		$this->db->where('date < DATE_SUB(NOW(), INTERVAL 40 DAY)');
+		$this->db->delete($this->_t);
+	}
+
 }
