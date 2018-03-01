@@ -465,3 +465,7 @@ function sumBOP(){
 	total = total + dep + elc + oth;
 	$("#ototal").text(total);
 }
+
+function prints(id){
+	window.open(site_url+"invoice/print_hpp/"+id);
+}

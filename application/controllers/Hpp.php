@@ -78,7 +78,7 @@ class Hpp extends MY_Controller {
 			$row['material_cost'] = $this->get_material_cost($value->id);
 			$row['btkl'] = $this->hm->get_total_btkl($value->id);;
 			$row['bop'] = $this->hm->get_total_bop($value->id);
-			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="printEvidence('.$value->id.')" type="button"><i class="fa fa-print"></i></button>
+			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="prints('.$value->id.')" type="button"><i class="fa fa-print"></i></button>
 							  .<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							  .<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
             $data[] = $row;

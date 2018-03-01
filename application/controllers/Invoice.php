@@ -24,6 +24,9 @@ class Invoice extends MY_Controller {
 		$this->load->model('material_return_model', 'mr');
 		$this->load->model('material_return_det_model', 'mrd');
 		$this->load->model('machine_model', 'mm');
+		$this->load->model('hpp_model', 'hm');
+		$this->load->model('products_model', 'pm');
+		$this->load->model('btkl_model', 'bm');
 	}
                 
 	public function index()
@@ -173,4 +176,108 @@ class Invoice extends MY_Controller {
 		$data['menu'] = $this->get_menu();							
 		$this->load->view('layouts/master', $data);
 	}
+
+	public function print_hpp($id)
+	{
+		$data['hpp'] = $this->hm->get_by_id('id', $id);
+		$data['hpp_material'] = $this->format_hpp_material($id);
+		$data['hpp_btkl'] = $this->format_hpp_btkl($id);
+		$data['hpp_product_result'] = $this->format_product_result($id);
+
+		$product_id = $data['hpp']->products_id;
+		$data['product'] = $this->pm->get_by_id('id', $product_id);
+
+		$data['title'] = "ERP | HPP";
+		$data['page_title'] = "HPP";
+		$data['breadcumb']  = array("HPP");
+		$data['page_view']  = "invoice/invoice_hpp";		
+		$data['js_asset']   = "invoice";	
+		$data['csrf'] = $this->csrf;	
+		$data['menu'] = $this->get_menu();							
+		$this->load->view('layouts/master', $data);
+	}
+
+	public function format_hpp_material($id)
+	{
+		$result = $this->hm->get_material_list($id);
+		$data = array();
+		$count = 0;
+		foreach($result as $value){
+			$row = array();
+			$row['category'] = $value->category;
+			$row['name'] = $value->name;
+			$row['pick'] = $value->pick;
+			$row['used'] = $value->pick-$value->return;
+			$row['return'] = $value->return;
+			$row['symbol'] = $value->symbol;
+			$unit_price = round($this->hm->get_per_pieces_price($value->id), 2);
+			$row['unit_price'] = $unit_price;
+			$row['total_price'] = round(($value->pick-$value->return)*$unit_price, 2);
+			$data[] = $row;
+			$count++;
+		}
+
+		$result = $data;
+		return $result;
+	}
+
+	public  function format_hpp_btkl($id)
+	{
+		$result = $this->bm->get_btkl_list($id);
+		$data = array();
+		$count = 0;
+		foreach($result as $value){
+			$row = array();
+			$row['id'] = $value->id;
+			$row['processes_id'] = $value->processes_id;
+			$row['qty'] = $value->qty;
+			$row['price'] = $value->price;
+			$row['total_price'] = $value->qty*$value->price;
+			$data[] = $row;
+			$count++;
+		}
+
+		$result = $data;
+		return $result;
+	}
+
+	public  function format_product_result($id)
+	{
+		$status = array('initital', 'intermediate', 'final', 'waste');
+		$details = $this->hm->get_by_id('id', $id);
+		$data = array();
+		
+		if(isset($details->products_id)){
+			$wos = $this->hm->get_all_wos($details->month, $details->year, $details->products_id);
+			$product_result = $this->hm->get_product_result($wos, $details->products_id);
+			foreach($status as $value){
+				$row = array();
+				$row['description'] = ucfirst($value);
+				$row['qty'] = $this->get_qty($value, $product_result);
+				$row['unit'] = "roll";
+				$row['pct'] = ($this->get_pct($value, $product_result) * 100);
+				$data[] = $row;
+			}
+		}
+
+		$result = $data;
+		return $result;
+	}
+
+	public function get_qty($val, $result)
+	{
+		if($val == 'waste'){
+			return $result['initital'] - $result['intermediate'] - $result['final'];  
+		}
+		return $result[$val];
+	}
+
+	public function get_pct($val, $result)
+	{
+		if($val == 'waste'){
+			return ($result['initital'] - $result['intermediate'] - $result['final']) / $result['initital'];  
+		}
+		return $result[$val]/$result['initital'];
+	}
+
 }
