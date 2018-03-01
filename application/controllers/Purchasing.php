@@ -55,6 +55,7 @@ class Purchasing extends MY_Controller {
 		$data['vendors'] = $this->vd->get_all_data();	
 		$data['currency'] = $this->cm->get_all_data();	
 		$data['company_address'] = $this->am->get_info()->address;	
+		$this->add_history($data['page_title']);
 		$this->load->view('layouts/master', $data);
 	}
 

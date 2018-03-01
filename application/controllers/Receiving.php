@@ -83,6 +83,7 @@ class Receiving extends MY_Controller {
 		$data['csrf'] = $this->csrf;
 		$data['menu'] = $this->get_menu();							
 		$data['vendors'] = $this->vd->get_all_data();	
+		$this->add_history($data['page_title']);
 		$this->load->view('layouts/master', $data);
 	}
 

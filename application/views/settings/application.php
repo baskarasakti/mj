@@ -75,6 +75,13 @@
 					</table>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-sm-12 ol-md-12 col-xs-12">
+					<div class="white-box text-center">
+						<a href="<?=site_url('history');?>" class="btn btn-info"><i class="fa fa-eye"></i> View User Log</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

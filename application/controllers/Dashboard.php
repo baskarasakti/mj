@@ -16,7 +16,8 @@ class Dashboard extends MY_Controller {
 		$data['page_view']  = "dashboard";		
 		$data['js_asset']   = "dashboard";	
 		$data['csrf'] = $this->csrf;
-		$data['menu'] = $this->get_menu();							
+		$data['menu'] = $this->get_menu();
+		$this->add_history($data['page_title']);							
 		$this->load->view('layouts/master', $data);
 	}
 }

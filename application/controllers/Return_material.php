@@ -45,7 +45,8 @@ class Return_material extends MY_Controller {
 		$data['u_categories']    = $this->uc->get_all_data();	
 		$data['categories']    = $this->mcm->get_all_data();	
 		$data['machines']    = $this->mm->populate_select();					
-		$data['uom']    = $this->uom->get_all_data();					
+		$data['uom']    = $this->uom->get_all_data();		
+		$this->add_history($data['page_title']);			
 		$this->load->view('layouts/master', $data);
 	}
 

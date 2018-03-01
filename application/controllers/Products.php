@@ -57,7 +57,8 @@ class Products extends MY_Controller {
 		$data['colors'] = $this->cm->get_all_data();		
 		$data['uom'] = $this->um->get_all_data();		
 		$data['csrf'] = $this->csrf;		
-		$data['menu'] = $this->get_menu();					
+		$data['menu'] = $this->get_menu();		
+		$this->add_history($data['page_title']);			
 		$this->load->view('layouts/master', $data);
 	}
 

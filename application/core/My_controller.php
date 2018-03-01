@@ -9,6 +9,7 @@ class MY_controller extends CI_Controller {
         parent::__construct();
 		$this->load->library('session');
 		$this->load->model('previllage_model', 'previllage');
+		$this->load->model('history_model', 'history_model');
 		//$this->lang->load('login', 'english');
         if(!$this->session->userdata('loggedIn')){
             redirect('login');
@@ -86,6 +87,17 @@ class MY_controller extends CI_Controller {
 			$data['msg'] = $param['folder'].'/'.$param['file_name'].$upd['file_ext'];
 		}
 		return $data;
+	}
+
+	public function add_history($page)
+	{
+		$d = array(
+			'date' => date("Y-m-d h:m:s"),
+			'name' => $this->session->userdata('name'),
+			'page' => $page,
+			'actions' => "visit"
+		);
+		$status = $this->history_model->add($d);
 	}
 
 }

@@ -34,6 +34,7 @@ class Users extends MY_Controller {
 		$data['csrf'] = $this->csrf;	
 		$data['menu'] = $this->get_menu();			
 		$data['roles'] = $this->rm->get_all_data();		
+		$this->add_history($data['page_title']);
 		$this->load->view('layouts/master', $data);
 	}
 

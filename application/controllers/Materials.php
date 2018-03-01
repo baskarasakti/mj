@@ -35,7 +35,8 @@ class Materials extends MY_Controller {
 		$data['csrf'] = $this->csrf;		
 		$data['menu'] = $this->get_menu();					
 		$data['m_categories'] = $this->mcm->get_all_data();							
-		$data['vendors'] = $this->vm->get_all_data();							
+		$data['vendors'] = $this->vm->get_all_data();	
+		$this->add_history($data['page_title']);						
 		$this->load->view('layouts/master', $data);
 	}
 

@@ -50,7 +50,8 @@ class Product_movement_detail extends MY_Controller {
 		$data['menu'] = $this->get_menu();					
 		$data['woid'] = $woid;					
 		$data['pid'] = $pid;				
-		$data['csrf'] = $this->csrf;		
+		$data['csrf'] = $this->csrf;	
+		$this->add_history($data['page_title']);	
 		$this->load->view('layouts/master', $data);
 	}
 

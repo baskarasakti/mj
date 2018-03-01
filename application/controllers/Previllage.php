@@ -28,7 +28,8 @@ class Previllage extends MY_Controller {
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;
 		$data['menu'] = $this->get_menu();		
-		$data['roles'] = $this->rm->get_all_data();					
+		$data['roles'] = $this->rm->get_all_data();		
+		$this->add_history($data['page_title']);			
 		$this->load->view('layouts/master', $data);
 	}
 

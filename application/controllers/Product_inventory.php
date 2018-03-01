@@ -57,7 +57,9 @@ class Product_inventory extends MY_Controller {
 		$data['columns']    = $this->get_column_attr();
 		$data['columns1']    = $this->get_column_attr1();
 		$data['csrf'] = $this->csrf;		
-		$data['menu'] = $this->get_menu();					
+		$data['menu'] = $this->get_menu();		
+		$this->add_history($data['page_title']);	
+		$this->add_history($data['page_title']);		
 		$this->load->view('layouts/master', $data);
 	}
 

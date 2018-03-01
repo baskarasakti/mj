@@ -38,7 +38,8 @@ class Pickup_material extends MY_Controller {
 		$data['csrf'] = $this->csrf;					
 		$data['menu'] = $this->get_menu();		
 		$data['u_categories']    = $this->uc->get_all_data();		
-		$data['machines']    = $this->mm->populate_select();		
+		$data['machines']    = $this->mm->populate_select();	
+		$this->add_history($data['page_title']);	
 		$this->load->view('layouts/master', $data);
 	}
 

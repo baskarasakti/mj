@@ -30,7 +30,8 @@ class Machine extends MY_Controller {
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;		
 		$data['menu'] = $this->get_menu();					
-		$data['process'] = $this->pm->get_all_data();					
+		$data['process'] = $this->pm->get_all_data();	
+		$this->add_history($data['page_title']);				
 		$this->load->view('layouts/master', $data);
 	}
 

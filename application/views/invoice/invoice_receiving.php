@@ -57,9 +57,9 @@
 								<thead>
 									<tr>
 										<th class="text-center">No. </th>
-										<th>NAMA BARANG</th>
+										<th class="text-center">NAMA BARANG</th>
 										<th class="text-right">Qty</th>
-										<th>SATUAN</th>
+										<th class="text-center">SATUAN</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -69,9 +69,9 @@
 										 	?>
 										 	<tr>
 												<td class="text-center"><?= $i ?></td>
-												<td><?= $q->name ?></td>
+												<td class="text-center"><?= $q->name ?></td>
 												<td class="text-right"><?= $q->qty ?></td>
-												<td><?= $q->uom ?></td>
+												<td class="text-center"><?= $q->uom ?></td>
 											</tr>
 										 	<?php
 										$i++;}

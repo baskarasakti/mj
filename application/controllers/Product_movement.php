@@ -47,6 +47,7 @@ class Product_movement extends MY_Controller {
 		$data['process'] = $this->prcm->get_all_data();	
 		$data['menu'] = $this->get_menu();					
 		$data['csrf'] = $this->csrf;		
+		$this->add_history($data['page_title']);
 		$this->load->view('layouts/master', $data);
 	}
 
