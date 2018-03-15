@@ -12,14 +12,28 @@ class Customers extends MY_Controller {
 	private function get_column_attr(){
         $table = new TableField();
         $table->addColumn('id', '', 'ID');
-		$table->addColumn('name', '', 'Name');
+		$table->addColumn('name', 'left', 'Name');
         $table->addColumn('description', '', 'Description');        
-        $table->addColumn('address', '', 'Address');        
+        $table->addColumn('address', 'left', 'Address');        
         $table->addColumn('telp', '', 'Telp');        
         $table->addColumn('actions', '', 'Actions');        
         return $table->getColumns();
     }
 	
+	public function populate_autocomplete(){
+		$result = $this->cm->populate_autocomplete();
+		$data = array();
+		foreach($result as $value){
+			$row = array();
+			$row['value'] = $value->name;
+			$row['id'] = $value->id;
+			$data[] = $row;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
 	public function index()
 	{
 		$data['title'] = "ERP | Customers";
@@ -59,9 +73,9 @@ class Customers extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
-			'description' => $this->normalize_text($this->input->post('description')),
-			'address' => $this->normalize_text($this->input->post('address')),
+			'name' => $this->input->post('name'),
+			'description' => $this->input->post('description'),
+			'address' => $this->input->post('address'),
 			'telp' => $this->input->post('telp'),
 			'ppn' => $this->input->post('ppn'),
 			'created_at' => date("Y-m-d H:m:s")
@@ -77,9 +91,9 @@ class Customers extends MY_Controller {
 
 	function update(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
-			'description' => $this->normalize_text($this->input->post('description')),
-			'address' => $this->normalize_text($this->input->post('address')),
+			'name' => $this->input->post('name'),
+			'description' => $this->input->post('description'),
+			'address' => $this->input->post('address'),
 			'telp' => $this->input->post('telp'),
 			'ppn' => $this->input->post('ppn'),
 			'updated_at' => date("Y-m-d H:m:s")

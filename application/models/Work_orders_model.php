@@ -6,12 +6,12 @@ class Work_orders_model extends MY_Model {
 	protected $_t = 'work_orders';
 	
 	var $table = 'work_orders';
-	var $column = array('wo.id', 'wo.id', 'wo.code', 'p.code', 'wo.ppn'); //set column field database for order and search
+	var $column = array('wo.id', 'wo.id', 'wo.code', 'start_date', 'end_date', 'p.code', 'wo.ppn'); //set column field database for order and search
     var $order = array('wo.id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('wo.id as id, wo.code as code, wo.ppn as ppn, p.code as projects_code');
+		$this->db->select('wo.id as id, wo.code as code, start_date, end_date, wo.ppn as ppn, p.code as projects_code');
 		$this->db->from($this->table.' wo');
 		$this->db->join('projects p', 'wo.projects_id = p.id', 'left');
  

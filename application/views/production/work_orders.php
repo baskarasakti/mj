@@ -52,12 +52,12 @@
 						</div>
 						<div class="form-group">
 							<label for="start_date" class="control-label">Start Date</label>
-							<input type="text" class="form-control" id="start_date" name="start_date" placeholder="Start Date" required>
+							<input type="text" class="form-control" id="start_date" name="start_date" placeholder="Work Order Start Date" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
 							<label for="end_date" class="control-label">End Date</label>
-							<input type="text" class="form-control" id="end_date" name="end_date" placeholder="End Date" required>
+							<input type="text" class="form-control" id="end_date" name="end_date" placeholder="Sales Order Send Date" required>
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group text-right">
@@ -71,11 +71,11 @@
                     <hr>
 					<form id="form2" data-toggle="validator">
 						<div class="row">
-							<div class="col-md-2">
+							<div class="col-md-1">
 								<div class="form-group">
-									<span class="form-control"><strong>Add / Edit Item</strong></span> </div>
+									<span class="form-control text-center"><strong>Item</strong></span> </div>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-4">
 								<div class="form-group">
 									<input id="product_name" name="product_name" class="form-control" placeholder="Choose Product Name" type="text" readonly>
 									<span class="help-block"> </span> </div>
@@ -83,7 +83,12 @@
 							<!--/span-->
 							<div class="col-md-2">
 								<div class="form-group">
-									<input id="qty" name="qty" class="form-control" placeholder="Quantity" type="number" required>
+									<input id="qty" name="qty" class="form-control" placeholder="Qty" type="number" required>
+									<span class="help-block"> </span> </div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<input id="note" name="note" class="form-control" placeholder="Note" type="text">
 									<span class="help-block"> </span> </div>
 							</div>
 							<input type="hidden" name="details_id">

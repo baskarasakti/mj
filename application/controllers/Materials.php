@@ -9,6 +9,8 @@ class Materials extends MY_Controller {
 			$this->load->model('materials_model', 'mm');
 			$this->load->model('material_cat_model', 'mcm');
 			$this->load->model('vendors_model', 'vm');
+			$this->load->model('uom_model', 'um');
+			$this->load->model('material_vendor_model', 'mvm');
 	}
 	
 	private function get_column_attr(){
@@ -17,8 +19,7 @@ class Materials extends MY_Controller {
         $table->addColumn('name', '', 'Name');        
         $table->addColumn('category', '', 'Category');        
         $table->addColumn('min_stock', 'right', 'Min Stock');        
-        $table->addColumn('uom', '', 'Unit');        
-        $table->addColumn('vendor', '', 'Vendor');        
+        $table->addColumn('uom', '', 'Unit');              
         $table->addColumn('actions', '', 'Actions');        
         return $table->getColumns();
     }
@@ -35,7 +36,7 @@ class Materials extends MY_Controller {
 		$data['csrf'] = $this->csrf;		
 		$data['menu'] = $this->get_menu();					
 		$data['m_categories'] = $this->mcm->get_all_data();							
-		$data['vendors'] = $this->vm->get_all_data();	
+		$data['uom'] = $this->um->get_all_data();		
 		$this->add_history($data['page_title']);						
 		$this->load->view('layouts/master', $data);
 	}
@@ -72,9 +73,18 @@ class Materials extends MY_Controller {
 		echo json_encode($result);
 	}
 
-	public function get_uom_materials($id)
-	{
-		# code...
+	public function populate_autocomplete(){
+		$result = $this->mm->populate_autocomplete();
+		$data = array();
+		foreach($result as $value){
+			$row = array();
+			$row['value'] = $value->name;
+			$row['id'] = $value->id;
+			$data[] = $row;
+		}
+
+		$result = $data;
+		echo json_encode($result);
 	}
 
 	public function view_data(){
@@ -88,7 +98,6 @@ class Materials extends MY_Controller {
 			$row['category'] = $value->category;
 			$row['min_stock'] = $value->min_stock;
 			$row['uom'] = $value->uom;
-			$row['vendor'] = $value->vendor;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							  .<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
             $data[] = $row;
@@ -102,12 +111,14 @@ class Materials extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
+			'name' => $this->input->post('name'),
 			'material_categories_id' => $this->input->post('material_categories_id'),
-			'vendors_id' => $this->input->post('vendors_id'),
+			'uom_id' => $this->input->post('uom_id'),
+			'min_stock' => $this->input->post('min_stock'),
+			'initial_qty' => $this->input->post('initial_qty'),
 			'created_at' => date("Y-m-d H:m:s")
 		);
-		$inserted = $this->mm->add($data);
+		$inserted = $this->mm->add_id($data);
 		echo json_encode(array('status' => $inserted));
 	}
 
@@ -129,6 +140,53 @@ class Materials extends MY_Controller {
 
 	function delete($id){        
 		$status = $this->mm->delete('id', $id);
+		echo json_encode(array('status' => $status));
+	}
+
+	function jsgrid_functions($id=-1){
+		switch($_SERVER["REQUEST_METHOD"]) {
+			case "GET":
+			$result = $this->mvm->get_material_vendor($id);
+			$data = array();
+			$count = 0;
+			foreach($result as $value){
+				$row = array();
+				$row['id'] = $value->id;
+				$row['vendors_id'] = $value->vendors_id;
+				$row['name'] = $value->name;
+				$row['address'] = $value->address;
+				$row['telp'] = $value->telp;
+				$data[] = $row;
+				$count++;
+			}
+
+			$result = $data;
+			echo json_encode($result);
+			break;
+
+			case "DELETE":
+			$this->input->raw_input_stream;
+			$status = $this->mvm->delete('id', $this->input->input_stream('id'));
+			break;
+		}
+	}
+
+	public function add_material_vendor()
+	{
+		$data = array(
+			'materials_id' => $this->input->post('materials_id'),
+			'vendors_id' => $this->input->post('vendors_id')
+		);
+		$inserted = $this->mvm->add($data);
+		echo json_encode(array('status' => $inserted));
+	}
+
+	public function edit_material_vendor()
+	{
+		$data = array(
+			'vendors_id' => $this->input->post('vendors_id')
+		);
+		$status = $this->mvm->update('id', $this->input->post('details_id'), $data);
 		echo json_encode(array('status' => $status));
 	}
 

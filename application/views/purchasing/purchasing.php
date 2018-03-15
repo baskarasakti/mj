@@ -74,15 +74,8 @@
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="vendor" class="control-label">Vendor</label>
-							<select class="custom-select col-sm-12" id="vendor" name="vendor" required>
-								<option selected="">Choose...</option>
-								<?php
-									foreach($vendors as $vendor){
-										echo '<option value="'.$vendor->id.'">'.$vendor->name.'</option>';
-									}
-								?>
-							</select>
+							<label for="vendor_name" class="control-label">Vendor</label>
+							<input type="text" class="form-control" id="vendor_name" name="vendor_name" placeholder="Vendor">
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
@@ -102,10 +95,49 @@
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
 						</div>
 						<input type="hidden" name="asd">
+						<input type="hidden" name="vendors_id">
+						<input type="hidden" name="change_id">
+					</form>
+					<h3 class="box-title">Product List</h3>
+                    <hr>
+					<form id="form2" data-toggle="validator">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<input id="material_name" name="material_name" class="form-control" placeholder="Type Material Name" type="text" required>
+								<span class="help-block"> </span> </div>
+						</div>
+						<!--/span-->
+						<div class="col-md-2">
+							<div class="form-group">
+								<input id="price" name="price" class="form-control" placeholder="Price" min="0" type="number" required>
+								<span class="help-block"> </span> </div>
+						</div>
+						<div class="col-md-1">
+							<div class="form-group">
+								<input id="qty" name="qty" class="form-control" placeholder="Qty" min="0" type="number" required>
+								<span class="help-block"> </span> </div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<input id="note" name="note" class="form-control" placeholder="Note" type="text" required>
+								<span class="help-block"> </span> </div>
+						</div>
+						<input type="hidden" id="materials_id" name="materials_id">
+						<input type="hidden" name="details_id">
+						<div class="col-md-1">
+							<div class="form-group">
+							<button type="button" id="saveBtn2" class="btn btn-success form-control">Save</button></div>
+						</div>
+						<div class="col-md-1">
+							<div class="form-group">
+							<button type="button" id="cancelBtn2" class="btn btn-danger form-control">Clear</button></div>
+						</div>
 						<div class="table-responsive"> 
 			              <div id="jsGrid"></div> 
 			            </div> 
-						<input type="hidden" name="change_id">
+						<!--/span-->
+					</div>
 					</form>
 					</div>
 				</div>

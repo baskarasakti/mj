@@ -11,9 +11,10 @@ class Products_model extends MY_Model {
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('p.id as id, p.code as code, p.name as name, pc.name as category');
+		$this->db->select('p.id as id, p.code as code, p.name as name, pc.name as category, symbol');
 		$this->db->from($this->table.' p');
 		$this->db->join('product_categories pc', 'p.product_categories_id = pc.id', 'left');
+		$this->db->join('uom', 'p.uom_id = uom.id', 'left');
  
 		$i = 0;
 	 
@@ -70,6 +71,15 @@ class Products_model extends MY_Model {
 	public function populate_autocomplete(){
 		$this->db->like('code', $this->input->get('term'), 'both');
 		$this->db->or_like('name', $this->input->get('term'), 'both');
+		return $this->db->get($this->_t)->result();
+	}
+
+	public function populate_autocomplete_code(){
+		if($this->input->get('category_id')){
+			$this->db->where('product_categories_id', $this->input->get('category_id'));
+		}
+		$this->db->like('code', $this->input->get('term'), 'both');
+		$this->db->order_by('code', 'desc');
 		return $this->db->get($this->_t)->result();
 	}
 

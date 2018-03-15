@@ -59,26 +59,20 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="customers_id" class="control-label">Customers</label>
-							<select class="custom-select col-sm-12" id="customers_id" name="customers_id" required>
-								<option selected="">Choose...</option>
-								<?php
-									foreach($customers as $item){
-										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
-									}
-								?>
-							</select>
+							<label for="customer_name" class="control-label">Customers</label>
+							<input type="text" class="form-control" id="customer_name" name="customer_name" placeholder="Customers">
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
-							<label for="description" class="control-label">Description</label>
-							<input type="text" class="form-control" id="description" name="description" placeholder="Description">
+							<label for="description" class="control-label">Note</label>
+							<input type="text" class="form-control" id="description" name="description" placeholder="Note">
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group text-right">
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
 						</div>
+						<input type="hidden" name="customers_id" value="">
 						<input type="hidden" name="asd" value="">
 						<input type="hidden" name="change_id">
 					</form>
@@ -86,11 +80,7 @@
                     <hr>
 					<form id="form2" data-toggle="validator">
 					<div class="row">
-						<div class="col-md-2">
-							<div class="form-group">
-								<span class="form-control"><strong>Add / Edit Item</strong></span> </div>
-						</div>
-						<div class="col-md-6">
+						<div class="col-md-4">
 							<div class="form-group">
 								<input id="product_name" name="product_name" class="form-control" placeholder="Type Product Name" type="text" required>
 								<span class="help-block"> </span> </div>
@@ -98,7 +88,17 @@
 						<!--/span-->
 						<div class="col-md-2">
 							<div class="form-group">
-								<input id="qty" name="qty" class="form-control" placeholder="Quantity" type="number" required>
+								<input id="price" name="price" class="form-control" placeholder="Price" min="0" type="number" required>
+								<span class="help-block"> </span> </div>
+						</div>
+						<div class="col-md-1">
+							<div class="form-group">
+								<input id="qty" name="qty" class="form-control" placeholder="Qty" min="0" type="number" required>
+								<span class="help-block"> </span> </div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<input id="note" name="note" class="form-control" placeholder="Note" type="text" required>
 								<span class="help-block"> </span> </div>
 						</div>
 						<input type="hidden" id="products_id" name="products_id">

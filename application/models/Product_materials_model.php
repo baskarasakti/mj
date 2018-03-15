@@ -6,9 +6,10 @@ class Product_materials_model extends MY_Model {
 	protected $_t = 'product_materials';
 
 	function get_product_materials($id){
-		$this->db->select(array('pm.id as id','qty','materials_id'));
+		$this->db->select('pm.id as id, pm.materials_id as materials_id, m.name as name, qty, symbol as unit');
 		$this->db->where('products_id', $id);
 		$this->db->join('materials m', 'pm.materials_id = m.id', 'left');
+		$this->db->join('uom', 'm.uom_id = uom.id', 'left');
 		$result = $this->db->get($this->_t.' pm');
 		return $result->result();
 	}

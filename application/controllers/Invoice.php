@@ -16,6 +16,7 @@ class Invoice extends MY_Controller {
 		$this->load->model('shipping_details_model', 'sdm');
 		$this->load->model('projects_model', 'prm');
 		$this->load->model('work_orders_model', 'wom');		
+		$this->load->model('work_order_detail_model', 'wodm');		
 		$this->load->model('project_details_model', 'pdm');
 		$this->load->model('product_movement_det_model', 'pmdm');
 		$this->load->model('material_usage_model', 'mu');
@@ -116,7 +117,8 @@ class Invoice extends MY_Controller {
 	public function print_wo($id)
 	{
 		$data['work_orders'] = $this->wom->get_by_id('id',$id);
-		$data['project_details'] = $this->pdm->get_project_details($data['work_orders']->projects_id);
+		$data['project'] = $this->prm->get_by_id('id',$data['work_orders']->projects_id);
+		$data['work_order_detail'] = $this->wodm->get_work_order_details($id);
 		$data['title'] = "ERP | Invoice";
 		$data['page_title'] = "Invoice";
 		$data['breadcumb']  = array("Invoice");

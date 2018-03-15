@@ -14,13 +14,14 @@ class Work_order_detail_model extends MY_Model {
 			$row['qty'] = $item->qty;
 			$row['products_id'] = $item->products_id;
 			$row['work_orders_id'] = $id_wo;
+			$row['note'] = $item->note;
 			$data[] = $row;
 		}
 		return $this->db->insert_batch($this->_t, $data);
 	}
 
 	function get_work_order_details($id){
-        $this->db->select('wod.id as id, p.name as name, wod.qty as qty, u.symbol as symbol, products_id as pid, work_orders_id as woid');		
+        $this->db->select('wod.id as id, p.name as name, wod.qty as qty, u.symbol as symbol, products_id as pid, work_orders_id as woid, wod.note as note');		
         $this->db->where('wod.work_orders_id', $id);		
         $this->db->join('products p', 'wod.products_id = p.id', 'left');		
         $this->db->join('uom u', 'p.uom_id = u.id', 'left');		

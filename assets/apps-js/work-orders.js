@@ -37,11 +37,12 @@ $(document).ready(function() {
         },
 
         fields: [ 
-		{ name: "no", title:"No" }, 
+		{ name: "no", title:"No", width: 10 }, 
 		{ name: "id", title:"ID", visible:false }, 
 		{ name: "name", title:"Product", width: 150 }, 
 		{ name: "qty", title:"Qty", type: "number", width: 50 },
 		{ name: "symbol", title:"Unit", type: "text", width: 50 },
+		{ name: "note", title:"Note", type: "text", width: 50 },
         ] 
 	}); 
 
@@ -50,6 +51,7 @@ $(document).ready(function() {
 		$('[name="details_id"]').val(data.id);
 		$('[name="product_name"]').val(data.name);
 		$('[name="qty"]').val(data.qty);
+		$('[name="note"]').val(data.note);
 	}
 
 	var saveDetail = function(data){
@@ -85,22 +87,33 @@ $(document).ready(function() {
 	  });
 
 	$('#start_date').datepicker({
-		format: 'yyyy-mm-dd' 
+		format: 'yyyy-mm-dd' ,
+		startDate: '-7d',
+		endDate: '+1Y',
 	});
 
 	$('#end_date').datepicker({
-		format: 'yyyy-mm-dd' 
+		format: 'yyyy-mm-dd', 
+		startDate: '-7d',
+		endDate: '+1Y',
 	});
 
 	var columns = [];
-	var right_align = [];
-	$("#datatable").find('th').each(function(i, th){
-		var field = $(th).attr('data-field');
-		var align = $(th).attr('data-align');
-		columns.push({data: field, name: field});
-		if(align == "right")
+    var right_align = [];
+    var center_align = [];
+    var left_align = [];
+    $("#datatable").find('th').each(function(i, th){
+        var field = $(th).attr('data-field');
+        var align = $(th).attr('data-align');
+        columns.push({data: field, name: field});
+        if(align == "right"){
 			right_align.push(i);
-	});
+		}else if(align == "left"){
+			left_align.push(i);
+		}else{
+			center_align.push(i);
+		}	
+    });
 
 	table = $('#datatable').DataTable({
 		dom: 'lrftip',
@@ -120,8 +133,10 @@ $(document).ready(function() {
 		},
 		columns: columns,
 		columnDefs: [ 
-		{ className: "dt-body-right", targets: right_align },
-		{ visible: false, targets: [1]},
+			{ className: "dt-body-right", targets: right_align },
+			{ className: "dt-body-center", targets: center_align },
+			{ className: "dt-body-left", targets: left_align },
+			{ visible: false, targets: [1]},
 		]
 	});
 	
@@ -264,8 +279,10 @@ function edit(id){
 			$('[name="projects_code"]').val(data.projects_code);
 			$('[name="projects_id"]').val(data.projects_id);
 			$('[name="code"]').val(data.code);
-			$('[name="start_date"]').val(data.start_date);
-			$('[name="end_date"]').val(data.end_date);
+			var temp = data.start_date.split(" ");
+			$('[name="start_date"]').val(temp[0]);
+			temp = data.end_date.split(" ");
+			$('[name="end_date"]').val(temp[0]);
 			$("#form").validator();
 			$('#form-title').text('Edit Form');
 			$('#jsGrid').jsGrid('loadData');

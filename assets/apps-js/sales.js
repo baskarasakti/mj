@@ -12,31 +12,53 @@ $(document).ready(function() {
     $( "#product_name" ).autocomplete({
 	  maxShowItems: 5,
       source: site_url+"products/populate_autocomplete",
-      minLength: 2,
+      minLength: 1,
       select: function( event, ui ) {
-		//alert( "Selected: " + ui.item.value + " aka " + ui.item.id );
 		$('#products_id').val(ui.item.id);
       }
-    });
+	});
+	
+	$( "#customer_name" ).autocomplete({
+		maxShowItems: 5,
+		source: site_url+"customers/populate_autocomplete",
+		minLength: 1,
+		select: function( event, ui ) {
+		  $('[name="customers_id"]').val(ui.item.id);
+		}
+	});
 
 	var columns = [];
-	var right_align = [];
-	$("#datatable").find('th').each(function(i, th){
-		var field = $(th).attr('data-field');
-		var align = $(th).attr('data-align');
-		columns.push({data: field, name: field});
-		if(align == "right")
+    var right_align = [];
+    var center_align = [];
+    var left_align = [];
+    $("#datatable").find('th').each(function(i, th){
+        var field = $(th).attr('data-field');
+        var align = $(th).attr('data-align');
+        columns.push({data: field, name: field});
+        if(align == "right"){
 			right_align.push(i);
-	});
+		}else if(align == "left"){
+			left_align.push(i);
+		}else{
+			center_align.push(i);
+		}	
+    });
 
 	var columns2 = [];
 	var right_align2 = [];
+    var center_align2 = [];
+    var left_align2 = [];
 	$("#datatable2").find('th').each(function(i, th){
 		var field = $(th).attr('data-field');
 		var align = $(th).attr('data-align');
 		columns2.push({data: field, name: field});
-		if(align == "right")
+		if(align == "right"){
 			right_align2.push(i);
+		}else if(align == "left"){
+			left_align2.push(i);
+		}else{
+			center_align2.push(i);
+		}	
 	});
 
 	table = $('#datatable').DataTable({
@@ -57,7 +79,10 @@ $(document).ready(function() {
 		},
 		columns: columns,
 		columnDefs: [ 
-		{ className: "dt-body-right", targets: right_align } 
+			{ className: "dt-body-right", targets: right_align },
+			{ className: "dt-body-center", targets: center_align },
+			{ className: "dt-body-left", targets: left_align },
+			{ "orderable": false, targets : [0, -1]  } 
 		]
 	});
 
@@ -80,7 +105,10 @@ $(document).ready(function() {
 		},
 		columns: columns2,
 		columnDefs: [ 
-		{ className: "dt-body-right", targets: right_align2 } 
+			{ className: "dt-body-right", targets: right_align2 },
+			{ className: "dt-body-center", targets: center_align2 },
+			{ className: "dt-body-left", targets: left_align2 },
+			{ "visible": false, targets : [0]  } 
 		]
 	});
 	
@@ -106,6 +134,7 @@ $(document).ready(function() {
 	$('#add-btn').click(function(){
 		action = "Add";
 		$("[name='asd']").val(-1);
+		$('#form2')[0].reset();
 		table2.ajax.reload();
 		generateID($("[name='vat']").val());
 		$('#form-title').text('Add Form');
@@ -311,6 +340,8 @@ function edit2(id){
 			$('[name="products_id"]').val(data.products_id);
 			$('[name="product_name"]').val(data.code+" - "+data.name);
 			$('[name="qty"]').val(data.qty);
+			$('[name="price"]').val(data.price);
+			$('[name="note"]').val(data.note);
 			$("#form2").validator();
 		}
 	});

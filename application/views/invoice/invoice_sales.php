@@ -29,7 +29,9 @@
 						<div class="pull-right text-right">
 							<address>
 								<h4 class="font-bold"><?= $customer->name ?></h4>
-								<p class="text-muted m-l-30"><?= $customer->address ?>
+								<?php $address = explode(",", $customer->address)?>
+								<p class="text-muted m-l-30"><?= $address[0] ?>
+								<p class="text-muted m-l-30"><?= $address[1] ?>
 									<br/> <?= $customer->telp ?>
 							</address>
 						</div>
@@ -46,9 +48,12 @@
 								<thead>
 									<tr>
 										<th class="text-center">No. </th>
-										<th class="text-center">NAMA BARANG</th>
+										<th class="text-center">Item</th>
 										<th class="text-right">Qty</th>
 										<th class="text-center">Unit</th>
+										<th class="text-center">Price</th>
+										<th class="text-center">Total</th>
+										<th class="text-center">Note</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -59,8 +64,11 @@
 										 	<tr>
 												<td class="text-center"><?= $i ?></td>
 												<td class="text-center"><?= $q->name ?></td>
-												<td class="text-right"><?= $q->qty ?></td>
+												<td class="text-right"><?= number_format($q->qty, 0, ",", ".") ?></td>
 												<td class="text-center"><?= $q->symbol ?></td>
+												<td class="text-right"><?= number_format($q->price, 0, ",", ".") ?></td>
+												<td class="text-right"><?= number_format($q->total_price, 0, ",", ".") ?></td>
+												<td class="text-center"><?= $q->note ?></td>												
 											</tr>
 										 	<?php
 											 $i++;

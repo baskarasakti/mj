@@ -8,6 +8,7 @@ class Vendors extends MY_Controller {
 			$this->load->helper('tablefield');
 			$this->load->model('vendors_model', 'vm');
 			$this->load->model('materials_model', 'mm');
+			$this->load->model('material_vendor_model', 'mvm');
 	}
 	
 	private function get_column_attr(){
@@ -34,6 +35,34 @@ class Vendors extends MY_Controller {
 		$data['menu'] = $this->get_menu();		
 		$this->add_history($data['page_title']);				
 		$this->load->view('layouts/master', $data);
+	}
+
+	public function populate_autocomplete(){
+		$result = $this->vm->populate_autocomplete();
+		$data = array();
+		foreach($result as $value){
+			$row = array();
+			$row['value'] = $value->name;
+			$row['id'] = $value->id;
+			$data[] = $row;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
+	public function populate_autocomplete_material(){
+		$result = $this->mvm->populate_autocomplete_material();
+		$data = array();
+		foreach($result as $value){
+			$row = array();
+			$row['value'] = $value->name;
+			$row['id'] = $value->materials_id;
+			$data[] = $row;
+		}
+
+		$result = $data;
+		echo json_encode($result);
 	}
 
 	public function view_data(){
@@ -95,16 +124,16 @@ class Vendors extends MY_Controller {
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->vm->get_vendor_materials($id);
+			$result = $this->mvm->get_vendor_material($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['name'] = $value->material_name;
-				$row['category'] = $value->material_category;
+				$row['name'] = $value->name;
+				$row['category'] = $value->category;
 				$row['min_stock'] = $value->min_stock;
-				$row['uom'] = $value->uom;
+				$row['uom'] = $value->symbol;
 				$data[] = $row;
 				$count++;
 			}

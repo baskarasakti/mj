@@ -14,7 +14,7 @@ class Currency extends MY_Controller {
         $table->addColumn('id', '', 'ID');
         $table->addColumn('name', '', 'Name');        
         $table->addColumn('symbol', '', 'Symbol');
-        $table->addColumn('rate', '', 'Rate');
+        $table->addColumn('rate', 'right', 'Rate');
         $table->addColumn('actions', '', 'Actions');        
         return $table->getColumns();
     }
@@ -69,9 +69,9 @@ class Currency extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'name' => ucfirst($this->input->post('name')),			
-			'symbol' => strtoupper($this->input->post('symbol')),
-			'rate' => strtoupper($this->input->post('rate')),
+			'name' => $this->input->post('name'),			
+			'symbol' => $this->input->post('symbol'),
+			'rate' => $this->input->post('rate'),
 		);
 		$inserted = $this->cm->add($data);
 		echo json_encode(array('status' => $inserted));
@@ -84,9 +84,9 @@ class Currency extends MY_Controller {
 
 	function update(){
 		$data = array(
-			'name' => ucfirst($this->input->post('name')),
-			'symbol' => strtoupper($this->input->post('symbol')),
-			'rate' => strtoupper($this->input->post('rate')),
+			'name' => $this->input->post('name'),			
+			'symbol' => $this->input->post('symbol'),
+			'rate' => $this->input->post('rate'),
 		);
 		$status = $this->cm->update('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('status' => $status));

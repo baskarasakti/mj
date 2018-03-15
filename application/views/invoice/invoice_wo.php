@@ -46,20 +46,23 @@
 								<thead>
 									<tr>
 										<th class="text-center">No. </th>
-										<th>NAMA BARANG</th>
+										<th class="text-center">Item</th>
 										<th class="text-right">Qty</th>
-										<th class="text-right">Keterangan</th>
+										<th class="text-center">Unit</th>
+										<th class="text-center">Keterangan</th>
 									</tr>
 								</thead>
 								<tbody>
 									<?php
 										$i = 1;
-										foreach ($project_details as $q) {
+										foreach ($work_order_detail as $q) {
 										 	?>
 										 	<tr>
 												<td class="text-center"><?= $i ?></td>
-												<td><?= $q->name ?></td>
+												<td class="text-center" ><?= $q->name ?></td>
 												<td class="text-right"><?= $q->qty ?></td>
+												<td class="text-center"><?= $q->symbol ?></td>
+												<td class="text-left"><?= $q->note ?></td>
 											</tr>
 										 	<?php
 										$i++;}
@@ -67,6 +70,14 @@
 								</tbody>
 							</table>
 						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="pull-left">SO No.: <?=$project->code;?></div>
+						<div class="pull-right m-t-30 text-right">
+							<h3><b></b> </h3>
+						</div>
+						<div class="clearfix"></div>
+						<hr>
 					</div>
 					<div class="col-md-2">
 						<p class="text-center">

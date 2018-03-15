@@ -9,6 +9,16 @@ $(document).ready(function() {
 		endDate: '+1Y',
 	});
 
+	$( "#vendor_name" ).autocomplete({
+		maxShowItems: 5,
+		source: site_url+"vendors/populate_autocomplete",
+		minLength: 1,
+		select: function( event, ui ) {
+		  $('[name="vendors_id"]').val(ui.item.id);
+		  generate_vendor_material();
+		}
+	});
+
 	var columns = [];
 	var right_align = [];
 	$("#datatable").find('th').each(function(i, th){
@@ -42,82 +52,7 @@ $(document).ready(function() {
 		]
 	});
 	
-	$('#form-panel').hide();
-
-	function generateID(){
-		$.ajax({
-			url : site_url+"purchasing/generate_id",
-			type: "GET",
-			dataType: "JSON",
-			success: function(data)
-			{
-				$("#code").val(data.id);
-			}
-		});	
-	}
-
-	$('#add-btn').click(function(){
-		action = "Add";
-		generateID();
-		$('[name="asd"]').val("");
-		$('#form-title').text('Add Form');
-		$("#form").validator();
-		form_jsGrid(-1);
-		$('#jsGrid').jsGrid('loadData');
-		show_hide_form(true);
-	});
-
-	$('#cancelBtn').click(function(){
-		$("#form").validator('destroy');
-		show_hide_form(false);
-		$('#form')[0].reset();
-		$("#saveBtn").text("Save");
-		$("#saveBtn").prop('disabled', false);
-	});
-
-	$("#saveBtn").click(function (e) {
-		var validator = $("#form").data("bs.validator");
-		validator.validate();
-		if (!validator.hasErrors()){
-			save_data();
-		}
-	});
-
-    // JsGrid
-    // var lists = [ 
-    //     { "Item Name": 1, "Qty": 25, "Amount": 10000}, 
-    //     { "Item Name": 2, "Qty": 45, "Amount": 200000}, 
-    //     { "Item Name": 2, "Qty": 29, "Amount": 300000}, 
-    //     { "Item Name": 1, "Qty": 56, "Amount": 100000}, 
-    //     { "Item Name": 1, "Qty": 32, "Amount": 300000} 
-    // ];  
-
-});
-
-function form_jsGrid(id) {
-	var materials;
-    $.ajax({
-    	url: site_url+'materials/populate_select_per_vendor/'+id,
-    	type: "GET",
-    	async: false,
-    	success : function(text)
-    	{
-    		materials = JSON.parse(text);
-    	}
-    });
-
-    var uom;
-    $.ajax({
-    	url: site_url+'uom/populate_select',
-    	type: "GET",
-    	async: false,
-    	success : function(text)
-    	{
-    		uom = JSON.parse(text);
-    	}
-    });
-
-    $("#jsGrid").jsGrid({ 
+	$("#jsGrid").jsGrid({ 
     	width: "100%", 
     	height: "400px", 
 
@@ -138,7 +73,6 @@ function form_jsGrid(id) {
         	},
         	insertItem: function(item) {
         		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
         		return $.ajax({
         			type: "POST",
         			url: "purchasing/jsgrid_functions/"+$('[name="asd"]').val(),
@@ -171,12 +105,120 @@ function form_jsGrid(id) {
 
         fields: [ 
         { name: "id", visible:false }, 
-        { name: "name", title:"Item Name", type: "select", items: materials, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
+        { name: "name", title:"Item Name", type: "text", width: 150, validate: "required" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
-        { name: "uom", title:"Uom", type: "select", items: uom, valueField: "Id", textField: "Name", width: 50, readOnly: true }, 
+        { name: "uom", title:"Uom", type: "text", width: 50, readOnly: true }, 
         { type: "control" } 
         ] 
     });
+
+	$('#form-panel').hide();
+
+	function generateID(){
+		$.ajax({
+			url : site_url+"purchasing/generate_id",
+			type: "GET",
+			dataType: "JSON",
+			success: function(data)
+			{
+				$("#code").val(data.id);
+			}
+		});	
+	}
+
+	$('#add-btn').click(function(){
+		action = "Add";
+		generateID();
+		$('[name="asd"]').val("");
+		$('#form-title').text('Add Form');
+		$("#form").validator();
+		$('#jsGrid').jsGrid('loadData');
+		show_hide_form(true);
+	});
+
+	$('#cancelBtn').click(function(){
+		$("#form").validator('destroy');
+		show_hide_form(false);
+		$('#form')[0].reset();
+		$("#saveBtn").text("Save");
+		$("#saveBtn").prop('disabled', false);
+	});
+
+	$("#saveBtn").click(function (e) {
+		var validator = $("#form").data("bs.validator");
+		validator.validate();
+		if (!validator.hasErrors()){
+			save_data();
+		}
+	});
+
+	var save_material_vendor = function(){
+		var data = $("#form2").serializeArray();
+		data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
+		data.push({name: 'materials_id',value: $("[name='change_id']").val()});
+		var url = site_url+"materials/edit_material_vendor";
+		if(method != "Edit"){
+			url = site_url+"materials/add_material_vendor";
+		}
+		$.ajax({
+			url : url,
+			type: "POST",
+			data: data,
+			dataType: "JSON",
+			success: function(data)
+			{
+				if(data){
+					method = "";
+					$('#form2')[0].reset();
+					$('#jsGrid').jsGrid('loadData');
+				}
+			}
+		}); 
+	 }
+
+	 var get_material_vendor = function(data){
+		$('[name="vendor_name"]').val(data.name);
+		$('[name="vendors_id"]').val(data.vendors_id);
+		$('[name="details_id"]').val(data.id);
+	 }
+
+	 var clear_highlight = function(selected){
+		if ( selected ) { selected.children('.jsgrid-cell').css('background-color', ''); }
+	 }
+
+	 $("#saveBtn2").click(function (e) {
+		var validator = $("#form2").data("bs.validator");
+		validator.validate();
+		if (!validator.hasErrors()){
+		   save_material_vendor();
+		}
+	});
+
+	$('#cancelBtn2').click(function(){
+		method = "";
+		clear_highlight(selectedRow);
+		$('#form2')[0].reset();
+	});
+
+});
+
+function generate_vendor_material(){
+	$( "#material_name" ).autocomplete({
+		maxShowItems: 5,
+		source: function(request,response){
+			$.ajax({
+				url: site_url+"vendors/populate_autocomplete_material",
+				type:"GET",
+				data:{term:request.term, vendors_id:$("[name='vendors_id']").val()},
+				success:response,
+				dataType:"json"
+			});
+		},
+		minLength: 1,
+		select: function( event, ui ) {
+		  $('[name="materials_id"]').val(ui.item.id);
+		}
+	});
 }
 
 function show_hide_form(bShow){
@@ -227,7 +269,6 @@ function save_data(){
 				$("#saveBtn").prop('disabled', true);
 				$('div.block-div').unblock();
 				$('[name="asd"]').val(data.id);
-				form_jsGrid(data.vendors_id);
 				show_hide_form(true);
 				// $('#form')[0].reset();
 			}else{
@@ -246,7 +287,6 @@ function edit(id){
 		dataType: "JSON",
 		success: function(data)
 		{
-			form_jsGrid(data.vendors_id);
 			$('#code').val(data.code);
 			$('#vat').val(data.vat);
 			$('#delivery_date').val(data.delivery_date);

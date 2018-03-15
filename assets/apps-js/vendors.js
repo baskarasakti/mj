@@ -5,12 +5,19 @@ $(document).ready(function() {
 
 	var columns = [];
     var right_align = [];
+    var center_align = [];
+    var left_align = [];
     $("#datatable").find('th').each(function(i, th){
         var field = $(th).attr('data-field');
         var align = $(th).attr('data-align');
         columns.push({data: field, name: field});
-        if(align == "right")
-            right_align.push(i);
+        if(align == "right"){
+			right_align.push(i);
+		}else if(align == "left"){
+			left_align.push(i);
+		}else{
+			center_align.push(i);
+		}	
     });
 
 	table = $('#datatable').DataTable({
@@ -32,6 +39,8 @@ $(document).ready(function() {
         columns: columns,
         columnDefs: [ 
 			{ className: "dt-body-right", targets: right_align },
+			{ className: "dt-body-center", targets: center_align },
+			{ className: "dt-body-left", targets: left_align },
 			{ "orderable": false, targets : [-1]  } 
         ]
 	});
@@ -85,8 +94,8 @@ $(document).ready(function() {
     	width: "100%", 
     	height: "400px", 
 
-    	inserting: true, 
-    	editing: true, 
+    	inserting: false, 
+    	editing: false, 
     	sorting: true, 
     	paging: true, 
 
@@ -99,40 +108,15 @@ $(document).ready(function() {
         			data: filter,
         			dataType:"JSON"
         		});
-        	},
-        	insertItem: function(item) {
-        		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
-        		return $.ajax({
-        			type: "POST",
-        			url: "vendors/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item,
-        			dataType:"JSON"
-        		});
-        	},
-        	updateItem: function(item) {
-        		return $.ajax({
-        			type: "PUT",
-        			url: "vendors/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
-        		});
-        	},
-        	deleteItem: function(item) {
-        		return $.ajax({
-        			type: "DELETE",
-        			url: "vendors/jsgrid_functions",
-        			data: item
-        		});
         	}
         },
 
         fields: [ 
-        { name: "id" }, 
+        { name: "id", title:"ID", visible:false }, 
         { name: "name", title:"Material Name", type: "text", width: 150, validate: "required" }, 
-        { name: "category", title:"Category", type: "select", items: category, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
+        { name: "category", title:"Category", type: "text", width: 150, validate: "required" }, 
 		{ name: "min_stock", title:"Min Stock", type: "number", validate: "required" }, 
-		{ name: "uom", title:"Uom", type: "select", items: uom, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
-        { type: "control" } 
+		{ name: "uom", title:"Uom", type: "text", width: 50, validate: "required" }
         ] 
 	}); 
 	

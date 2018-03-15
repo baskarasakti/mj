@@ -78,7 +78,14 @@
 			<div class="row">
 				<div class="col-sm-12 ol-md-12 col-xs-12">
 					<div class="white-box text-center">
-						<a href="<?=site_url('history');?>" class="btn btn-info"><i class="fa fa-eye"></i> View User Log</a>
+						<a href="<?=site_url('history');?>" class="btn btn-rounded btn-info"><i class="fa fa-eye"></i> View User Log</a>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 ol-md-12 col-xs-12">
+					<div class="white-box text-center">
+						<a href="" class="btn btn-rounded btn-info"><i class="fa fa-book"></i> View User Guide</a>
 					</div>
 				</div>
 			</div>

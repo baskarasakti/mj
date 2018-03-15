@@ -28,9 +28,25 @@ class MY_controller extends CI_Controller {
 		return date("Y-m-d H:m:s", strtotime($date));
 	}
 
+	function toFormat($date, $format)
+	{
+		return date($format, strtotime($date));	
+	}
+
 	function mysql_time_now(){
 		return date("Y-m-d H:m:s");
 	}
+
+	function formatCurrency($value)
+	{
+		return number_format($value, 2, ",", ".");	
+	}
+
+	function formatNumber($value)
+	{
+		return number_format($value, 2, ",", ".");	
+	}
+
 
 	function add_adding_detail($data){
 		$data['created_at'] = $this->mysql_time_now();

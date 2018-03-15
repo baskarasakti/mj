@@ -71,8 +71,8 @@ class Uom extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'name' => ucfirst($this->input->post('name')),			
-			'symbol' => strtoupper($this->input->post('symbol')),
+			'name' => $this->normalize_text($this->input->post('name')),			
+			'symbol' => strtolower($this->input->post('symbol')),
 		);
 		$inserted = $this->um->add($data);
 		echo json_encode(array('status' => $inserted));
@@ -85,8 +85,8 @@ class Uom extends MY_Controller {
 
 	function update(){
 		$data = array(
-			'name' => ucfirst($this->input->post('name')),
-			'symbol' => strtoupper($this->input->post('symbol')),
+			'name' => $this->normalize_text($this->input->post('name')),			
+			'symbol' => strtolower($this->input->post('symbol')),
 		);
 		$status = $this->um->update('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('status' => $status));

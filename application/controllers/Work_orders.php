@@ -16,7 +16,9 @@ class Work_orders extends MY_Controller {
 		$table = new TableField();
 		$table->addColumn('no', '', 'No');
 		$table->addColumn('id', '', 'ID');
-		$table->addColumn('code', '', 'Code');         
+		$table->addColumn('code', '', 'Code');     
+		$table->addColumn('start_date', '', 'Start Date');
+		$table->addColumn('end_date', '', 'End date');
 		$table->addColumn('projects_code', '', 'Sales Order');        
 		$table->addColumn('ppn', '', 'VAT');        
 		$table->addColumn('actions', '', 'Actions');        
@@ -89,10 +91,12 @@ class Work_orders extends MY_Controller {
 			$row['no'] = $count;
 			$row['id'] = $value->id;
 			$row['code'] = $value->code;
+			$row['start_date'] = $this->toFormat($value->start_date, "Y-m-d");
+			$row['end_date'] =  $this->toFormat($value->end_date, "Y-m-d");
 			$row['projects_code'] = $value->projects_code;
-			$vat = ($value->ppn == 1) ? "VAT" : "Non VAT";
+			$vat = ($value->ppn == 1) ? "PPn" : "Non PPn";
 			$row['ppn'] = $vat;
-			$row['actions'] = '<a href=invoice/print_wo/'.$value->id.'><button class="btn btn-sm btn-success" type="button">Print</button></a>
+			$row['actions'] = '<a href=invoice/print_wo/'.$value->id.'><button class="btn btn-sm btn-success" type="button"><i class="fa fa-print"></i></button></a>
 			<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
@@ -157,6 +161,7 @@ class Work_orders extends MY_Controller {
 				$row['name'] = $value->name;
 				$row['qty'] = $value->qty;
 				$row['symbol'] = $value->symbol;
+				$row['note'] = $value->note;
 				$data[] = $row;
 				$count++;
 			}

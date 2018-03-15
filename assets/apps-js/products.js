@@ -1,50 +1,25 @@
 var table;
 var action;
+var methode;
 
 $(document).ready(function() {
 
-
-	function generateID(ptype){
-		$.ajax({
-			url : site_url+"products/generate_id",
-			type: "GET",
-			data: {
-				type: ptype,
-				color: $("#color").val(),
-			},
-			dataType: "JSON",
-			success: function(data)
-			{
-				$("#code").val(data.id);
-			}
-		});	
-	}
-
-	//Generate ID
-	$("#color").change(function(){
-		var ptype = $('[name="type"]').val();
-		generateID(ptype);
-	});
-
-	$('[name="type"]').change(function(){
-		if(this.value == "tipping"){
-			$("#color-group").hide();
-			generateID(this.value);
-		}else{
-			$("#code").val("");
-			$("#color-group").show();	
-		}
-	});
-
 	var columns = [];
-	var right_align = [];
-	$("#datatable").find('th').each(function(i, th){
-		var field = $(th).attr('data-field');
-		var align = $(th).attr('data-align');
-		columns.push({data: field, name: field});
-		if(align == "right")
+    var right_align = [];
+    var center_align = [];
+    var left_align = [];
+    $("#datatable").find('th').each(function(i, th){
+        var field = $(th).attr('data-field');
+        var align = $(th).attr('data-align');
+        columns.push({data: field, name: field});
+        if(align == "right"){
 			right_align.push(i);
-	});
+		}else if(align == "left"){
+			left_align.push(i);
+		}else{
+			center_align.push(i);
+		}	
+    });
 
 	table = $('#datatable').DataTable({
 		dom: 'lrftip',
@@ -64,54 +39,34 @@ $(document).ready(function() {
 		},
 		columns: columns,
 		columnDefs: [ 
-		{ className: "dt-body-right", targets: right_align } 
+			{ className: "dt-body-right", targets: right_align },
+			{ className: "dt-body-center", targets: center_align },
+			{ className: "dt-body-left", targets: left_align },
 		]
 	});
 	
-	$('#form-panel').hide();
-
-	$('#add-btn').click(function(){
-		action = "Add";
-		$('#form-title').text('Add Form');
-		$("#form").validator();
-		show_hide_form(true);
+	$( "#code" ).autocomplete({
+		maxShowItems: 5,
+		source: function(request,response){
+			$.ajax({
+				url: site_url+"products/populate_autocomplete_code",
+				type:"GET",
+				data:{term:request.term, category_id:$("#product_categories_id").val()},
+				success:response,
+				dataType:"json"
+			});
+		},
+		minLength: 1
 	});
 
-	$('#cancelBtn').click(function(){
-		$("#form").validator('destroy');
-		show_hide_form(false);
-		$('#form')[0].reset();
-		$("#saveBtn").text("Save");
-		$("#saveBtn").prop('disabled', false);
-	});
-
-	$("#saveBtn").click(function (e) {
-		var validator = $("#form").data("bs.validator");
-		validator.validate();
-		if (!validator.hasErrors()){
-			save_data();
+	$( "#material_name" ).autocomplete({
+		maxShowItems: 5,
+		source: site_url+"materials/populate_autocomplete",
+		minLength: 1,
+		select: function( event, ui ) {
+		  $('[name="materials_id"]').val(ui.item.id);
 		}
 	});
-
-    // JsGrid
-    // var lists = [ 
-    //     { "Item Name": 1, "Qty": 25, "Amount": 10000}, 
-    //     { "Item Name": 2, "Qty": 45, "Amount": 200000}, 
-    //     { "Item Name": 2, "Qty": 29, "Amount": 300000}, 
-    //     { "Item Name": 1, "Qty": 56, "Amount": 100000}, 
-    //     { "Item Name": 1, "Qty": 32, "Amount": 300000} 
-    // ]; 
-
-    var materials;
-    $.ajax({
-    	url: site_url+'materials/populate_select',
-    	type: "GET",
-    	async: false,
-    	success : function(text)
-    	{
-    		materials = JSON.parse(text);
-    	}
-    });
 
 	var processes;
     $.ajax({
@@ -128,11 +83,14 @@ $(document).ready(function() {
     	width: "100%", 
     	height: "400px", 
 
-    	inserting: true, 
-    	editing: true, 
+    	inserting: false, 
+    	editing: false, 
     	sorting: true, 
     	paging: true, 
-
+		rowClick: function(args) {
+			method = "Edit";
+			get_product_material(args.item);
+        },
         // data: lists, 
         controller: {
         	loadData: function(filter) {
@@ -141,23 +99,6 @@ $(document).ready(function() {
         			url: "products/jsgrid_functions/"+$('[name="asd"]').val(),
         			data: filter,
         			dataType:"JSON"
-        		});
-        	},
-        	insertItem: function(item) {
-        		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
-        		return $.ajax({
-        			type: "POST",
-        			url: "products/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item,
-        			dataType:"JSON"
-        		});
-        	},
-        	updateItem: function(item) {
-        		return $.ajax({
-        			type: "PUT",
-        			url: "products/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
         		});
         	},
         	deleteItem: function(item) {
@@ -170,12 +111,19 @@ $(document).ready(function() {
         },
 
         fields: [ 
-        { name: "id" }, 
-        { name: "materials_id", title:"Item Name", type: "select", items: materials, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
+        { name: "id",  visible:false }, 
+        { name: "materials_id", visible:false }, 
+        { name: "name", title:"Material", type: "text", width: 150, validate: "required" }, 
         { name: "qty", title:"Qty", type: "number", width: 50 }, 
-        { type: "control" } 
+        { name: "unit", title:"Unit", type: "text", width: 50 }, 
+        { 
+			type: "control",
+			modeSwitchButton: false,
+			editButton: false 
+		} 
         ] 
 	}); 
+	
 	
 	$("#jsGrid2").jsGrid({ 
     	width: "100%", 
@@ -198,11 +146,11 @@ $(document).ready(function() {
         	},
         	insertItem: function(item) {
         		item["csrf_token"] = $("[name='csrf_token']").val();
-        		console.log(item)
         		return $.ajax({
         			type: "POST",
         			url: "products/jsgrid_functions2/"+$('[name="asd"]').val(),
-        			data: item
+					data: item,
+					dataType:"JSON"
         		});
         	},
         	updateItem: function(item) {
@@ -222,11 +170,85 @@ $(document).ready(function() {
         },
 
         fields: [ 
-        { name: "id" }, 
+        { name: "id", visible:false}, 
         { name: "processes_id", title:"Item Name", type: "select", items: processes, valueField: "Id", textField: "Name", width: 150, validate: "required" }, 
        	{ type: "control" } 
         ] 
     }); 
+
+	$('#form-panel').hide();
+
+	$('#add-btn').click(function(){
+		action = "Add";
+		method = "";
+		$('#form-title').text('Add Form');
+		$("#form").validator();
+		$('[name="asd"]').val("");
+		$('#jsGrid').jsGrid('loadData');
+		$('#jsGrid2').jsGrid('loadData');
+		show_hide_form(true);
+	});
+
+	$('#cancelBtn').click(function(){
+		$("#form").validator('destroy');
+		show_hide_form(false);
+		$('#form')[0].reset();
+		$("#saveBtn").text("Save");
+		$("#saveBtn").prop('disabled', false);
+	});
+
+	$("#saveBtn").click(function (e) {
+		var validator = $("#form").data("bs.validator");
+		validator.validate();
+		if (!validator.hasErrors()){
+				save_data();
+		}
+	});
+
+	$("#saveBtn2").click(function (e) {
+		var validator = $("#form2").data("bs.validator");
+		validator.validate();
+		if (!validator.hasErrors()){
+			save_product_material();
+		}
+	});
+
+	$('#cancelBtn2').click(function(){
+		method = "";
+		$('#form2')[0].reset();
+	});
+
+	var save_product_material = function(){
+		var data = $("#form2").serializeArray();
+		data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
+		data.push({name: 'products_id',value: $("[name='change_id']").val()});
+		var url = site_url+"products/edit_product_material";
+		if(method != "Edit"){
+			url = site_url+"products/add_product_material";
+		}
+		$.ajax({
+			url : url,
+			type: "POST",
+			data: data,
+			dataType: "JSON",
+			success: function(data)
+			{
+				if(data){
+					method = "";
+					$('#form2')[0].reset();
+					$('#jsGrid').jsGrid('loadData');
+				}
+			}
+		}); 
+	}
+
+	var get_product_material = function(data){
+		$('[name="material_name"]').val(data.name);
+		$('[name="materials_id"]').val(data.materials_id);
+		$('[name="qty"]').val(data.qty);
+		$('[name="details_id"]').val(data.id);
+	 }
+
 
 });
 
@@ -305,6 +327,9 @@ function edit(id){
 			}
 			$('#name').val(data.name);
 			$('#code').val(data.code);
+			$('#initial_qty').val(data.initial_qty);
+			$('#initial_half_qty').val(data.initial_half_qty);
+			$('#code').val(data.code);
 			$('#uom_id').val(data.uom_id);
 			$('#product_categories_id').val(data.product_categories_id);
 			$("#form").validator();
@@ -313,6 +338,7 @@ function edit(id){
 			$('#jsGrid').jsGrid('loadData');
 			$('#jsGrid2').jsGrid('loadData');
 			show_hide_form(true);
+			method = "";
 		}
 	});
 }

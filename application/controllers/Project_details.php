@@ -20,8 +20,11 @@ class Project_details extends MY_Controller {
 			$row = array();
 			$row['id'] = $value->id;
 			$row['name'] = $value->name;
-			$row['qty'] = $value->qty;
+			$row['qty'] = $this->formatNumber($value->qty);
 			$row['uom'] = $value->symbol;
+			$row['price'] = $this->formatCurrency($value->price);
+			$row['total_price'] = $this->formatCurrency($value->total_price);
+			$row['note'] = $value->note;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit2('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							   <button class="btn btn-sm btn-danger" onclick="remove2('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
@@ -36,6 +39,9 @@ class Project_details extends MY_Controller {
 	function add(){
 		$data = array(
 			'qty' => $this->input->post('qty'),			
+			'price' => $this->input->post('price'),			
+			'total_price' => $this->input->post('price')*$this->input->post('qty'),			
+			'note' => $this->input->post('note'),						
 			'projects_id' => $this->input->post('asd'),
 			'products_id' => $this->input->post('products_id')
 		);
@@ -51,6 +57,9 @@ class Project_details extends MY_Controller {
 	function update(){
 		$data = array(
 			'qty' => $this->input->post('qty'),			
+			'price' => $this->input->post('price'),			
+			'total_price' => $this->input->post('price')*$this->input->post('qty'),			
+			'note' => $this->input->post('note'),		
 			'products_id' => $this->input->post('products_id')
 		);
 		$status = $this->pdm->update_id('id', $this->input->post('details_id'), $data);

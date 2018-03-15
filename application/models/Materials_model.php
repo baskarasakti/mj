@@ -11,11 +11,10 @@ class Materials_model extends MY_Model {
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('m.id as id, m.name as name, mc.name as category, min_stock, u.symbol as uom, v.name as vendor');
+		$this->db->select('m.id as id, m.name as name, mc.name as category, min_stock, u.symbol as uom');
 		$this->db->from($this->table.' m');
 		$this->db->join('material_categories mc', 'm.material_categories_id = mc.id', 'left');
 		$this->db->join('uom u', 'm.uom_id = u.id', 'left');
-		$this->db->join('vendors v', 'm.vendors_id = v.id', 'left');
  
 		$i = 0;
 	 
@@ -61,6 +60,11 @@ class Materials_model extends MY_Model {
 		$this->db->from($this->table);
 		$this->db->where('vendors_id', $id);
 		return $this->db->get()->result();
+	}
+
+	public function populate_autocomplete(){
+		$this->db->like('name', $this->input->get('term'), 'both');
+		return $this->db->get($this->_t)->result();
 	}
 
 }

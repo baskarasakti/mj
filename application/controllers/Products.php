@@ -17,8 +17,8 @@ class Products extends MY_Controller {
 	private function get_column_attr(){
 		$table = new TableField();
 		$table->addColumn('id', '', 'ID');
-		$table->addColumn('code', '', 'Code');
-		$table->addColumn('name', '', 'Name');        
+		$table->addColumn('code', '', 'Code');      
+		$table->addColumn('uom', '', 'Unit');        
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
 	}
@@ -92,6 +92,25 @@ class Products extends MY_Controller {
 		echo json_encode($result);
 	}
 
+	public function populate_autocomplete_code(){
+		$result = $this->pm->populate_autocomplete_code();
+		$data = array();
+		foreach($result as $value){
+			$row = array();
+			$row['value'] = $value->code;
+			$row['id'] = $value->id;
+			$data[] = $row;
+		}
+		if(sizeof($data) == 0){
+			$row = array();
+			$row['value'] = "No data found";
+			$row['id'] = "";
+			$data[] = $row;
+		}
+		$result = $data;
+		echo json_encode($result);
+	}
+
 	public function get_product_materials($id=-1){
 		$result = $this->pmm->get_product_materials2($id);
 		echo json_encode($result);
@@ -106,6 +125,7 @@ class Products extends MY_Controller {
 			$row['id'] = $value->id;
 			$row['code'] = $value->code;
 			$row['name'] = $value->name;
+			$row['uom'] = $value->symbol;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 			.<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
@@ -119,9 +139,11 @@ class Products extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
-			'code' => $this->input->post('code'),
 			'product_categories_id' =>$this->input->post('product_categories_id'),
+			'code' => $this->input->post('code'),
+			'name' => $this->input->post('name'),
+			'initial_qty' => $this->input->post('initial_qty'),
+			'initial_half_qty' => $this->input->post('initial_half_qty'),
 			'uom_id' =>$this->input->post('uom_id'),
 		);
 		$inserted = $this->pm->add_id($data);
@@ -135,9 +157,11 @@ class Products extends MY_Controller {
 
 	function update(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
+			'product_categories_id' =>$this->input->post('product_categories_id'),
 			'code' => $this->input->post('code'),
-			'product_categories_id' => $this->input->post('product_categories_id'),
+			'name' => $this->input->post('name'),
+			'initial_qty' => $this->input->post('initial_qty'),
+			'initial_half_qty' => $this->input->post('initial_half_qty'),
 			'uom_id' =>$this->input->post('uom_id'),
 		);
 		$status = $this->pm->update_id('id', $this->input->post('change_id'), $data);
@@ -159,7 +183,9 @@ class Products extends MY_Controller {
 				$row = array();
 				$row['id'] = $value->id;
 				$row['materials_id'] = $value->materials_id;
+				$row['name'] = $value->name;
 				$row['qty'] = $value->qty;
+				$row['unit'] = $value->unit;
 				$data[] = $row;
 				$count++;
 			}
@@ -223,7 +249,7 @@ class Products extends MY_Controller {
 				'processes_id' => $this->input->post('processes_id'),
 				'products_id' => $id
 			);
-			$result = $this->ppm->add($data);
+			$result = $this->ppm->add_id($data);
 
 			$row = array();
 			$row['id'] = $result;
@@ -247,5 +273,25 @@ class Products extends MY_Controller {
 		}
 	}
 
+	public function add_product_material()
+	{
+		$data = array(
+			'materials_id' => $this->input->post('materials_id'),
+			'qty' => $this->input->post('qty'),
+			'products_id' => $this->input->post('products_id')
+		);
+		$inserted = $this->pmm->add($data);
+		echo json_encode(array('status' => $inserted));
+	}
+
+	public function edit_product_material()
+	{
+		$data = array(
+			'materials_id' => $this->input->post('materials_id'),
+			'qty' => $this->input->post('qty'),
+		);
+		$status = $this->pmm->update('id', $this->input->post('details_id'), $data);
+		echo json_encode(array('status' => $status));
+	}
 
 }

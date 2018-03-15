@@ -7,7 +7,7 @@ class Vendors_model extends MY_Model {
 		
 	var $table = 'vendors';
 	var $column = array('id','name', 'description', 'address', 'telp'); //set column field database for order and search
-    var $order = array('id' => 'asc'); // default order 
+    var $order = array('name' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
@@ -58,5 +58,11 @@ class Vendors_model extends MY_Model {
 		$this->db->join('uom u', 'm.uom_id = u.id', 'left');
 		return $this->db->get()->result();
 	}
+
+	public function populate_autocomplete(){
+		$this->db->like('name', $this->input->get('term'), 'both');
+		return $this->db->get($this->_t)->result();
+	}
+
 
 }

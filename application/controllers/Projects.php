@@ -14,9 +14,10 @@ class Projects extends MY_Controller {
 	private function get_column_attr(){
 		$table = new TableField();
 		$table->addColumn('id', '', 'ID');
+		$table->addColumn('date', '', 'Date');
 		$table->addColumn('code', '', 'Code');        
 		$table->addColumn('vat', '', 'VAT');        
-		$table->addColumn('description', '', 'Description');        
+		$table->addColumn('description', '', 'Note');        
 		$table->addColumn('customer', '', 'Customer');        
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
@@ -26,8 +27,11 @@ class Projects extends MY_Controller {
 		$table = new TableField();
 		$table->addColumn('id', '', 'ID');
 		$table->addColumn('name', '', 'Product');        
-		$table->addColumn('qty', '', 'Qty');              
+		$table->addColumn('qty', 'right', 'Qty');              
 		$table->addColumn('uom', '', 'Unit');              
+		$table->addColumn('price', 'right', 'Unit Price');              
+		$table->addColumn('total_price', 'right', 'Total');              
+		$table->addColumn('note', '', 'Note');              
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
 	}
@@ -107,10 +111,11 @@ class Projects extends MY_Controller {
 		foreach($result['data'] as $value){
 			$row = array();
 			$row['id'] = $value->id;
+			$row['date'] = $this->toFormat($value->date, "Y-m-d");
 			$row['code'] = $value->code;
-			$vat = "VAT";
+			$vat = "PPn";
 			if($value->vat == 0){
-				$vat = "Non VAT";
+				$vat = "Non PPn";
 			}
 			$row['vat'] = $vat;
 			$row['description'] = $value->description;

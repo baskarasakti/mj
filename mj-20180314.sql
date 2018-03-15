@@ -105,8 +105,8 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`products` (
   `updated_at` DATETIME NULL,
   `product_categories_id` INT UNSIGNED NOT NULL,
   `colours_id` INT UNSIGNED NULL,
-  `qty` FLOAT NULL,
-  `half_qty` FLOAT NULL,
+  `initial_qty` FLOAT NULL DEFAULT 0,
+  `initial_half_qty` FLOAT NULL DEFAULT 0,
   `uom_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_products_product_categories1_idx` (`product_categories_id` ASC),
@@ -144,46 +144,24 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `megahjaya2`.`vendors`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `megahjaya2`.`vendors` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `code` VARCHAR(45) NULL,
-  `name` VARCHAR(255) NOT NULL,
-  `description` VARCHAR(255) NULL,
-  `address` VARCHAR(255) NOT NULL,
-  `telp` VARCHAR(25) NOT NULL,
-  `created_at` DATETIME NOT NULL,
-  `updated_at` DATETIME NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `megahjaya2`.`materials`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `megahjaya2`.`materials` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(10) NULL,
   `name` VARCHAR(255) NOT NULL,
-  `min_stock` FLOAT NULL,
+  `initial_qty` FLOAT NULL DEFAULT 0,
+  `min_stock` FLOAT NULL DEFAULT 0,
   `created_at` DATETIME NOT NULL,
   `updated_at` DATETIME NULL,
   `material_categories_id` INT UNSIGNED NOT NULL,
-  `vendors_id` INT UNSIGNED NULL,
   `uom_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_materials_material_categories_idx` (`material_categories_id` ASC),
-  INDEX `fk_materials_vendors1_idx` (`vendors_id` ASC),
   INDEX `fk_materials_uom1_idx` (`uom_id` ASC),
   CONSTRAINT `fk_materials_material_categories`
     FOREIGN KEY (`material_categories_id`)
     REFERENCES `megahjaya2`.`material_categories` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_materials_vendors1`
-    FOREIGN KEY (`vendors_id`)
-    REFERENCES `megahjaya2`.`vendors` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_materials_uom1`
@@ -295,6 +273,9 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `megahjaya2`.`project_details` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `qty` FLOAT NULL,
+  `price` FLOAT NULL,
+  `total_price` FLOAT NULL,
+  `note` TEXT NULL,
   `projects_id` INT UNSIGNED NOT NULL,
   `products_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
@@ -336,6 +317,22 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`work_orders` (
     REFERENCES `megahjaya2`.`projects` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `megahjaya2`.`vendors`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `megahjaya2`.`vendors` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(45) NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255) NULL,
+  `address` VARCHAR(255) NOT NULL,
+  `telp` VARCHAR(25) NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  `updated_at` DATETIME NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
@@ -392,6 +389,10 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`purchase_details` (
   `purchasing_id` INT UNSIGNED NOT NULL,
   `materials_id` INT UNSIGNED NOT NULL,
   `qty` FLOAT NULL,
+  `price` FLOAT NULL,
+  `discount` VARCHAR(45) NULL,
+  `total_price` FLOAT NULL,
+  `note` TEXT NULL,
   `rechrome` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_purchase_details_purchasing1_idx` (`purchasing_id` ASC),
@@ -416,6 +417,7 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`receiving` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(45) NOT NULL,
   `receive_date` DATETIME NOT NULL,
+  `note` TEXT NULL,
   `created_at` DATETIME NOT NULL,
   `created_by` VARCHAR(100) NULL,
   `updated_at` DATETIME NULL,
@@ -449,6 +451,7 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`receive_details` (
   `unit_price` FLOAT NOT NULL,
   `discount` FLOAT NULL,
   `total_price` FLOAT NOT NULL,
+  `note` TEXT NULL,
   `receiving_id` INT UNSIGNED NOT NULL,
   `materials_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
@@ -480,59 +483,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `megahjaya2`.`machine`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `megahjaya2`.`machine` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `code` VARCHAR(45) NULL,
-  `processes_id` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_machine_processes1_idx` (`processes_id` ASC),
-  CONSTRAINT `fk_machine_processes1`
-    FOREIGN KEY (`processes_id`)
-    REFERENCES `megahjaya2`.`processes` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `megahjaya2`.`material_usage`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `megahjaya2`.`material_usage` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `code` VARCHAR(45) NULL,
-  `usage_date` DATETIME NOT NULL,
-  `usage_categories_id` INT UNSIGNED NOT NULL,
-  `created_at` DATETIME NULL,
-  `created_by` VARCHAR(100) NULL,
-  `updated_at` DATETIME NULL,
-  `updated_by` VARCHAR(100) NULL,
-  `machine_id` INT UNSIGNED NOT NULL,
-  `work_orders_id` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_material_usage_usage_categories1_idx` (`usage_categories_id` ASC),
-  INDEX `fk_material_usage_machine1_idx` (`machine_id` ASC),
-  INDEX `fk_material_usage_work_orders1_idx` (`work_orders_id` ASC),
-  CONSTRAINT `fk_material_usage_usage_categories1`
-    FOREIGN KEY (`usage_categories_id`)
-    REFERENCES `megahjaya2`.`usage_categories` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_material_usage_machine1`
-    FOREIGN KEY (`machine_id`)
-    REFERENCES `megahjaya2`.`machine` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_material_usage_work_orders1`
-    FOREIGN KEY (`work_orders_id`)
-    REFERENCES `megahjaya2`.`work_orders` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `megahjaya2`.`material_usage_categories`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `megahjaya2`.`material_usage_categories` (
@@ -556,25 +506,17 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `megahjaya2`.`material_usage_details`
+-- Table `megahjaya2`.`machine`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `megahjaya2`.`material_usage_details` (
+CREATE TABLE IF NOT EXISTS `megahjaya2`.`machine` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `qty` FLOAT NULL,
-  `note` VARCHAR(255) NULL,
-  `material_usage_id` INT UNSIGNED NOT NULL,
-  `materials_id` INT UNSIGNED NOT NULL,
+  `code` VARCHAR(45) NULL,
+  `processes_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_material_usage_details_material_usage1_idx` (`material_usage_id` ASC),
-  INDEX `fk_material_usage_details_materials1_idx` (`materials_id` ASC),
-  CONSTRAINT `fk_material_usage_details_material_usage1`
-    FOREIGN KEY (`material_usage_id`)
-    REFERENCES `megahjaya2`.`material_usage` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_material_usage_details_materials1`
-    FOREIGN KEY (`materials_id`)
-    REFERENCES `megahjaya2`.`materials` (`id`)
+  INDEX `fk_machine_processes1_idx` (`processes_id` ASC),
+  CONSTRAINT `fk_machine_processes1`
+    FOREIGN KEY (`processes_id`)
+    REFERENCES `megahjaya2`.`processes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -666,6 +608,7 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`product_shipping_detail` (
   `qty` FLOAT NOT NULL,
   `unit_price` FLOAT NOT NULL,
   `total_price` FLOAT NOT NULL,
+  `note` TEXT NULL,
   `product_shipping_id` INT UNSIGNED NOT NULL,
   `products_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
@@ -679,53 +622,6 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`product_shipping_detail` (
   CONSTRAINT `fk_product_shipping_detail_products1`
     FOREIGN KEY (`products_id`)
     REFERENCES `megahjaya2`.`products` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `megahjaya2`.`material_return`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `megahjaya2`.`material_return` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `code` VARCHAR(45) NULL,
-  `return_date` DATETIME NOT NULL,
-  `created_at` DATETIME NULL,
-  `created_by` VARCHAR(100) NULL,
-  `updated_at` DATETIME NULL,
-  `updated_by` VARCHAR(100) NULL,
-  `material_usage_id` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_matrial_return_material_usage1_idx` (`material_usage_id` ASC),
-  CONSTRAINT `fk_matrial_return_material_usage1`
-    FOREIGN KEY (`material_usage_id`)
-    REFERENCES `megahjaya2`.`material_usage` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `megahjaya2`.`material_return_detail`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `megahjaya2`.`material_return_detail` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `qty` FLOAT NULL,
-  `note` VARCHAR(255) NULL,
-  `materials_id` INT UNSIGNED NOT NULL,
-  `material_return_id` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_material_return_detail_materials1_idx` (`materials_id` ASC),
-  INDEX `fk_material_return_detail_material_return1_idx` (`material_return_id` ASC),
-  CONSTRAINT `fk_material_return_detail_materials1`
-    FOREIGN KEY (`materials_id`)
-    REFERENCES `megahjaya2`.`materials` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_material_return_detail_material_return1`
-    FOREIGN KEY (`material_return_id`)
-    REFERENCES `megahjaya2`.`material_return` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -792,6 +688,7 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`purchase_return` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(45) NULL,
   `date` DATETIME NULL,
+  `note` TEXT NULL,
   `created_at` DATETIME NULL,
   `created_by` VARCHAR(100) NULL,
   `updated_at` DATETIME NULL,
@@ -813,6 +710,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `megahjaya2`.`p_return_details` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `qty` FLOAT NULL,
+  `price` FLOAT NULL,
+  `total_price` FLOAT NULL,
   `note` TEXT NULL,
   `return_id` INT UNSIGNED NOT NULL,
   `materials_id` INT UNSIGNED NOT NULL,
@@ -839,6 +738,7 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`sales_return` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(45) NULL,
   `date` DATETIME NULL,
+  `note` TEXT NULL,
   `created_at` DATETIME NULL,
   `created_by` VARCHAR(100) NULL,
   `updated_at` DATETIME NULL,
@@ -860,6 +760,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `megahjaya2`.`s_return_details` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `qty` FLOAT NULL,
+  `price` FLOAT NULL,
+  `total_price` FLOAT NULL,
   `note` TEXT NULL,
   `sales_return_id` INT UNSIGNED NOT NULL,
   `products_id` INT UNSIGNED NOT NULL,
@@ -880,44 +782,12 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `megahjaya2`.`product_inventory`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `megahjaya2`.`product_inventory` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `date` DATETIME NULL,
-  `type` VARCHAR(5) NULL,
-  `product_shipping_detail_id` INT UNSIGNED NULL,
-  `qty` FLOAT NULL DEFAULT 0,
-  `products_id` INT UNSIGNED NOT NULL,
-  `s_return_details_id` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_product_inventory_product_shipping_detail1_idx` (`product_shipping_detail_id` ASC),
-  INDEX `fk_product_inventory_products1_idx` (`products_id` ASC),
-  INDEX `fk_product_inventory_s_return_details1_idx` (`s_return_details_id` ASC),
-  CONSTRAINT `fk_product_inventory_product_shipping_detail1`
-    FOREIGN KEY (`product_shipping_detail_id`)
-    REFERENCES `megahjaya2`.`product_shipping_detail` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_product_inventory_products1`
-    FOREIGN KEY (`products_id`)
-    REFERENCES `megahjaya2`.`products` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_product_inventory_s_return_details1`
-    FOREIGN KEY (`s_return_details_id`)
-    REFERENCES `megahjaya2`.`s_return_details` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `megahjaya2`.`material_usages`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `megahjaya2`.`material_usages` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `date` DATETIME NULL,
+  `material` TINYINT NOT NULL,
   `code_pick` VARCHAR(45) NULL,
   `code_return` VARCHAR(45) NULL,
   `created_at` DATETIME NULL,
@@ -951,6 +821,80 @@ CREATE TABLE IF NOT EXISTS `megahjaya2`.`material_usages` (
   CONSTRAINT `fk_material_usages_products1`
     FOREIGN KEY (`products_id`)
     REFERENCES `megahjaya2`.`products` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `megahjaya2`.`nonmaterial_usages_detail`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `megahjaya2`.`nonmaterial_usages_detail` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `qty_pick` FLOAT NULL,
+  `qty_return` FLOAT NULL,
+  `pick_note` VARCHAR(255) NULL,
+  `return_note` VARCHAR(255) NULL,
+  `material_usages_id` INT UNSIGNED NOT NULL,
+  `products_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_nonmaterial_usages_detail_material_usages1_idx` (`material_usages_id` ASC),
+  INDEX `fk_nonmaterial_usages_detail_products1_idx` (`products_id` ASC),
+  CONSTRAINT `fk_nonmaterial_usages_detail_material_usages1`
+    FOREIGN KEY (`material_usages_id`)
+    REFERENCES `megahjaya2`.`material_usages` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_nonmaterial_usages_detail_products1`
+    FOREIGN KEY (`products_id`)
+    REFERENCES `megahjaya2`.`products` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `megahjaya2`.`product_inventory`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `megahjaya2`.`product_inventory` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `date` DATETIME NULL,
+  `type` VARCHAR(5) NULL,
+  `product_shipping_detail_id` INT UNSIGNED NULL,
+  `qty` FLOAT NULL DEFAULT 0,
+  `products_id` INT UNSIGNED NOT NULL,
+  `s_return_details_id` INT UNSIGNED NULL,
+  `product_movement_id` INT UNSIGNED NULL,
+  `nonmaterial_usages_detail_id` INT UNSIGNED NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_product_inventory_product_shipping_detail1_idx` (`product_shipping_detail_id` ASC),
+  INDEX `fk_product_inventory_products1_idx` (`products_id` ASC),
+  INDEX `fk_product_inventory_s_return_details1_idx` (`s_return_details_id` ASC),
+  INDEX `fk_product_inventory_product_movement1_idx` (`product_movement_id` ASC),
+  INDEX `fk_product_inventory_nonmaterial_usages_detail1_idx` (`nonmaterial_usages_detail_id` ASC),
+  CONSTRAINT `fk_product_inventory_product_shipping_detail1`
+    FOREIGN KEY (`product_shipping_detail_id`)
+    REFERENCES `megahjaya2`.`product_shipping_detail` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_product_inventory_products1`
+    FOREIGN KEY (`products_id`)
+    REFERENCES `megahjaya2`.`products` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_product_inventory_s_return_details1`
+    FOREIGN KEY (`s_return_details_id`)
+    REFERENCES `megahjaya2`.`s_return_details` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_product_inventory_product_movement1`
+    FOREIGN KEY (`product_movement_id`)
+    REFERENCES `megahjaya2`.`product_movement` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_product_inventory_nonmaterial_usages_detail1`
+    FOREIGN KEY (`nonmaterial_usages_detail_id`)
+    REFERENCES `megahjaya2`.`nonmaterial_usages_detail` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -1176,10 +1120,15 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `megahjaya2`.`hpp` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `work_orders_id` INT UNSIGNED NOT NULL,
+  `code` VARCHAR(45) NULL,
   `penyusutan` FLOAT NULL,
   `listrik` FLOAT NULL,
   `lain_lain` FLOAT NULL,
+  `created_at` DATETIME NULL,
+  `created_by` VARCHAR(45) NULL,
+  `updated_at` DATETIME NULL,
+  `updated_by` VARCHAR(45) NULL,
+  `work_orders_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_hpp_work_orders1_idx` (`work_orders_id` ASC),
   CONSTRAINT `fk_hpp_work_orders1`
@@ -1194,22 +1143,39 @@ ENGINE = InnoDB;
 -- Table `megahjaya2`.`btkl`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `megahjaya2`.`btkl` (
-  `id` INT NOT NULL,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `qty` FLOAT NULL,
   `price` FLOAT NULL,
   `hpp_id` INT UNSIGNED NOT NULL,
-  `processes_id` INT UNSIGNED NOT NULL,
+  `processes_id` VARCHAR(25) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_btkl_hpp1_idx` (`hpp_id` ASC),
-  INDEX `fk_btkl_processes1_idx` (`processes_id` ASC),
   CONSTRAINT `fk_btkl_hpp1`
     FOREIGN KEY (`hpp_id`)
     REFERENCES `megahjaya2`.`hpp` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `megahjaya2`.`material_vendor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `megahjaya2`.`material_vendor` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `vendors_id` INT UNSIGNED NOT NULL,
+  `materials_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_material_vendor_vendors1_idx` (`vendors_id` ASC),
+  INDEX `fk_material_vendor_materials1_idx` (`materials_id` ASC),
+  CONSTRAINT `fk_material_vendor_vendors1`
+    FOREIGN KEY (`vendors_id`)
+    REFERENCES `megahjaya2`.`vendors` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_btkl_processes1`
-    FOREIGN KEY (`processes_id`)
-    REFERENCES `megahjaya2`.`processes` (`id`)
+  CONSTRAINT `fk_material_vendor_materials1`
+    FOREIGN KEY (`materials_id`)
+    REFERENCES `megahjaya2`.`materials` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
