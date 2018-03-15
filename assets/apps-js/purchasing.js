@@ -20,14 +20,21 @@ $(document).ready(function() {
 	});
 
 	var columns = [];
-	var right_align = [];
-	$("#datatable").find('th').each(function(i, th){
-		var field = $(th).attr('data-field');
-		var align = $(th).attr('data-align');
-		columns.push({data: field, name: field});
-		if(align == "right")
+    var right_align = [];
+    var center_align = [];
+    var left_align = [];
+    $("#datatable").find('th').each(function(i, th){
+        var field = $(th).attr('data-field');
+        var align = $(th).attr('data-align');
+        columns.push({data: field, name: field});
+        if(align == "right"){
 			right_align.push(i);
-	});
+		}else if(align == "left"){
+			left_align.push(i);
+		}else{
+			center_align.push(i);
+		}	
+    });
 
 	table = $('#datatable').DataTable({
 		dom: 'lrftip',
@@ -47,8 +54,10 @@ $(document).ready(function() {
 		},
 		columns: columns,
 		columnDefs: [ 
-		{ className: "dt-body-right", targets: right_align }, 
-		{ visible: false, targets: [0] }, 
+			{ className: "dt-body-right", targets: right_align },
+			{ className: "dt-body-center", targets: center_align },
+			{ className: "dt-body-left", targets: left_align }, 
+			{ visible: false, targets: [0] }, 
 		]
 	});
 	
@@ -287,11 +296,12 @@ function edit(id){
 		dataType: "JSON",
 		success: function(data)
 		{
-			$('#code').val(data.code);
-			$('#vat').val(data.vat);
+			$('[name="code"]').val(data.code);
+			$('[name="vat"]').val(data.vat);
 			$('#delivery_date').val(data.delivery_date);
 			$('#delivery_place').val(data.delivery_place);
 			$('#note').val(data.note);
+			$('#vendor').val(data.vendors_id);
 			$('#vendor').val(data.vendors_id);
 			$('#currency').val(data.currency_id);
 			$("#form").validator();

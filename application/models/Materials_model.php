@@ -6,7 +6,7 @@ class Materials_model extends MY_Model {
 	protected $_t = 'materials';
 		
 	var $table = 'materials';
-	var $column = array('m.id','m.name', 'mc.name', 'min_stock', 'u.symbol', 'v.name'); //set column field database for order and search
+	var $column = array('m.id','m.name', 'mc.name', 'min_stock', 'u.symbol'); //set column field database for order and search
     var $order = array('id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {

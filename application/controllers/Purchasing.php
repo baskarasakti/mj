@@ -93,7 +93,7 @@ class Purchasing extends MY_Controller {
 			'delivery_date' => $this->input->post('delivery_date'),
 			'delivery_place' => $this->normalize_text($this->input->post('delivery_place')),
 			'note' => $this->normalize_text($this->input->post('note')),
-			'vendors_id' => $this->input->post('vendor'),
+			'vendors_id' => $this->input->post('vendors_id'),
 			'currency_id' => $this->normalize_text($this->input->post('currency')),
 			'created_at' => $this->mysql_time_now()
 		);
@@ -102,7 +102,7 @@ class Purchasing extends MY_Controller {
 	}
 
 	function get_by_id($id){
-		$detail = $this->prc->get_by_id('id', $id);
+		$detail = $this->prc->get_detail($id);
 		echo json_encode($detail);
 	}
 
