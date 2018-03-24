@@ -135,6 +135,7 @@ function edit(id){
 			dataType: "JSON",
 			success: function(data)
 			{
+				check_vat(data.ppn);
 				$('#name').val(data.name);
 				$('#description').val(data.description);
 				$('#address').val(data.address);
@@ -169,4 +170,12 @@ function remove(id){
 				}
 			});	
 	});
+}
+
+function check_vat(value){
+	if(value == 1){
+		$('#vat').iCheck('check');
+	}else{
+		$('#nonvat').iCheck('check');
+	}
 }

@@ -187,10 +187,26 @@ $(document).ready(function() {
         fields: [ 
         {
             headerTemplate: function() {
-                return "Choose";
+				return $("<input>").attr("type", "checkbox").attr("id", "selectAllCheckbox")
+				.on("click", function(){
+					if(this.checked){
+						var data =  $('#jsGrid').jsGrid('option', 'data');
+						$.each(data, function(k, v){
+							selectedItems.push(v.id);
+						})
+						$(".singleCheckbox").each(function(){
+							this.checked = true;
+						});
+					}else{
+						selectedItems = [];
+						$(".singleCheckbox").each(function(){
+							this.checked = false;
+						}); 
+					}
+				});
             },
             itemTemplate: function(_, item) {
-                return $("<input>").attr("type", "checkbox")
+                return $("<input>").attr("type", "checkbox").attr("class", "singleCheckbox")
                 .prop("checked", $.inArray(item.id, selectedItems) > -1)
                 .on("change", function () {
                     $(this).is(":checked") ? selectItem(item.id) : unselectItem(item.id);
@@ -199,7 +215,7 @@ $(document).ready(function() {
             align: "center",
             width: 50
         },
-        { name: "id", visible:false }, 
+        { name: "id", visible:false, width: 10 }, 
         { name: "code", title:"Code", type: "text", width: 50 }, 
         { type: "control", editButton: false, deleteButton: false } 
         ] 
@@ -208,7 +224,7 @@ $(document).ready(function() {
     var selectedItems = [];
  
     var selectItem = function(item) {
-        selectedItems.push(item);
+		selectedItems.push(item);
     };
  
     var unselectItem = function(item) {
@@ -216,10 +232,9 @@ $(document).ready(function() {
             return i !== item;
         });
     };
- 
+
     var saveSelectedItems = function() { 
         saveClients(selectedItems);
-        console.log(selectedItems);
         selectedItems = [];
     };
  

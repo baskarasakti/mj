@@ -54,7 +54,7 @@ class MY_controller extends CI_Controller {
 		return $data;
 	}
 
-	function add_updating_detail(){
+	function add_updating_detail($data){
 		$data['updated_at'] = $this->mysql_time_now();
 		$data['updated_by'] = $this->session->userdata('name');
 		return $data;

@@ -56,7 +56,7 @@ class Usage_categories extends MY_Controller {
 		$data = array(
 			'name' => $this->normalize_text($this->input->post('name'))
 		);
-		$inserted = $this->ucm->add($data);
+		$inserted = $this->ucm->add_id($data);
 		echo json_encode(array('status' => $inserted));
 	}
 

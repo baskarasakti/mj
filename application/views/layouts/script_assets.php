@@ -60,6 +60,9 @@
 	 <script src="<?= asset_url('plugins/bower_components/dropzone-master/dist/dropzone.js');?>"></script>
 	 <!-- Toast -->
 	 <script src="<?= asset_url('plugins/bower_components/toast-master/js/jquery.toast.js');?>"></script>
+	 <!-- icheck -->
+    <script src="<?= asset_url('plugins/bower_components/icheck/icheck.min.js');?>"></script>
+    <script src="<?= asset_url('plugins/bower_components/icheck/icheck.init.js');?>"></script>
 	<!-- Extra JavaScript -->
 	<script src="<?= asset_url('apps-js/extra.js');?>"></script>
 	<script src="<?= asset_url('js/jquery.PrintArea.js');?>" type="text/JavaScript"></script>

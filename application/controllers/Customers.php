@@ -77,7 +77,7 @@ class Customers extends MY_Controller {
 			'description' => $this->input->post('description'),
 			'address' => $this->input->post('address'),
 			'telp' => $this->input->post('telp'),
-			'ppn' => $this->input->post('ppn'),
+			'ppn' => $this->input->post('vat'),
 			'created_at' => date("Y-m-d H:m:s")
 		);
 		$inserted = $this->cm->add($data);
@@ -95,7 +95,7 @@ class Customers extends MY_Controller {
 			'description' => $this->input->post('description'),
 			'address' => $this->input->post('address'),
 			'telp' => $this->input->post('telp'),
-			'ppn' => $this->input->post('ppn'),
+			'ppn' => $this->input->post('vat'),
 			'updated_at' => date("Y-m-d H:m:s")
 		);
 		$status = $this->cm->update('id', $this->input->post('change_id'), $data);

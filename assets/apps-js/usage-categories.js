@@ -180,7 +180,7 @@ function save_data(){
 				   $("#saveBtn").text("Save");
 				   $("#saveBtn").prop('disabled', false);
 				   $('div.block-div').unblock();
-				   $('[name="asd"]').val(id);
+				   $('[name="asd"]').val(data.status);
 				   show_hide_form(true);
 				   $('#form')[0].reset();
 			   }else{

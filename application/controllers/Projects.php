@@ -151,8 +151,9 @@ class Projects extends MY_Controller {
 
 	function update(){
 		$data = array(
+			'code' => $this->input->post('code'),			
 			'vat' => $this->input->post('vat'),
-			'product_categories_id' => $this->input->post('product_categories_id')
+			'description' => $this->normalize_text($this->input->post('description')),
 		);
 		$data = $this->add_updating_detail($data);
 		$status = $this->pm->update_id('id', $this->input->post('change_id'), $data);

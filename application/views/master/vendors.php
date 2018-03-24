@@ -59,6 +59,16 @@
 							<input type="text" class="form-control" id="telp" name="telp" placeholder="Telp" required>
 							<div class="help-block with-errors"></div>
 						</div>
+						<div class="form-group row">
+							<div class="col-sm-4">
+								<input type="radio" class="check" id="vat" name="vat" value="1" data-radio="iradio_square-blue">
+                                <label for="vat"> VAT </label>
+							</div>
+							<div class="col-sm-4">
+								<input type="radio" class="check" id="nonvat" name="vat" value="0" data-radio="iradio_square-blue">
+                                <label for="nonvat"> Non VAT </label>
+							</div>
+						</div>
 						<input type="hidden" name="change_id">
 						<input type="hidden" name="asd" value="">
 						<div class="form-group text-right">

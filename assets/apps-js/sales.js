@@ -2,10 +2,15 @@ var table;
 var table2;
 var action;
 var action2;
+var vat = -1;
 
 $(document).ready(function() {
 
 	action2 = "Add";
+
+	$('[name="vat"]').on('ifClicked', function (event) {
+        vat = this.value;
+    });
 
 	$("[name='asd']").val(-1);
 
@@ -20,7 +25,15 @@ $(document).ready(function() {
 	
 	$( "#customer_name" ).autocomplete({
 		maxShowItems: 5,
-		source: site_url+"customers/populate_autocomplete",
+		source: function(request,response){
+			$.ajax({
+				url: site_url+"customers/populate_autocomplete",
+				type:"GET",
+				data:{term:request.term, vat:vat},
+				success:response,
+				dataType:"json"
+			});
+		},
 		minLength: 1,
 		select: function( event, ui ) {
 		  $('[name="customers_id"]').val(ui.item.id);
@@ -247,6 +260,8 @@ function edit(id){
 		{
 			$('#code').val(data.code);
 			$('#name').val(data.name);
+			check_vat(data.vat);
+			vat = data.vat;
 			$('#description').val(data.description);
 			$('#customers_id').val(data.customers_id);
 			$("#form").validator();
@@ -374,4 +389,12 @@ function remove2(id){
 
 function prints(id){
 	window.open(site_url+"invoice/print_sales_order/"+id);
+}
+
+function check_vat(value){
+	if(value == 1){
+		$('#vat').iCheck('check');
+	}else{
+		$('#nonvat').iCheck('check');
+	}
 }

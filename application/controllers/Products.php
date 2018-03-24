@@ -18,6 +18,7 @@ class Products extends MY_Controller {
 		$table = new TableField();
 		$table->addColumn('id', '', 'ID');
 		$table->addColumn('code', '', 'Code');      
+		$table->addColumn('name', '', 'Name');      
 		$table->addColumn('uom', '', 'Unit');        
 		$table->addColumn('actions', '', 'Actions');        
 		return $table->getColumns();
@@ -111,9 +112,21 @@ class Products extends MY_Controller {
 		echo json_encode($result);
 	}
 
-	public function get_product_materials($id=-1){
-		$result = $this->pmm->get_product_materials2($id);
-		echo json_encode($result);
+	public function get_product_materials(){
+		$data = array();
+		if($this->input->get('material')==1){
+			$result = $this->pmm->get_product_materials2($this->input->get('products_id'));
+			foreach($result as $value){
+				$row = array();
+				$row['qty'] = $value->qty;
+				$row['value'] = $value->name;
+				$row['id'] = $value->id;
+				$data[] = $row;
+			}
+		}else{
+			$data = ['No data'];
+		}
+		echo json_encode($data);
 	}
 
 	public function view_data(){

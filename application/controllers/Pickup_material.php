@@ -88,13 +88,17 @@ class Pickup_material extends MY_Controller {
 	}
 
 	function add(){
+		$machine_id = $this->input->post('machine_id') == "" ? NULL: $this->input->post('machine_id'); 
+		$products_id = $this->input->post('products_id') == "" ? NULL: $this->input->post('products_id'); 
+		$usage_categories_id = $this->input->post('usage_categories_id') == "" ? NULL: $this->input->post('usage_categories_id'); 
 		$data = array(
 			'code_pick' => $this->input->post('code'),
+			'material' => $this->input->post('material'),
 			'date' => $this->input->post('date'),
-			'machine_id' => $this->input->post('machine_id'),
-			'products_id' => $this->input->post('products_id'),
 			'work_orders_id' => $this->input->post('work_orders_id'),
-			'usage_categories_id' => $this->input->post('usage_categories_id')
+			'machine_id' => $machine_id,
+			'products_id' => $products_id,
+			'usage_categories_id' => $usage_categories_id
 		);
 		$data = $this->add_adding_detail($data);
 		$inserted = $this->mu->add_id($data);
@@ -154,18 +158,18 @@ class Pickup_material extends MY_Controller {
 	}
 
 	public function add_detail(){
-		$stock_status = $this->mi->check_material_stock($this->input->post('materials_id'), $this->input->post('qty'));
+		$stock_status = $this->mi->check_material_stock($this->input->post('item_id'), $this->input->post('qty'));
 		if($stock_status['status']){
 			$data = array(
 				'material_usages_id' => $this->input->post('material_usages_id'),
-				'materials_id' => $this->input->post('materials_id'),
+				'materials_id' => $this->input->post('item_id'),
 				'pick_note' => $this->normalize_text($this->input->post('note')),
 				'qty_pick' => $this->input->post('qty')
 			);
 			$id = $this->mud->add_id($data);
 			$detail = $this->mud->get_by_id('id',$id);
 			if(isset($id)){
-				$status = $this->mi->material_usage_change($id, $this->input->post('materials_id'), $detail);
+				$status = $this->mi->material_usage_change($id, $this->input->post('item_id'), $detail);
 			}
 			echo json_encode(array('id'=> $id));
 		}else{

@@ -128,7 +128,7 @@ class Product_movement_detail extends MY_Controller {
 		$data = array(
 			'work_orders_id' => $woid,
 			'products_id' => $pid,
-			'machine_id' => 1
+			'machine_id' => NULL
 		);
 
 		$data = $this->add_adding_detail($data);

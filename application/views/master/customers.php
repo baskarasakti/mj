@@ -61,16 +61,12 @@
 						</div>
 						<div class="form-group row">
 							<div class="col-sm-4">
-								<div class="radio">
-									<input name="ppn" checked value="1" required="" type="radio">
-									<label for="out"> PPN </label>
-								</div>
+								<input type="radio" class="check" id="vat" name="vat" value="1" data-radio="iradio_square-blue">
+                                <label for="vat"> VAT </label>
 							</div>
 							<div class="col-sm-4">
-								<div class="radio">
-									<input name="ppn" value="0" required="" type="radio">
-									<label for="out"> Non-PPN </label>
-								</div>
+								<input type="radio" class="check" id="nonvat" name="vat" value="0" data-radio="iradio_square-blue">
+                                <label for="nonvat"> Non VAT </label>
 							</div>
 						</div>
 						<input type="hidden" name="change_id">

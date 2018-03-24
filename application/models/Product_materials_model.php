@@ -22,7 +22,7 @@ class Product_materials_model extends MY_Model {
 			array_push($allowed_material_ctg, $item->material_categories_id);
 		}
 
-		$this->db->select(array('m.id as id','m.code as code','m.name as name'));
+		$this->db->select(array('m.id as id','m.code as code','m.name as name','pm.qty as qty'));
 		$this->db->where('products_id', $id);
 		$this->db->group_start();
 			$this->db->where_in('m.material_categories_id', $allowed_material_ctg);

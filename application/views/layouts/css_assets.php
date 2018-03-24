@@ -1,6 +1,7 @@
 	<!-- Bootstrap Core CSS -->
 	<link href="<?= asset_url('bootstrap/dist/css/bootstrap.min.css');?>" rel="stylesheet">
 	<link href="<?= asset_url('plugins/bower_components/bootstrap-extension/css/bootstrap-extension.css');?>" rel="stylesheet">
+	<link href="<?= asset_url('plugins/bower_components/icheck/skins/all.css');?>" rel="stylesheet">
 	<link rel="stylesheet" href="<?= asset_url('plugins/bower_components/jqueryui/jquery-ui.min.css');?>">
 	<!--DataTables -->
 	<link href="<?= asset_url('plugins/bower_components/datatables/jquery.dataTables.min.css" rel="stylesheet');?>" type="text/css" />

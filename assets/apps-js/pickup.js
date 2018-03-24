@@ -1,11 +1,39 @@
 var table;
 var action;
 var method;
+var material = -1;
 
 $(document).ready(function() {
 
 	$('#date').datepicker({
 		format: 'yyyy-mm-dd' 
+	});
+
+	$('[name="material"]').on('ifClicked', function (event) {
+        material = this.value;
+	});
+	
+	$( "#item_name" ).autocomplete({
+		maxShowItems: 5,
+		source: function(request,response){
+			$.ajax({
+				url: site_url+"products/get_product_materials/",
+				type:"GET",
+				data:{
+					term:request.term, 
+					products_id:$('[name="products_id"]').val(),
+					usage_categories_id: $('[name="usage_categories_id"]').val(),
+					material:material
+				},
+				success:response,
+				dataType:"json"
+			});
+		},
+		minLength: 1,
+		select: function( event, ui ) {
+			$('[name="item_id"]').val(ui.item.id);
+			$('[name="qty"]').val(ui.item.qty);
+		}
 	});
 
 	$("#jsGrid").jsGrid({ 
@@ -71,6 +99,7 @@ $(document).ready(function() {
 		$.ajax({
 			url : site_url+"pickup_material/generate_id",
 			type: "GET",
+			data: {},
 			dataType: "JSON",
 			success: function(data)
 			{
@@ -116,6 +145,7 @@ $(document).ready(function() {
 
 	$('#add-btn').click(function(){
 		action = "Add";
+		reset_material_choice();
 		$('#form-title').text('Add Form');
 		$("#form").validator();
 		$("#saveBtn").prop('disabled', false);
@@ -153,6 +183,7 @@ $(document).ready(function() {
 		var data = $("#form2").serializeArray();
 		data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
 		data.push({name: 'material_usages_id',value: $("[name='asd']").val()});
+		data.push({name: 'material',value: material});
 		var url = site_url+"pickup_material/update_detail";
 		if(method != "Edit"){
 			url = site_url+"pickup_material/add_detail";
@@ -340,7 +371,7 @@ function populate_product_select(selected){
 			}
 			$('[name="products_id"]').html(option);
 			$('[name="products_id"]').val(selected);
-			populate_product_materials("");
+			//populate_product_materials("");
 		}
 	});	
 }
@@ -368,5 +399,10 @@ function populate_product_materials(selected){
 
 function printEvidence(id){
 	window.open(site_url+"invoice/print_pickup/"+id);
+}
+
+function reset_material_choice(){
+	material = -1;
+	$('input[name="material"]').removeAttr('checked').iCheck('update');
 }
 
