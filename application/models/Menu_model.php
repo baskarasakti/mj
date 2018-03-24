@@ -117,22 +117,22 @@ class Menu_model extends MY_Model {
 			'link' => '#',
 			'child' => array(
 				'Purchase Report' => array(
-					'link' => 'purchase_report',
+					'link' => 'report/purchase',
 				),
 				'Receiving Report' => array(
-					'link' => 'receiving_report',
+					'link' => 'report/receiving',
 				),
 				'Purchase Return Report' => array(
-					'link' => 'purchase_return_report',
+					'link' => 'report/purchase_return',
 				),
 				'Sales Report' => array(
-					'link' => 'sales_report',
+					'link' => 'report/sales',
 				),
 				'Shipping Report' => array(
-					'link' => 'shipping_report',
+					'link' => 'report/shipping',
 				),
 				'Sales Return Report' => array(
-					'link' => 'sales_return_report',
+					'link' => 'report/sales_return',
 				)
 			)
 		),
