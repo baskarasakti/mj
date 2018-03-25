@@ -18,6 +18,7 @@ class Vendors extends MY_Controller {
         $table->addColumn('description', '', 'Description');        
         $table->addColumn('address', '', 'Address');        
         $table->addColumn('telp', '', 'Telp');        
+        $table->addColumn('vat', '', 'VAT');        
         $table->addColumn('actions', '', 'Actions');        
         return $table->getColumns();
     }
@@ -39,6 +40,20 @@ class Vendors extends MY_Controller {
 
 	public function populate_autocomplete(){
 		$result = $this->vm->populate_autocomplete();
+		$data = array();
+		foreach($result as $value){
+			$row = array();
+			$row['value'] = $value->name;
+			$row['id'] = $value->id;
+			$data[] = $row;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
+	public function populate_autocomplete2(){
+		$result = $this->vm->populate_autocomplete2();
 		$data = array();
 		foreach($result as $value){
 			$row = array();
@@ -76,6 +91,11 @@ class Vendors extends MY_Controller {
 			$row['description'] = $value->description;
 			$row['address'] = $value->address;
 			$row['telp'] = $value->telp;
+			$vat = "PPn";
+			if($value->ppn == 0){
+				$vat = "Non PPn";
+			}
+			$row['vat'] = $vat;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
 							  .<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
             $data[] = $row;
@@ -119,7 +139,7 @@ class Vendors extends MY_Controller {
    }
 
 	function delete($id){        
-		$status = $this->vm->delete('id', $id);
+		$status = $this->vm->delete2('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 

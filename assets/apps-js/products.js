@@ -221,7 +221,7 @@ $(document).ready(function() {
 	var save_product_material = function(){
 		var data = $("#form2").serializeArray();
 		data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
-		data.push({name: 'products_id',value: $("[name='change_id']").val()});
+		data.push({name: 'products_id',value: $("[name='asd']").val()});
 		var url = site_url+"products/edit_product_material";
 		if(method != "Edit"){
 			url = site_url+"products/add_product_material";

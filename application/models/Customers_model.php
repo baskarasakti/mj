@@ -13,6 +13,7 @@ class Customers_model extends MY_Model {
          
 		$this->db->select('id, name, description, address, telp, ppn');
 		$this->db->from($this->table);
+		$this->db->where('deleted',0);
  
 		$i = 0;
 	 

@@ -39,7 +39,7 @@
 							<h3>ORDER PEMBELIAN</h3>
 							<h4>PO. No: <?= $purchasing->code ?></h4>
 						</div>
-						<p>Mohon dikirimkan kepada kami tanggal : <?= $purchasing->delivery_date ?></p>
+						<p>Mohon dikirimkan kepada kami tanggal : <?= explode(" ", $purchasing->delivery_date)[0] ?></p>
 					</div>
 					<div class="col-md-12">
 						<div class="table-responsive m-t-40" style="clear: both;">
@@ -47,26 +47,32 @@
 								<thead>
 									<tr>
 										<th class="text-center">No. </th>
-										<th class="text-right">NAMA BARANG</th>
-										<th class="text-right">Qty</th>
-										<th class="text-right">HARGA SATUAN</th>
-										<th class="text-right">JUMLAH</th>
+										<th class="text-center">NAMA BARANG</th>
+										<th class="text-center">Qty</th>
+										<th class="text-center">Unit</th>
+										<th class="text-center">Price</th>
+										<th class="text-center">Discount</th>
+										<th class="text-center">Sub Total</th>
+										<th class="text-center">Note</th>
 									</tr>
 								</thead>
 								<tbody>
 									<?php
 										$i = 1; $total = 0;
-										foreach ($receive_det as $q) {
+										foreach ($purchase_detail as $q) {
 										 	?>
 										 	<tr>
 												<td class="text-center"><?= $i ?></td>
-												<td class="text-right"><?= $q->name ?></td>
-												<td class="text-right"><?= $q->qty ?></td>
-												<td class="text-right"><?= $q->unit_price ?></td>
-												<td class="text-right"><?= $q->total_price ?></td>
+												<td class="text-center"><?= $q->name ?></td>
+												<td class="text-right"><?= number_format($q->qty, 0, ",", ".") ?></td>
+												<td class="text-center"><?= $q->uom ?></td>
+												<td class="text-right"><?= number_format($q->price, 0, ",", ".") ?></td>
+												<td class="text-right"><?= number_format($q->discount, 0, ",", ".") ?></td>
+												<td class="text-right"><?= number_format($q->total_price-$q->discount, 0, ",", ".") ?></td>
+												<td class="text-left"><?= $q->note ?></td>
 											</tr>
 										 	<?php
-										$i++;$total += $q->total_price;}
+										$i++;$total += $q->total_price-$q->discount;}
 									?>
 								</tbody>
 							</table>
@@ -75,7 +81,7 @@
 					<div class="col-md-12">
 						<div class="pull-left">NB: <?= $purchasing->note ?></div>
 						<div class="pull-right m-t-30 text-right">
-							<h3><b>Total :</b> <?= $total; ?></h3>
+							<h3><b>Total :</b> <?= number_format($total, 0, ",", ".") ?></h3>
 						</div>
 						<div class="clearfix"></div>
 						<hr>
@@ -147,7 +153,7 @@
 							<h3>ORDER PEMBELIAN</h3>
 							<h4>PO. No: <?= $purchasing->code ?></h4>
 						</div>
-						<p>Mohon dikirimkan kepada kami tanggal : <?= $purchasing->delivery_date ?></p>
+						<p>Mohon dikirimkan kepada kami tanggal : <?= explode(" ", $purchasing->delivery_date)[0] ?></p>
 					</div>
 					<div class="col-md-12">
 						<div class="table-responsive m-t-40" style="clear: both;">
@@ -155,19 +161,21 @@
 								<thead>
 									<tr>
 										<th class="text-center">No. </th>
-										<th class="text-right">NAMA BARANG</th>
-										<th class="text-right">Qty</th>
+										<th class="text-center">NAMA BARANG</th>
+										<th class="text-center">Qty</th>
+										<th class="text-center">Unit</th>
 									</tr>
 								</thead>
 								<tbody>
 									<?php
 										$i = 1; $total = 0;
-										foreach ($receive_det as $q) {
+										foreach ($purchase_detail as $q) {
 										 	?>
 										 	<tr>
 												<td class="text-center"><?= $i ?></td>
-												<td class="text-right"><?= $q->name ?></td>
-												<td class="text-right"><?= $q->qty ?></td>
+												<td class="text-center"><?= $q->name ?></td>
+												<td class="text-right"><?= number_format($q->qty, 0, ",", ".") ?></td>
+												<td class="text-center"><?= $q->uom ?></td>
 											</tr>
 										 	<?php
 										$i++;$total += $q->total_price;}

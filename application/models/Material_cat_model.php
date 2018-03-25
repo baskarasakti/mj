@@ -13,6 +13,7 @@ class Material_cat_model extends MY_Model {
          
 		$this->db->select('id, name');
 		$this->db->from($this->table);
+		$this->db->where('deleted',0);
  
 		$i = 0;
 	 

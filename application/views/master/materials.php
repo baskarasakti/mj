@@ -45,7 +45,9 @@
 								<option selected="">Choose...</option>
 								<?php
 									foreach($m_categories as $item){
-										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
+										if($item->deleted == 0){
+											echo '<option value="'.$item->id.'">'.$item->name.'</option>';
+										}
 									}
 								?>
 							</select>

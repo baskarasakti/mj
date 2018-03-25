@@ -7,6 +7,7 @@ class Invoice extends MY_Controller {
 		parent::__construct();
 			//$this->load->model('Login', 'login');
 		$this->load->model('purchase_model', 'prc');
+		$this->load->model('purchase_det_model', 'prd');
 		$this->load->model('receive_model', 'rcv');
 		$this->load->model('receive_det_model', 'rcvd');
 		$this->load->model('materials_model', 'mm');
@@ -63,7 +64,7 @@ class Invoice extends MY_Controller {
 	public function print_purchasing($id)
 	{
 		$data['purchasing'] = $this->prc->get_by_id('id', $id);
-		$data['receive_det'] = $this->rcvd->get_receive_det_where_id($id);
+		$data['purchase_detail'] = $this->prd->get_purchase_details($id);
 
 		$vendor_id = $data['purchasing']->vendors_id;
 		$data['vendor'] = $this->vm->get_by_id('id', $vendor_id);

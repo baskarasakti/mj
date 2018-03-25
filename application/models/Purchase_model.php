@@ -65,10 +65,10 @@ class Purchase_model extends MY_Model {
 
 	public function get_detail($id)
 	{
-		$this->db->select('p.id as id, p.code as code, vat, delivery_date, note, vendors_id, v.name as name, currency_id');
+		$this->db->select('p.id as id, p.code as code, vat, delivery_place, delivery_date, note, vendors_id, v.name as name, currency_id');
 		$this->db->join('vendors v', 'p.vendors_id = v.id', 'left' );
 		$result = $this->db->get($this->_t.' p' )->row();
-		return $row;
+		return $result;
 	}
 
 }

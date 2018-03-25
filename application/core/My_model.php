@@ -157,6 +157,18 @@ class MY_Model extends CI_Model {
             return TRUE;
         }
         return FALSE;
+	}
+	
+	function delete2($col, $id){
+        $this->db->set('deleted', 1);
+		$this->db->where($col, $id);
+		$this->db->update($this->_t);
+        $num_removed = $this->db->affected_rows();
+        if($num_removed == 1){
+            return $id;
+        }else{
+            return $id;
+        }
     }
 
     function get_by_id_by_table($column, $id, $table){
@@ -185,6 +197,27 @@ class MY_Model extends CI_Model {
         $this->db->update($this->_t, $data);
         $num_affected = $this->db->affected_rows();
         return $num_affected > 0;
-    }
+	}
+	
+	function convert_currency($source_curr, $amount)
+	{
+		$this->db->select('currency_id');		
+		$row = $this->db->get('company_info')->row();
+		$target_curr = $row->currency_id;
+
+		if($target_curr == null || $target_curr == $source_curr){
+			return $amount;
+		}else{
+			$this->db->select('rate');		
+			$this->db->where('id', $source_curr);		
+			$row = $this->db->get('currency')->row();
+			$rate = $row->rate; 
+			if($source_curr == 1){
+				return $amount / $rate;
+			}else{
+				return $amount * $rate;
+			}
+		}
+	}
 
 }

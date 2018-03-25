@@ -6,13 +6,14 @@ class Vendors_model extends MY_Model {
 	protected $_t = 'vendors';
 		
 	var $table = 'vendors';
-	var $column = array('id','name', 'description', 'address', 'telp'); //set column field database for order and search
+	var $column = array('id','name', 'description', 'address', 'telp', 'ppn'); //set column field database for order and search
     var $order = array('name' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('id, name, description, address, telp');
+		$this->db->select('id, name, description, address, telp, ppn');
 		$this->db->from($this->table);
+		$this->db->where('deleted',0);
  
 		$i = 0;
 	 
@@ -60,6 +61,11 @@ class Vendors_model extends MY_Model {
 	}
 
 	public function populate_autocomplete(){
+		return $this->db->get($this->_t)->result();
+	}
+
+	public function populate_autocomplete2(){
+		$this->db->where('ppn', $this->input->get('vat'));
 		$this->db->like('name', $this->input->get('term'), 'both');
 		return $this->db->get($this->_t)->result();
 	}

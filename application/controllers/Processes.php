@@ -91,7 +91,7 @@ class Processes extends MY_Controller {
    }
 
 	function delete($id){        
-		$status = $this->pm->delete('id', $id);
+		$status = $this->pm->delete2('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 

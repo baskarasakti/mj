@@ -13,6 +13,7 @@ class Currency_model extends MY_Model {
          
 		$this->db->select('id, name, symbol, rate');
 		$this->db->from($this->table);
+		$this->db->where('deleted',0);
  
 		$i = 0;
 	 

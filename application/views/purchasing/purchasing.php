@@ -46,16 +46,12 @@
 						</div>
 						<div class="form-group row">
 							<div class="col-sm-4">
-								<div class="radio">
-									<input name="vat" checked value="1" required="" type="radio">
-									<label for="out"> VAT </label>
-								</div>
+								<input type="radio" class="check" id="vat" name="vat" value="1" data-radio="iradio_square-blue">
+                                <label for="vat"> VAT </label>
 							</div>
 							<div class="col-sm-4">
-								<div class="radio">
-									<input name="vat" value="0" required="" type="radio">
-									<label for="out"> Non VAT </label>
-								</div>
+								<input type="radio" class="check" id="nonvat" name="vat" value="0" data-radio="iradio_square-blue">
+                                <label for="nonvat"> Non VAT </label>
 							</div>
 						</div>
 						<div class="form-group">
@@ -102,7 +98,7 @@
                     <hr>
 					<form id="form2" data-toggle="validator">
 					<div class="row">
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<div class="form-group">
 								<input id="material_name" name="material_name" class="form-control" placeholder="Type Material Name" type="text" required>
 								<span class="help-block"> </span> </div>
@@ -118,27 +114,30 @@
 								<input id="qty" name="qty" class="form-control" placeholder="Qty" min="0" type="number" required>
 								<span class="help-block"> </span> </div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-2">
 							<div class="form-group">
-								<input id="note" name="note" class="form-control" placeholder="Note" type="text" required>
+								<input id="discount" name="discount" class="form-control" placeholder="Discount" min="0" type="number" required>
 								<span class="help-block"> </span> </div>
 						</div>
-						<input type="hidden" id="materials_id" name="materials_id">
+						<div class="col-md-3">
+							<div class="form-group">
+								<input id="note2" name="note2" class="form-control" placeholder="Note" type="text" required>
+								<span class="help-block"> </span> </div>
+						</div>
+						<input type="hidden" name="materials_id">
 						<input type="hidden" name="details_id">
 						<div class="col-md-1">
 							<div class="form-group">
-							<button type="button" id="saveBtn2" class="btn btn-success form-control">Save</button></div>
+							<button type="button" id="saveBtn2" class="btn btn-success"><i class="fa fa-save"></i></button>
+							<button type="button" id="cancelBtn2" class="btn btn-danger"><i class="fa fa-remove"></i></button>
+							</div>
 						</div>
-						<div class="col-md-1">
-							<div class="form-group">
-							<button type="button" id="cancelBtn2" class="btn btn-danger form-control">Clear</button></div>
-						</div>
-						<div class="table-responsive"> 
-			              <div id="jsGrid"></div> 
-			            </div> 
 						<!--/span-->
 					</div>
 					</form>
+					<div class="table-responsive"> 
+						<div id="jsGrid"></div> 
+					</div> 
 					</div>
 				</div>
 			</div>

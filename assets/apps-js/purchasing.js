@@ -1,5 +1,8 @@
 var table;
 var action;
+var vat = -1;
+var method;
+
 
 $(document).ready(function() {
 
@@ -9,15 +12,48 @@ $(document).ready(function() {
 		endDate: '+1Y',
 	});
 
+	$('[name="vat"]').on('ifClicked', function (event) {
+        vat = this.value;
+	});
+	
+	$("[name='asd']").val(-1);
+
 	$( "#vendor_name" ).autocomplete({
 		maxShowItems: 5,
-		source: site_url+"vendors/populate_autocomplete",
+		source: function(request,response){
+			$.ajax({
+				url: site_url+"vendors/populate_autocomplete2",
+				type:"GET",
+				data:{term:request.term, vat:vat},
+				success:response,
+				dataType:"json"
+			});
+		},
 		minLength: 1,
 		select: function( event, ui ) {
-		  $('[name="vendors_id"]').val(ui.item.id);
-		  generate_vendor_material();
+			$('[name="vendors_id"]').val(ui.item.id);
+			generate_vendor_material();
 		}
 	});
+
+	$( "#material_name" ).autocomplete({
+		maxShowItems: 5,
+		source: function(request,response){
+			$.ajax({
+				url: site_url+"vendors/populate_autocomplete_material",
+				type:"GET",
+				data:{term:request.term, vendors_id:$('[name="vendors_id"]').val()},
+				success:response,
+				dataType:"json"
+			});
+		},
+		minLength: 1,
+		select: function( event, ui ) {
+			$('[name="materials_id"]').val(ui.item.id);
+			generate_vendor_material();
+		}
+	});
+	
 
 	var columns = [];
     var right_align = [];
@@ -65,11 +101,14 @@ $(document).ready(function() {
     	width: "100%", 
     	height: "400px", 
 
-    	inserting: true, 
-    	editing: true, 
+    	inserting: false, 
+    	editing: false, 
     	sorting: true, 
     	paging: true, 
-
+		rowClick: function(args) {
+			method = "Edit";
+			get_item_detail(args.item);
+        },
         // data: lists, 
         controller: {
         	loadData: function(filter) {
@@ -78,22 +117,6 @@ $(document).ready(function() {
         			url: "purchasing/jsgrid_functions/"+$('[name="asd"]').val(),
         			data: filter,
         			dataType:"JSON"
-        		});
-        	},
-        	insertItem: function(item) {
-        		item["csrf_token"] = $("[name='csrf_token']").val();
-        		return $.ajax({
-        			type: "POST",
-        			url: "purchasing/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item,
-        			dataType:"JSON"
-        		});
-        	},
-        	updateItem: function(item) {
-        		return $.ajax({
-        			type: "PUT",
-        			url: "purchasing/jsgrid_functions/"+$('[name="asd"]').val(),
-        			data: item
         		});
         	},
         	deleteItem: function(item) {
@@ -114,10 +137,19 @@ $(document).ready(function() {
 
         fields: [ 
         { name: "id", visible:false }, 
-        { name: "name", title:"Item Name", type: "text", width: 150, validate: "required" }, 
-        { name: "qty", title:"Qty", type: "number", width: 50 }, 
-        { name: "uom", title:"Uom", type: "text", width: 50, readOnly: true }, 
-        { type: "control" } 
+        { name: "materials_id", visible:false }, 
+        { name: "name", title:"Item Name", type: "text" }, 
+        { name: "qty", title:"Qty", type: "number" }, 
+		{ name: "uom", title:"Unit", type: "text", readOnly: true }, 
+        { name: "price", title:"Price", type: "number" }, 
+		{ name: "discount", title:"Discount", type: "number" }, 
+		{ name: "sub_total", title:"Sub Total", type: "number" }, 	
+		{ name: "note", title:"Note", type: "text" }, 			
+		{ 
+			type: "control",
+			modeSwitchButton: false,
+			editButton: false 
+		} 
         ] 
     });
 
@@ -137,6 +169,7 @@ $(document).ready(function() {
 
 	$('#add-btn').click(function(){
 		action = "Add";
+		method = "";
 		generateID();
 		$('[name="asd"]').val("");
 		$('#form-title').text('Add Form');
@@ -161,13 +194,14 @@ $(document).ready(function() {
 		}
 	});
 
-	var save_material_vendor = function(){
+	var save_item = function(){
 		var data = $("#form2").serializeArray();
 		data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
-		data.push({name: 'materials_id',value: $("[name='change_id']").val()});
-		var url = site_url+"materials/edit_material_vendor";
+		data.push({name: 'currency_id',value: $("[name='currency']").val()});
+		data.push({name: 'purchasing_id',value: $('[name="asd"]').val()});
+		var url = site_url+"purchasing/edit_item";
 		if(method != "Edit"){
-			url = site_url+"materials/add_material_vendor";
+			url = site_url+"purchasing/add_item";
 		}
 		$.ajax({
 			url : url,
@@ -185,10 +219,14 @@ $(document).ready(function() {
 		}); 
 	 }
 
-	 var get_material_vendor = function(data){
-		$('[name="vendor_name"]').val(data.name);
-		$('[name="vendors_id"]').val(data.vendors_id);
-		$('[name="details_id"]').val(data.id);
+	 var get_item_detail = function(data){
+		$('[name="details_id"]').val(normalize_number_format(data.id));
+		$('[name="materials_id"]').val(normalize_number_format(data.materials_id));
+		$('[name="material_name"]').val(normalize_number_format(data.name));
+		$('[name="qty"]').val(normalize_number_format(data.qty));
+		$('[name="price"]').val(normalize_number_format(data.price));
+		$('[name="discount"]').val(normalize_number_format(data.discount));
+		$('[name="note2"]').val(normalize_number_format(data.note));
 	 }
 
 	 var clear_highlight = function(selected){
@@ -199,13 +237,12 @@ $(document).ready(function() {
 		var validator = $("#form2").data("bs.validator");
 		validator.validate();
 		if (!validator.hasErrors()){
-		   save_material_vendor();
+		   save_item();
 		}
 	});
 
 	$('#cancelBtn2').click(function(){
 		method = "";
-		clear_highlight(selectedRow);
 		$('#form2')[0].reset();
 	});
 
@@ -297,13 +334,14 @@ function edit(id){
 		success: function(data)
 		{
 			$('[name="code"]').val(data.code);
-			$('[name="vat"]').val(data.vat);
-			$('#delivery_date').val(data.delivery_date);
-			$('#delivery_place').val(data.delivery_place);
-			$('#note').val(data.note);
-			$('#vendor').val(data.vendors_id);
-			$('#vendor').val(data.vendors_id);
-			$('#currency').val(data.currency_id);
+			check_vat(data.vat);
+			var temp = data.delivery_date.split(" ");
+			$('[name="delivery_date"]').val(temp[0]);
+			$('[name="delivery_place"]').val(data.delivery_place);
+			$('[name="note"]').val(data.note);
+			$('[name="vendor_name"]').val(data.name);
+			$('[name="vendors_id"]').val(data.vendors_id);
+			$('[name="currency"]').val(data.currency_id);
 			$("#form").validator();
 			$('#form-title').text('Edit Form');
 			$('[name="asd"]').val(id);
@@ -336,4 +374,20 @@ function remove(id){
 			}
 		});	
 	});
+}
+
+function check_vat(value){
+	if(value == 1){
+		$('#vat').iCheck('check');
+	}else{
+		$('#nonvat').iCheck('check');
+	}
+}
+
+function normalize_number_format(number){
+	return number.split(",")[0].replace(".", "");
+}
+
+function prints(id){
+	window.open(site_url+"invoice/print_purchasing/"+id);
 }

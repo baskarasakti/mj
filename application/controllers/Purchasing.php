@@ -75,8 +75,9 @@ class Purchasing extends MY_Controller {
 			$row['delivery_date'] = $value->delivery_date;
 			$row['vat'] = $value->vat;
 			$row['vendor'] = $value->vendor;
-			$row['actions'] = $value->status == 'true' ? '<a href=invoice/print_purchasing/'.$value->id.'><button class="btn btn-sm btn-success" type="button">Print</button></a>' : '<button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
-			.<button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
+			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="prints('.$value->id.')" type="button"><i class="fa fa-print"></i></button>
+							   <button class="btn btn-sm btn-info" onclick="edit('.$value->id.')" type="button"><i class="fa fa-edit"></i></button>
+							   <button class="btn btn-sm btn-danger" onclick="remove('.$value->id.')" type="button"><i class="fa fa-trash"></i></button>';
 			$data[] = $row;
 			$count++;
 		}
@@ -112,7 +113,7 @@ class Purchasing extends MY_Controller {
 			'delivery_date' => $this->input->post('delivery_date'),
 			'delivery_place' => $this->normalize_text($this->input->post('delivery_place')),
 			'note' => $this->normalize_text($this->input->post('note')),
-			'vendors_id' => $this->input->post('vendor'),
+			'vendors_id' => $this->input->post('vendors_id'),
 			'currency_id' => $this->normalize_text($this->input->post('currency')),
 			'updated_at' => $this->mysql_time_now()
 		);
@@ -134,9 +135,14 @@ class Purchasing extends MY_Controller {
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['name'] = $value->id_materials;
-				$row['qty'] = $value->qty;
+				$row['materials_id'] = $value->materials_id;
+				$row['name'] = $value->name;
+				$row['qty'] =$this->formatNumber($value->qty);
 				$row['uom'] = $value->uom;
+				$row['price'] =$this->formatCurrency($value->price);
+				$row['discount'] =$this->formatCurrency($value->discount);
+				$row['sub_total'] =$this->formatCurrency($value->total_price-$value->discount);
+				$row['note'] = $value->note;
 				$data[] = $row;
 				$count++;
 			}
@@ -182,5 +188,40 @@ class Purchasing extends MY_Controller {
 			break;
 		}
 	}
+
+	public function add_item()
+	{
+		$price = $this->prd->convert_currency($this->input->post('currency_id'), $this->input->post('price'));
+		$discount = $this->prd->convert_currency($this->input->post('currency_id'), $this->input->post('discount'));
+		$data = array(
+			'materials_id' => $this->input->post('materials_id'),
+			'purchasing_id' => $this->input->post('purchasing_id'),
+			'qty' => $this->input->post('qty'),
+			'price' => $price,
+			'discount' => $discount,
+			'note' => $this->input->post('note2'),
+			'total_price' => $this->input->post('qty')*$price,
+		);
+		$inserted = $this->prd->add($data);
+		echo json_encode(array('status' => $inserted));
+	}
+
+	public function edit_item()
+	{
+		$price = $this->prd->convert_currency($this->input->post('currency_id'), $this->input->post('price'));
+		$discount = $this->prd->convert_currency($this->input->post('currency_id'), $this->input->post('discount'));
+		$data = array(
+			'materials_id' => $this->input->post('materials_id'),
+			'purchasing_id' => $this->input->post('purchasing_id'),
+			'qty' => $this->input->post('qty'),
+			'price' => $price,
+			'discount' => $discount,
+			'note' => $this->input->post('note2'),
+			'total_price' => $this->input->post('qty')*$price,
+		);
+		$status = $this->prd->update('id', $this->input->post('details_id'), $data);
+		echo json_encode(array('status' => $status));
+	}
+
 
 }

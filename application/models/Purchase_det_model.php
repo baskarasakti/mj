@@ -50,11 +50,11 @@ class Purchase_det_model extends MY_Model {
 	}
 
 	function get_purchase_details($id){
-        $this->db->select(array('purchase_details.id as id','materials.id as id_materials','qty','materials_id', 'u.id as uom'));
+        $this->db->select('pd.id as id, m.id as materials_id, m.name as name, qty, price, discount, total_price, pd.note as note, u.symbol as uom');
         $this->db->where('purchasing_id', $id);
-        $this->db->join('materials', 'materials.id = purchase_details.materials_id', 'LEFT');
-        $this->db->join('uom u', 'u.id = materials.uom_id', 'LEFT');
-        $result = $this->db->get('purchase_details');
+        $this->db->join('materials m', 'm.id = pd.materials_id', 'LEFT');
+        $this->db->join('uom u', 'u.id = m.uom_id', 'LEFT');
+        $result = $this->db->get('purchase_details pd');
         return $result->result();
 	}
 

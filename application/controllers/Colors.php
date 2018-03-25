@@ -77,7 +77,7 @@ class Colors extends MY_Controller {
    }
 
 	function delete($id){        
-		$status = $this->cm->delete('id', $id);
+		$status = $this->cm->delete2('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 

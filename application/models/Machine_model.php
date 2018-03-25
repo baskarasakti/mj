@@ -13,6 +13,7 @@ class Machine_model extends MY_Model {
          
 		$this->db->select('mc.id, code, processes_id, p.name');
 		$this->db->from($this->table." mc");
+		$this->db->where('mc.deleted',0);
 		$this->db->join("processes p", "mc.processes_id = p.id", "left");
  
 		$i = 0;

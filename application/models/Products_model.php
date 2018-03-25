@@ -13,6 +13,7 @@ class Products_model extends MY_Model {
          
 		$this->db->select('p.id as id, p.code as code, p.name as name, pc.name as category, symbol');
 		$this->db->from($this->table.' p');
+		$this->db->where('p.deleted',0);
 		$this->db->join('product_categories pc', 'p.product_categories_id = pc.id', 'left');
 		$this->db->join('uom', 'p.uom_id = uom.id', 'left');
  
