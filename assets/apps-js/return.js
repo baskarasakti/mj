@@ -215,6 +215,7 @@ $(document).ready(function() {
 	 var get_pick_detail = function(data){
 		$('[name="details_id"]').val(data.id);
 		$('[name="materials_id"]').val(data.materials_id);
+		$('[name="materials_name"]').val(data.name);
 		$('[name="qty"]').val(data.qty);
 		$('[name="note"]').val(data.note);
 	 }

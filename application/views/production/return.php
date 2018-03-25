@@ -100,9 +100,8 @@
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<select class="form-control" id="materials_id" name="materials_id" required disabled>
-										<option selected="">Choose Material in Table...</option>
-									</select>
+									<input type="hidden" name="materials_id">
+									<input id="materials_name" name="materials_name" class="form-control" placeholder="Choose Material in Table..." type="text" required readonly>
 								</div>
 							</div>
 							<!--/span-->

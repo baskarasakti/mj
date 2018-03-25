@@ -111,12 +111,14 @@ class Material_inventory_model extends MY_Model {
 	public function check_material_stock($id, $pick_qty)
 	{
 		$min_stock = 0;
-		$this->db->select('m.name as name, min_stock, symbol');	
+		$initial = 0;
+		$this->db->select('m.name as name, min_stock, symbol, initial_qty');	
 		$this->db->join('uom u', 'm.uom_id = u.id', 'left');	
 		$this->db->where('m.id', $id);	
 		$material = $this->db->get('materials m')->row();
 		if(isset($material)){
 			$min_stock = $material->min_stock;
+			$initial = $material->initial_qty;
 		}
 
 		$this->db->select("COALESCE(SUM(case type
@@ -125,7 +127,7 @@ class Material_inventory_model extends MY_Model {
 	    end), 0) as stock");
 		$this->db->where('materials_id', $id);
 		$stock = $this->db->get($this->_t)->row();
-		if($stock->stock - $pick_qty >= $min_stock){
+		if($stock->stock+$initial - $pick_qty >= $min_stock){
 			$data = array(
 				'status' => true
 			); 
@@ -133,7 +135,7 @@ class Material_inventory_model extends MY_Model {
 		}
 		return array(
 			'status' => false,
-			'msg' => $this->generate_material_stock_notif($material, $stock->stock, $min_stock, $pick_qty)
+			'msg' => $this->generate_material_stock_notif($material, $stock->stock+$initial, $min_stock, $pick_qty)
 		);
 	}
 

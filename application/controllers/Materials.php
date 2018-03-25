@@ -129,9 +129,11 @@ class Materials extends MY_Controller {
 
 	function update(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
+			'name' => $this->input->post('name'),
 			'material_categories_id' => $this->input->post('material_categories_id'),
-			'vendors_id' => $this->input->post('vendors_id'),
+			'uom_id' => $this->input->post('uom_id'),
+			'min_stock' => $this->input->post('min_stock'),
+			'initial_qty' => $this->input->post('initial_qty'),
 			'updated_at' => date("Y-m-d H:m:s")
 		);
 		$status = $this->mm->update('id', $this->input->post('change_id'), $data);
