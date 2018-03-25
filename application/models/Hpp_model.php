@@ -11,8 +11,9 @@ class Hpp_model extends MY_Model {
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('h.id as id, h.code as code, p.code as pcode, p.name as name');
+		$this->db->select('h.id as id, h.code as code, wo.code as wocode, h.products_id, p.name as name');
 		$this->db->from($this->_t.' h');
+		$this->db->join('work_orders wo', 'h.work_orders_id = wo.id', 'left');
 		$this->db->join('products p', 'h.products_id = p.id', 'left');
 		$i = 0;
 	 
@@ -81,7 +82,7 @@ class Hpp_model extends MY_Model {
 		return 0;
 	}
 
-	public function get_material_list($id)
+	public function get_material_list($id, $wo_id)
 	{
 		$this->db->where('id', $id);
 		$hpp = $this->db->get($this->_t)->row();
@@ -89,18 +90,15 @@ class Hpp_model extends MY_Model {
 		if(!isset($hpp)){
 			return array();
 		}
-		$month = $hpp->month;
-		if(sizeof($month) == 1){
-			$month = "0".$month;
-		}
 	
 		$this->db->select('mud.materials_id as id,  m.name as name, SUM(qty_pick) as `pick`, SUM(qty_return) as `return`, u.symbol, mc.id as idcat,mc.name as category');
 		$this->db->join('material_usages mu', 'mud.material_usages_id = mu.id', 'left');
 		$this->db->join('materials m', 'mud.materials_id = m.id', 'left');
 		$this->db->join('uom u', 'm.uom_id = u.id', 'left');
 		$this->db->join('material_categories mc', 'm.material_categories_id = mc.id', 'left');
-		$this->db->where('DATE_FORMAT(mu.date, "%Y-%m") = ', $hpp->year."-".$month);
+		$this->db->join('work_orders wo', 'mu.work_orders_id = wo.id', 'left');
 		$this->db->where('mu.products_id', $hpp->products_id);
+		$this->db->where('wo.id', $wo_id);
 		$this->db->group_by('mud.materials_id');
 		$this->db->order_by('mc.id', 'asc');
 		$result = $this->db->get('material_usages_detail mud')->result();
@@ -118,15 +116,11 @@ class Hpp_model extends MY_Model {
 		return 0;
 	}
 
-	public function get_all_wos($month, $year, $pid)
+	public function get_all_wos($pid)
 	{
-		if(sizeof($month) == 1){
-			$month = "0".$month;
-		}
 
 		$this->db->select('DISTINCT(wo.id) as id', FALSE);
 		$this->db->join('work_orders wo', 'wod.work_orders_id = wo.id', 'left');
-		$this->db->where('DATE_FORMAT(wo.start_date, "%Y-%m") = ', $year."-".$month);
 		$this->db->where('wod.products_id', $pid);
 		$result = $this->db->get('work_order_detail wod')->result();
 		return $result;

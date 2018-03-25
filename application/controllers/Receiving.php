@@ -95,7 +95,7 @@ class Receiving extends MY_Controller {
 			$row = array();
 			$row['id'] = $value->purchasing_id;
 			$row['code'] = $value->code;
-			$row['receive_date'] = $value->receive_date;
+			$row['receive_date'] = $this->toFormat($value->receive_date, "Y-m-d");
 			$row['actions'] = '<button class="btn btn-sm btn-default" onclick="details('.$value->id.')" type="button">details</button> <a href=invoice/print_receiving/'.$value->id.'><button class="btn btn-sm btn-success" type="button">print</button></a>';
 			$data[] = $row;
 			$count++;
@@ -122,9 +122,9 @@ class Receiving extends MY_Controller {
 		foreach($purchase_details as $value){
 			$data = array(
 				'qty' => $value->qty,
-				'unit_price' => 0,
+				'unit_price' => $value->price,
 				'discount' => 0,
-				'total_price' => 0,
+				'total_price' => $value->qty*$value->price,
 				'receiving_id' => $inserted,
 				'materials_id' => $value->materials_id,
 			);
@@ -181,10 +181,10 @@ class Receiving extends MY_Controller {
 				$row = array();
 				$row['id'] = $value->id;
 				$row['name'] = $value->id_materials;
-				$row['qty'] = $value->qty;
-				$row['price'] = $value->unit_price;
-				$row['discount'] = $value->discount;
-				$row['total_price'] = $value->total_price;
+				$row['qty'] = $this->formatNumber($value->qty);
+				$row['price'] = $this->formatCurrency($value->unit_price);
+				$row['discount'] = $this->formatCurrency($value->discount);
+				$row['total_price'] =$this->formatCurrency($value->total_price);
 				$data[] = $row;
 				$count++;
 			}

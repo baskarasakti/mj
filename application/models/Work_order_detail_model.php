@@ -57,7 +57,23 @@ class Work_order_detail_model extends MY_Model {
         return $result->result();
 	}
 
-	public function get_product_by_month_year()
+	public function get_work_orders_by_month_year()
+	{
+		$year = $this->input->get('year');	
+		$month = $this->input->get('month');
+
+		if(sizeof($month) == 1){
+			$month = "0".$month;
+		}
+		
+		$this->db->select('DISTINCT wo.id as id, wo.code as code', FALSE);
+		$this->db->join('work_orders wo', 'wd.work_orders_id = wo.id', 'left');
+		$this->db->where('DATE_FORMAT(wo.start_date, "%Y-%m") = ', $year."-".$month);
+		$result = $this->db->get($this->_t.' wd');
+		return $result->result();
+	}
+
+	public function get_product_by_month_year($wo_id)
 	{
 		$year = $this->input->get('year');	
 		$month = $this->input->get('month');
@@ -70,6 +86,7 @@ class Work_order_detail_model extends MY_Model {
 		$this->db->join('work_orders w', 'wd.work_orders_id = w.id', 'left');
 		$this->db->join('products p', 'wd.products_id = p.id', 'left');
 		$this->db->where('DATE_FORMAT(w.start_date, "%Y-%m") = ', $year."-".$month);
+		$this->db->where('wd.work_orders_id', $wo_id);
 		$result = $this->db->get($this->_t.' wd');
 		return $result->result();
 	}

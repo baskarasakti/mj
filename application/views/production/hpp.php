@@ -61,6 +61,12 @@
 							<div class="help-block with-errors"></div>
 						</div>
 						<div class="form-group">
+							<label for="products_id" class="control-label">Work Orders</label>
+							<select class="custom-select col-sm-12" id="work_orders_id" name="work_orders_id">
+								<option selected="">Choose...</option>
+							</select>
+						</div>
+						<div class="form-group">
 							<label for="products_id" class="control-label">Products</label>
 							<select class="custom-select col-sm-12" id="products_id" name="products_id">
 								<option selected="">Choose...</option>
@@ -72,6 +78,7 @@
 						</div>
 						<input type="hidden" name="change_id">
 						<input type="hidden" name="asd" value="">
+						<input type="hidden" name="wo_id" value="">
 					</form>	
 					<h3 class="box-title">Material Cost</h3>
                     <hr>	

@@ -373,7 +373,8 @@ function receiving(id){
                 $("#saveBtn").text("Save");
                 $("#saveBtn").prop('disabled', false);
 				$('#code').val(data.code);
-				$('#delivery_date').val(data.delivery_date);
+                var temp = data.delivery_date.split(" ");
+                $('#delivery_date').val(temp[0]);
 				$('#vendors_id').val(data.vendors_id);			
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
@@ -396,8 +397,10 @@ function details(id){
                 $("#saveBtn").text("Save");
                 $("#saveBtn").prop('disabled', false);
 				$('#code').val(data.code);
-                $('#delivery_date').val(data.delivery_date);
-                $('#receive_date').val(data.receive_date);
+                var temp = data.delivery_date.split(" ");
+                $('#delivery_date').val(temp[0]);
+                var temp1 = data.receive_date.split(" ");
+                $('#receive_date').val(temp1[0]);
                 $('#vendors_id').val(data.vendors_id);          
                 $("#form").validator();
                 $('#form-title').text('Edit Form');

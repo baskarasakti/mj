@@ -20,7 +20,7 @@ class Hpp extends MY_Controller {
         $table = new TableField();
         $table->addColumn('id', '', 'ID');
 		$table->addColumn('code', '', 'Code');            
-		$table->addColumn('pcode', '', 'Product Code');           
+		$table->addColumn('wocode', '', 'Work Order');           
 		$table->addColumn('name', '', 'Product');            
 		$table->addColumn('material_cost', '', 'Material Cost');            
 		$table->addColumn('btkl', '', 'BTKL');            
@@ -73,9 +73,9 @@ class Hpp extends MY_Controller {
 			$row = array();
 			$row['id'] = $value->id;
 			$row['code'] = $value->code;
-			$row['pcode'] = $value->pcode;
+			$row['wocode'] = $value->wocode;
 			$row['name'] = $value->name;
-			$row['material_cost'] = $this->get_material_cost($value->id);
+			$row['material_cost'] = $this->get_material_cost($value->id, $value->wocode);
 			$row['btkl'] = $this->hm->get_total_btkl($value->id);;
 			$row['bop'] = $this->hm->get_total_bop($value->id);
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="prints('.$value->id.')" type="button"><i class="fa fa-print"></i></button>
@@ -93,10 +93,9 @@ class Hpp extends MY_Controller {
 	function add(){
 		$code = $this->hm->generate_id();
 		$data = array(
-			'month' => $this->input->post('month'),
-			'year' => $this->input->post('year'),
 			'code' => $code,
 			'products_id' => $this->input->post('products_id'),
+			'work_orders_id' => $this->input->post('work_orders_id'),
 			'penyusutan' => 0,
 			'listrik' => 0,
 			'lain_lain' => 0
@@ -126,10 +125,10 @@ class Hpp extends MY_Controller {
 		echo json_encode(array('status' => $status));
 	}
 
-	function jsgrid_functions($id=-1){
+	function jsgrid_functions($id=-1, $wo_id){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->hm->get_material_list($id);
+			$result = $this->hm->get_material_list($id, $wo_id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
@@ -160,7 +159,7 @@ class Hpp extends MY_Controller {
 			$data = array();
 			
 			if(isset($details->products_id)){
-				$wos = $this->hm->get_all_wos($details->month, $details->year, $details->products_id);
+				$wos = $this->hm->get_all_wos($details->products_id);
 				$product_result = $this->hm->get_product_result($wos, $details->products_id);
 				foreach($status as $value){
 					$row = array();
@@ -205,9 +204,9 @@ class Hpp extends MY_Controller {
 		echo json_encode(array('status' => $status));
    }
 
-   public function get_material_cost($id)
+   public function get_material_cost($id, $wo_id)
    {
-		$result = $this->hm->get_material_list($id);
+		$result = $this->hm->get_material_list($id, $wo_id);
 		$total = 0;
 		foreach($result as $value){
 			$unit_price = round($this->hm->get_per_pieces_price($value->id), 2);

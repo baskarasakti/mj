@@ -72,7 +72,7 @@ class Purchasing extends MY_Controller {
 			$row = array();
 			$row['id'] = $value->id;
 			$row['code'] = $value->code;
-			$row['delivery_date'] = $value->delivery_date;
+			$row['delivery_date'] = $this->toFormat($value->delivery_date, "Y-m-d");
 			$row['vat'] = $value->vat;
 			$row['vendor'] = $value->vendor;
 			$row['actions'] = '<button class="btn btn-sm btn-info" onclick="prints('.$value->id.')" type="button"><i class="fa fa-print"></i></button>

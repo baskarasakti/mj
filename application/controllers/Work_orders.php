@@ -210,9 +210,24 @@ class Work_orders extends MY_Controller {
 		echo json_encode(array('status' => $status));
 	}
 
-	public function get_product_by_month_year()
+	public function get_work_orders_by_month_year()
 	{
-		$result = $this->wodm->get_product_by_month_year();
+		$result = $this->wodm->get_work_orders_by_month_year();
+		$data = array();
+		foreach($result as $value){
+			$row = array();
+			$row['id'] = $value->id;
+			$row['code'] = $value->code;
+			$data[] = $row;
+		}
+
+		$result = $data;
+		echo json_encode($result);
+	}
+
+	public function get_product_by_month_year($wo_id)
+	{
+		$result = $this->wodm->get_product_by_month_year($wo_id);
 		$data = array();
 		foreach($result as $value){
 			$row = array();

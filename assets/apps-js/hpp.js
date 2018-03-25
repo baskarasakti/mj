@@ -28,6 +28,10 @@ $(document).ready(function() {
 	form_drop_down("#year", "year");
 
 	$("#month, #year").change(function(){
+		populate_work_orders_select("");
+	});
+
+	$("#work_orders_id").change(function(){
 		populate_product_select("");
 	});
 
@@ -50,7 +54,7 @@ $(document).ready(function() {
         	loadData: function(filter) {
         		return $.ajax({
         			type: "GET",
-        			url: "hpp/jsgrid_functions/"+$('[name="asd"]').val(),
+        			url: "hpp/jsgrid_functions/"+$('[name="asd"]').val()+"/"+$('[name="wo_id"]').val(),
         			data: filter,
         			dataType:"JSON"
         		});
@@ -401,6 +405,7 @@ function edit(id){
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				$('[name="asd"]').val(id);
+				$('[name="wo_id"]').val(data.work_orders_id);
 				$('#jsGrid').jsGrid('loadData');
 				$('#jsGrid2').jsGrid('loadData');
 				$('#jsGrid3').jsGrid('loadData');
@@ -437,9 +442,29 @@ function remove(id){
 }
 
 
+function populate_work_orders_select(selected){
+	$.ajax({
+		url: site_url+"work_orders/get_work_orders_by_month_year",
+		type: "GET",
+		data:{
+			month:$("#month").val(),
+			year:$("#year").val()
+		},
+		dataType: "JSON",
+		success:function(resp){
+			var option = "<option value='' selected>Choose..</option>";
+			$.each(resp, function(k, v){
+				option += "<option value='"+v.id+"'>"+v.code+"</option>";
+			});
+			$("#work_orders_id").html(option);
+			$("#work_orders_id").val(selected);
+		}
+	});
+}
+
 function populate_product_select(selected){
 	$.ajax({
-		url: site_url+"work_orders/get_product_by_month_year",
+		url: site_url+"work_orders/get_product_by_month_year/"+$("#work_orders_id").val(),
 		type: "GET",
 		data:{
 			month:$("#month").val(),
