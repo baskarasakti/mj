@@ -22,7 +22,7 @@ $(document).ready(function() {
         deferRender: true,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         ajax: {
-            url: site_url+'material_inventory/view_data',
+            url: site_url+'unfinished_product_inventory/view_data',
             type: "POST",
             dataSrc : 'data',
             data: function ( d ) {
@@ -32,8 +32,8 @@ $(document).ready(function() {
         columns: columns,
         columnDefs: [ 
 			{ className: "dt-body-right", targets: right_align },
-			{ "orderable": false, targets : [0, 4, 5, 6, -1]  },
-			{ "visible": false, targets : [1]  } 
+			{ "orderable": false, targets : [-1]  },
+			{ "visible": false, targets : [0]  } 
         ]
 	});
 	
@@ -84,7 +84,7 @@ function form_jsgrid(id){
         	loadData: function(filter) {
         		return $.ajax({
         			type: "GET",
-        			url: "material_inventory/jsgrid_functions/"+id,
+        			url: "unfinished_product_inventory/jsgrid_functions/"+id,
         			data: filter,
         			dataType:"JSON"
         		});
@@ -135,9 +135,9 @@ function reload_table(){
 function save_data(){
 	var url;
 	if(action == "Add"){
-		url = site_url+"material_inventory/add";
+		url = site_url+"unfinished_product_inventory/add";
 	}else{
-		url = site_url+"material_inventory/update";
+		url = site_url+"unfinished_product_inventory/update";
 	}
    
 	var data = $("#form").serializeArray();
@@ -177,15 +177,15 @@ function save_data(){
 function edit(id){
 	action = "Edit";
 	$.ajax({
-			url : site_url+"material_inventory/get_material_inventory/"+id,
+			url : site_url+"unfinished_product_inventory/get_product_inventory/"+id,
 			type: "GET",
 			dataType: "JSON",
 			success: function(data)
 			{
 				form_jsgrid(id);
 				$('#jsGrid').jsGrid('loadData');
-				$('#materials').val(data.name);
-				$('#materials_id').val(data.id);
+				$('#products').val(data.name);
+				$('#products_id').val(data.id);
 				$('#initial_qty').val(data.initial_qty);
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
@@ -208,7 +208,7 @@ function remove(id){
 		},
 		function(){
 			$.ajax({
-				url : site_url+"material_inventory/delete/"+id,
+				url : site_url+"unfinished_product_inventory/delete/"+id,
 				type: "GET",
 				dataType: "JSON",
 				success: function(data)

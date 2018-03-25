@@ -246,7 +246,7 @@ class Product_movement_detail extends MY_Controller {
 			$count++;
 		}
 
-		if ($this->input->post('processes_id') == 0) {
+		if ($this->input->post('process_id') == 0) {
 			$product_movement = $this->pmm->get_by_id('id', $this->input->post('pm_id'));
 			$data1 = array(
 				'product_movement_id' => $this->input->post('pm_id'),

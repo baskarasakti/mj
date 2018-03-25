@@ -98,6 +98,7 @@ function form_jsgrid(id){
         { name: "qty", title:"Qty", type: "text", width: 200 }, 
         { name: "type", title:"Type", type: "text", width: 200 },  
         { name: "status", title:"Status", type: "text", width: 200 },  
+        { name: "code", title:"Code", type: "text", width: 200 },  
         { type: "control", deleteButton: false, editButton: false } 
         ] 
     }); 
@@ -185,6 +186,7 @@ function edit(id){
 				$('#jsGrid').jsGrid('loadData');
 				$('#products').val(data.name);
 				$('#products_id').val(data.id);
+				$('#initial_qty').val(data.initial_qty);
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				show_hide_form(true);

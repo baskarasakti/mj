@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Product_inventory extends MY_Controller {
+class Unfinished_product_inventory extends MY_Controller {
 
 	function  __construct() {
 		parent::__construct();
 			$this->load->helper('tablefield');
-			$this->load->model('product_inventory_model', 'pi');
+			$this->load->model('unfinished_product_inventory_model', 'upi');
 	}
 	
 	private function get_column_attr(){
@@ -31,7 +31,7 @@ class Product_inventory extends MY_Controller {
     }
 
     public function get_product_categories(){
-		$result = $this->pi->get_all_data();
+		$result = $this->upi->get_all_data();
 		$data = array();
 		$count = 0;
 		foreach($result as $value){
@@ -48,8 +48,8 @@ class Product_inventory extends MY_Controller {
 	
 	public function index()
 	{
-		$data['title'] = "ERP | Product Inventory";
-		$data['page_title'] = "Product Inventory";
+		$data['title'] = "ERP | Unfinished Product Inventory";
+		$data['page_title'] = "Unfinished Product Inventory";
 		$data['table_title'] = "List Item";		
 		$data['breadcumb']  = array("Inventory", "Product Inventory");
 		$data['page_view']  = "inventory/product_inventory";		
@@ -64,7 +64,7 @@ class Product_inventory extends MY_Controller {
 	}
 
 	public function view_data(){
-		$result = $this->pi->get_output_data();
+		$result = $this->upi->get_output_data();
         $data = array();
         $count = 0;
         foreach($result['data'] as $value){
@@ -86,7 +86,7 @@ class Product_inventory extends MY_Controller {
 	}
 
 	public function get_product_inventory($id){
-		$result = $this->pi->get_product_inventory($id);
+		$result = $this->upi->get_product_inventory($id);
         echo json_encode($result);
 	}
 
@@ -98,12 +98,12 @@ class Product_inventory extends MY_Controller {
 			'qty' => $this->normalize_text($this->input->post('qty')),
 			'adjustment' => 1
 		);
-		$inserted = $this->pi->add($data);
+		$inserted = $this->upi->add($data);
 		echo json_encode(array('status' => $inserted));
 	}
 
 	function get_by_id($id){
-		$detail = $this->pi->get_by_id('products_id', $id);
+		$detail = $this->upi->get_by_id('products_id', $id);
 		echo json_encode($detail);
 	}
 

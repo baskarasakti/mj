@@ -43,6 +43,10 @@
 				<div class="panel-wrapper collapse in block-div" aria-expanded="true">
 					<div class="panel-body">
 					<form>
+						<div class="form-group">
+							<label>Initial Stock</label>
+							<input type="text" name="initial_qty" id="initial_qty" readonly>
+						</div>
 						<div class="form-group text-right">
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>
 						</div>

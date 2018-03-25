@@ -127,12 +127,16 @@ class Material_inventory extends MY_Controller {
 				$row['qty'] = $value->qty;
 				if ($value->receive_details_id != null) {
 					$row['status'] = "receiving";
+					$row['code'] = $value->rcode;
 				} elseif ($value->p_return_details_id) {
-					$row['status'] = "return";
+					$row['status'] = "purchase return";
+					$row['code'] = $value->prcode;
 				} elseif ($value->material_usages_detail_id) {
 					$row['status'] = "pickup/return";
+					$row['code'] = $value->mucode;
 				} elseif ($value->adjustment) {
 					$row['status'] = "adjustment";
+					$row['code'] = "-";
 				}
 				$data[] = $row;
 				$count++;

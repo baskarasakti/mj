@@ -11,7 +11,7 @@ class Material_inventory_model extends MY_Model {
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select(array('m.id as id', 'mc.name as category','SUM(CASE WHEN mi.type = "in" THEN mi.qty ELSE 0 END) as debit', 'SUM(CASE WHEN mi.type = "out" THEN mi.qty ELSE 0 END) as credit','SUM(CASE WHEN mi.type = "in" THEN mi.qty ELSE 0 END)-SUM(CASE WHEN mi.type = "out" THEN mi.qty ELSE 0 END) as qty', 'm.name as name'));
+		$this->db->select(array('m.id as id', 'mc.name as category','SUM(CASE WHEN mi.type = "in" THEN mi.qty ELSE 0 END)+m.initial_qty as debit', 'SUM(CASE WHEN mi.type = "out" THEN mi.qty ELSE 0 END) as credit','SUM(CASE WHEN mi.type = "in" THEN mi.qty ELSE 0 END)+m.initial_qty-SUM(CASE WHEN mi.type = "out" THEN mi.qty ELSE 0 END) as qty', 'm.name as name'));
 		$this->db->from($this->table. " mi");
 		$this->db->join('materials m', 'm.id = mi.materials_id');
 		$this->db->join('material_categories mc', 'm.material_categories_id = mc.id');
@@ -53,16 +53,20 @@ class Material_inventory_model extends MY_Model {
 
 	public function get_material_inventories($id)
 	{
-		$this->db->select(array('m.id as id', 'm.name as name', 'mi.date as date', 'mi.type as type', 'mi.qty as qty', 'mi.receive_details_id', 'mi.p_return_details_id', 'mi.material_usages_detail_id', 'adjustment'),false);
+		$this->db->select(array('m.id as id', 'm.name as name', 'mi.date as date', 'mi.type as type', 'mi.qty as qty', 'mi.receive_details_id', 'mi.p_return_details_id', 'mi.material_usages_detail_id', 'adjustment', 'm.initial_qty', 'r.code as rcode', 'pr.code as prcode', 'mu.code_pick as mucode'),false);
 		$this->db->from($this->table. " mi");
-		$this->db->join('materials m', 'm.id = mi.materials_id');
+		$this->db->join('materials m', 'mi.materials_id = m.id', 'left');
+		$this->db->join('receiving r', 'mi.receive_details_id = r.id', 'left');
+		$this->db->join('purchase_return pr', 'mi.p_return_details_id = pr.id', 'left');
+		$this->db->join('material_usages mu', 'mi.material_usages_detail_id = mu.id', 'left');
+		$this->db->join('work_orders wo', 'mu.work_orders_id = wo.id', 'left');
 		$this->db->where('mi.materials_id', $id);
 		return $this->db->get()->result();
 	}
 
 	public function get_material_inventory($id)
 	{
-		$this->db->select(array('m.id as id', 'm.name as name', 'mi.date as date', 'mi.type as type', 'mi.qty as qty', 'mi.receive_details_id', 'mi.p_return_details_id', 'mi.material_usages_detail_id'),false);
+		$this->db->select(array('m.id as id', 'm.name as name', 'mi.date as date', 'mi.type as type', 'mi.qty as qty', 'mi.receive_details_id', 'mi.p_return_details_id', 'mi.material_usages_detail_id', 'm.initial_qty'),false);
 		$this->db->from($this->table. " mi");
 		$this->db->join('materials m', 'm.id = mi.materials_id');
 		$this->db->where('mi.materials_id', $id);
