@@ -53,7 +53,7 @@ class Unfinished_product_inventory extends MY_Controller {
 		$data['table_title'] = "List Item";		
 		$data['breadcumb']  = array("Inventory", "Unfinished Product Inventory");
 		$data['page_view']  = "inventory/unfinished_product_inventory";		
-		$data['js_asset']   = "infinished-product-inventory";	
+		$data['js_asset']   = "unfinished-product-inventory";	
 		$data['columns']    = $this->get_column_attr();
 		$data['columns1']    = $this->get_column_attr1();
 		$data['csrf'] = $this->csrf;		

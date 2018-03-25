@@ -14,6 +14,7 @@ class Product_movement_detail extends MY_Controller {
 		$this->load->model('work_order_detail_model', 'wodm');
 		$this->load->model('products_model', 'pm');	
 		$this->load->model('product_inventory_model', 'pim');	
+		$this->load->model('unfinished_product_inventory_model', 'upim');	
 		$this->load->model('machine_model', 'mm');	
 	}
 
@@ -132,9 +133,9 @@ class Product_movement_detail extends MY_Controller {
 		);
 
 		$data = $this->add_adding_detail($data);
+		$codes = $this->generate_product_code($woid, $pid);
 		$inserted = $this->pmm->add_id($data);
 
-		$codes = $this->generate_product_code($woid, $pid);
 		for ($i=0; $i < $this->input->post('estimate'); $i++) { 
 			$data = array(
 				'code' => $codes.sprintf("%03s", $i+1),
@@ -256,6 +257,16 @@ class Product_movement_detail extends MY_Controller {
 				'products_id' => $product_movement->products_id
 			);
 			$this->pim->add($data1);
+		} elseif ($this->input->post('process_id') == -1) {
+			$product_movement = $this->pmm->get_by_id('id', $this->input->post('pm_id'));
+			$data1 = array(
+				'product_movement_id' => $this->input->post('pm_id'),
+				'qty' => $count,
+				'type' => 'in',
+				'date' => date('Y-m-d H:i:s'),
+				'products_id' => $product_movement->products_id
+			);
+			$this->upim->add($data1);
 		}
 
 		echo json_encode(array('status' => $status));
