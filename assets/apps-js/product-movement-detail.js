@@ -336,7 +336,9 @@ function save_data(){
 
 function edit(woid, pid, prid, pmid){
     action = "Edit";
+    $('#processes_id').prop('disabled', false);
     $('#machine_id').prop('disabled', false);
+    $('#saveBtn1').prop('disabled', false);
     $('[name="prid"]').val(prid);
     $('[name="pm_id"]').val(pmid);
     $("#form1").validator();
@@ -346,7 +348,7 @@ function edit(woid, pid, prid, pmid){
     if (prid == 0 || prid == -1) {
         $('[name="processes_id"]').val(prid);
         $('#processes_id').prop('disabled', 'disabled');
-        $('#saveBtn1').prop('disabled', 'disabled');
+        $('#machine_id').prop('disabled', 'disabled');
         $('#saveBtn1').prop('disabled', 'disabled');
     }
 }

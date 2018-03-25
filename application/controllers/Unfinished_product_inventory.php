@@ -85,8 +85,8 @@ class Unfinished_product_inventory extends MY_Controller {
         echo json_encode($result);
 	}
 
-	public function get_product_inventory($id){
-		$result = $this->upi->get_product_inventory($id);
+	public function get_unfinished_product_inventory($id){
+		$result = $this->upi->get_unfinished_product_inventory($id);
         echo json_encode($result);
 	}
 
@@ -111,19 +111,19 @@ class Unfinished_product_inventory extends MY_Controller {
 		$data = array(
 			'name' => $this->normalize_text($this->input->post('name'))
 		);
-		$status = $this->pi->update('id', $this->input->post('change_id'), $data);
+		$status = $this->upi->update('id', $this->input->post('change_id'), $data);
 		echo json_encode(array('status' => $status));
    }
 
 	function delete($id){        
-		$status = $this->pi->delete('id', $id);
+		$status = $this->upi->delete('id', $id);
 		echo json_encode(array('status' => $status));
 	}
 
 	function jsgrid_functions($id = -1){
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			$result = $this->pi->get_product_inventories($id);
+			$result = $this->upi->get_unfinished_product_inventories($id);
 			$data = array();
 			$count = 0;
 			foreach($result as $value){
@@ -133,12 +133,14 @@ class Unfinished_product_inventory extends MY_Controller {
 				$row['date'] = $value->date;
 				$row['type'] = $value->type;
 				$row['qty'] = $value->qty;
-				if ($value->product_shipping_detail_id != null) {
-					$row['status'] = "shipping";
-					$row['code'] = $value->scode;
-				} elseif ($value->s_return_details_id) {
-					$row['status'] = "return";
-					$row['code'] = $value->srcode;
+				if ($value->nonmaterial_usages_detail_id != 0) {
+					if ($value->type == "out") {
+						$row['status'] = "pickup";
+						$row['code'] = $value->mucodepick;
+					} elseif ($value->type == "in") {
+						$row['status'] = "return";
+						$row['code'] = $value->mucodereturn;
+					}
 				} elseif ($value->product_movement_id) {
 					$row['status'] = "production";
 					$row['code'] = $value->wocode;

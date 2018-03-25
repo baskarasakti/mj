@@ -50,18 +50,21 @@ class Unfinished_product_inventory_model extends MY_Model {
 		}
 	}
 
-	public function get_product_inventories($id)
+	public function get_unfinished_product_inventories($id)
 	{
-		$this->db->select(array('p.id as id', 'p.name as name', 'upi.date as date', 'upi.type as type', 'upi.qty as qty', 'upi.nonmaterial_usages_detail_id', 'upi.product_movement_id'),false);
+		$this->db->select(array('p.id as id', 'p.name as name', 'upi.date as date', 'upi.type as type', 'upi.qty as qty', 'upi.nonmaterial_usages_detail_id', 'upi.product_movement_id', 'p.initial_half_qty', 'wo.code as wocode', 'mu.code_pick as mucodepick', 'mu.code_return as mucodereturn'),false);
 		$this->db->from($this->table. " upi");
 		$this->db->join('products p', 'upi.products_id = p.id', 'left');
+		$this->db->join('product_movement pm', 'upi.product_movement_id = pm.id', 'left');
+		$this->db->join('work_orders wo', 'pm.work_orders_id = wo.id', 'left');
+		$this->db->join('material_usages mu', 'upi.nonmaterial_usages_detail_id = mu.id', 'left');
 		$this->db->where('upi.products_id', $id);
 		return $this->db->get()->result();
 	}
 
-	public function get_product_inventory($id)
+	public function get_unfinished_product_inventory($id)
 	{
-		$this->db->select(array('p.id as id', 'p.name as name', 'upi.date as date', 'upi.type as type', 'upi.qty as qty', 'upi.nonmaterial_usages_detail_id', 'upi.product_movement_id'),false);
+		$this->db->select(array('p.id as id', 'p.name as name', 'upi.date as date', 'upi.type as type', 'upi.qty as qty', 'upi.nonmaterial_usages_detail_id', 'upi.product_movement_id', 'p.initial_half_qty'),false);
 		$this->db->from($this->table. " upi");
 		$this->db->join('products p', 'upi.products_id = p.id', 'left');
 		$this->db->where('upi.products_id', $id);

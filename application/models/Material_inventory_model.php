@@ -53,7 +53,7 @@ class Material_inventory_model extends MY_Model {
 
 	public function get_material_inventories($id)
 	{
-		$this->db->select(array('m.id as id', 'm.name as name', 'mi.date as date', 'mi.type as type', 'mi.qty as qty', 'mi.receive_details_id', 'mi.p_return_details_id', 'mi.material_usages_detail_id', 'adjustment', 'm.initial_qty', 'r.code as rcode', 'pr.code as prcode', 'mu.code_pick as mucode'),false);
+		$this->db->select(array('m.id as id', 'm.name as name', 'mi.date as date', 'mi.type as type', 'mi.qty as qty', 'mi.receive_details_id', 'mi.p_return_details_id', 'mi.material_usages_detail_id', 'adjustment', 'm.initial_qty', 'r.code as rcode', 'pr.code as prcode', 'mu.code_pick as mucodepick', 'mu.code_return as mucodereturn'),false);
 		$this->db->from($this->table. " mi");
 		$this->db->join('materials m', 'mi.materials_id = m.id', 'left');
 		$this->db->join('receiving r', 'mi.receive_details_id = r.id', 'left');

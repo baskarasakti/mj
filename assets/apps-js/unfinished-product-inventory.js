@@ -177,7 +177,7 @@ function save_data(){
 function edit(id){
 	action = "Edit";
 	$.ajax({
-			url : site_url+"unfinished_product_inventory/get_product_inventory/"+id,
+			url : site_url+"unfinished_product_inventory/get_unfinished_product_inventory/"+id,
 			type: "GET",
 			dataType: "JSON",
 			success: function(data)
@@ -186,7 +186,7 @@ function edit(id){
 				$('#jsGrid').jsGrid('loadData');
 				$('#products').val(data.name);
 				$('#products_id').val(data.id);
-				$('#initial_qty').val(data.initial_qty);
+				$('#initial_qty').val(data.initial_half_qty);
 				$("#form").validator();
 				$('#form-title').text('Edit Form');
 				show_hide_form(true);
