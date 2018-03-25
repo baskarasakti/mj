@@ -109,9 +109,9 @@ class Vendors extends MY_Controller {
 
 	function add(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
-			'description' => $this->normalize_text($this->input->post('description')),
-			'address' => $this->normalize_text($this->input->post('address')),
+			'name' => $this->input->post('name'),
+			'description' => $this->input->post('description'),
+			'address' => $this->input->post('address'),
 			'telp' => $this->input->post('telp'),
 			'ppn' => $this->input->post('vat'),
 			'created_at' => date("Y-m-d H:m:s")
@@ -127,9 +127,9 @@ class Vendors extends MY_Controller {
 
 	function update(){
 		$data = array(
-			'name' => $this->normalize_text($this->input->post('name')),
-			'description' => $this->normalize_text($this->input->post('description')),
-			'address' => $this->normalize_text($this->input->post('address')),
+			'name' => $this->input->post('name'),
+			'description' => $this->input->post('description'),
+			'address' =>$this->input->post('address'),
 			'telp' => $this->input->post('telp'),
 			'ppn' => $this->input->post('vat'),
 			'updated_at' => date("Y-m-d H:m:s")

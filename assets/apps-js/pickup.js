@@ -196,7 +196,6 @@ $(document).ready(function() {
 			success: function(data)
 			{
 				if(data.id){
-					
 					method = "";
 					$('#form2')[0].reset();
 					$('#jsGrid').jsGrid('loadData');
@@ -210,7 +209,8 @@ $(document).ready(function() {
 
 	 var get_pick_detail = function(data){
 		$('[name="details_id"]').val(data.id);
-		$('[name="materials_id"]').val(data.materials_id);
+		$('[name="item_name"]').val(data.name);
+		$('[name="item_id"]').val(data.materials_id);
 		$('[name="qty"]').val(data.qty);
 		$('[name="note"]').val(data.note);
 	 }
