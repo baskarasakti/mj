@@ -61,6 +61,7 @@ class Vendors_model extends MY_Model {
 	}
 
 	public function populate_autocomplete(){
+		$this->db->like('name', $this->input->get('term'), 'both');
 		return $this->db->get($this->_t)->result();
 	}
 

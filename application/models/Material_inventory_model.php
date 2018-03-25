@@ -73,31 +73,36 @@ class Material_inventory_model extends MY_Model {
 		return $this->db->get()->row();
 	}
 
-	public function material_usage_change($id, $material_id, $detail){
+	public function material_usage_change($id, $material_id, $detail, $type){
 		$this->db->where('material_usages_detail_id', $id);
 		$this->db->where('materials_id', $material_id);
+		$this->db->where('type', $type);
 		$row = $this->db->get($this->_t)->row();
 		if(isset($row)){
-			$type = "in";
-			if($detail->qty_pick > $detail->qty_return){
-				$type = "out";
+			$qty = 0;
+			if($type == "out"){
+				$qty = $detail->qty_pick;
+			}else{
+				$qty = $detail->qty_return;
 			}
 			$data = array(
 				'type' => $type,
-				'qty' => abs($detail->qty_pick - $detail->qty_return),
+				'qty' =>  $qty
 			);
 			$this->db->where('id', $row->id);
 			$status = $this->db->update($this->_t, $data);
 		}else{
-			$type = "in";
-			if($detail->qty_pick > $detail->qty_return){
-				$type = "out";
+			$qty = 0;
+			if($type == "out"){
+				$qty = $detail->qty_pick;
+			}else{
+				$qty = $detail->qty_return;
 			}
 			$data = array(
 				'date' => date("Y-m-d h:m:s"),
 				'type' => $type,
 				'material_usages_detail_id' => $id,
-				'qty' => abs($detail->qty_pick - $detail->qty_return),
+				'qty' => $qty,
 				'materials_id' => $detail->materials_id
 			);
 			$status = $this->db->insert($this->_t, $data);

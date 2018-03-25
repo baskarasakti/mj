@@ -124,6 +124,7 @@
 										<input id="note" name="note" class="form-control" placeholder="Note" type="text">
 										<span class="help-block"> </span> </div>
 								</div>
+								<input name="item_id" type="hidden">
 								<input type="hidden" name="details_id">
 								<div class="col-md-1">
 									<div class="form-group">
@@ -135,7 +136,6 @@
 								</div>
 								<!--/span-->
 							</div>
-							<input name="item_id" type="hidden">
 						</form>
 						<div class="table-responsive"> 
 			              <div id="jsGrid"></div> 

@@ -148,7 +148,7 @@ class Return_material extends MY_Controller {
 		$status = $this->mrd->update_id('id',$this->input->post('details_id'),$data);
 		$detail = $this->mrd->get_by_id('id',$this->input->post('details_id'));
 		if(isset($status)){
-			$status = $this->mi->material_usage_change($this->input->post('details_id'), $this->input->post('materials_id'), $detail);
+			$status = $this->mi->material_usage_change($this->input->post('details_id'), $this->input->post('materials_id'), $detail, "in");
 		}
 		echo json_encode(array('status'=> $status));
 	}
