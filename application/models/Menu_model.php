@@ -110,6 +110,9 @@ class Menu_model extends MY_Model {
 				),
 				'Product Inventory' => array(
 					'link' => 'product_inventory',
+				),
+				'Unfinished Product Inventory' => array(
+					'link' => 'unfinished_product_inventory',
 				)
 			)
 		),

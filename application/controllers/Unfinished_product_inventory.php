@@ -51,9 +51,9 @@ class Unfinished_product_inventory extends MY_Controller {
 		$data['title'] = "ERP | Unfinished Product Inventory";
 		$data['page_title'] = "Unfinished Product Inventory";
 		$data['table_title'] = "List Item";		
-		$data['breadcumb']  = array("Inventory", "Product Inventory");
-		$data['page_view']  = "inventory/product_inventory";		
-		$data['js_asset']   = "product-inventory";	
+		$data['breadcumb']  = array("Inventory", "Unfinished Product Inventory");
+		$data['page_view']  = "inventory/unfinished_product_inventory";		
+		$data['js_asset']   = "infinished-product-inventory";	
 		$data['columns']    = $this->get_column_attr();
 		$data['columns1']    = $this->get_column_attr1();
 		$data['csrf'] = $this->csrf;		
