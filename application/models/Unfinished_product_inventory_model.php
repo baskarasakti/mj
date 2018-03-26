@@ -71,4 +71,42 @@ class Unfinished_product_inventory_model extends MY_Model {
 		return $this->db->get()->row();
 	}
 
+	public function material_usage_change($id, $products_id, $detail, $type){
+		$this->db->where('nonmaterial_usages_detail_id', $id);
+		$this->db->where('products_id', $products_id);
+		$this->db->where('type', $type);
+		$row = $this->db->get($this->_t)->row();
+		if(isset($row)){
+			$qty = 0;
+			if($type == "out"){
+				$qty = $detail->qty_pick;
+			}else{
+				$qty = $detail->qty_return;
+			}
+			$data = array(
+				'date' => date("Y-m-d h:m:s"),
+				'type' => $type,
+				'qty' =>  $qty
+			);
+			$this->db->where('id', $row->id);
+			$status = $this->db->update($this->_t, $data);
+		}else{
+			$qty = 0;
+			if($type == "out"){
+				$qty = $detail->qty_pick;
+			}else{
+				$qty = $detail->qty_return;
+			}
+			$data = array(
+				'date' => date("Y-m-d h:m:s"),
+				'type' => $type,
+				'nonmaterial_usages_detail_id' => $id,
+				'qty' => $qty,
+				'products_id' => $detail->products_id
+			);
+			$status = $this->db->insert($this->_t, $data);
+		}
+		return true;
+	}
+
 }

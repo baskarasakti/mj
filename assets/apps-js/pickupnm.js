@@ -1,7 +1,7 @@
 var table;
 var action;
 var method;
-var material = 1;
+var material = 0;
 
 $(document).ready(function() {
 
@@ -17,13 +17,10 @@ $(document).ready(function() {
 		maxShowItems: 5,
 		source: function(request,response){
 			$.ajax({
-				url: site_url+"products/get_product_materials/",
+				url: site_url+"products/populate_autocomplete/",
 				type:"GET",
 				data:{
 					term:request.term, 
-					products_id:$('[name="products_id"]').val(),
-					usage_categories_id: $('[name="usage_categories_id"]').val(),
-					material:material
 				},
 				success:response,
 				dataType:"json"
@@ -54,7 +51,7 @@ $(document).ready(function() {
         	loadData: function(filter) {
         		return $.ajax({
         			type: "GET",
-        			url: "pickup_material/jsgrid_functions/"+$('[name="asd"]').val(),
+        			url: "pickup_nonmaterial/jsgrid_functions/"+$('[name="asd"]').val(),
         			data: filter,
         			dataType:"JSON"
         		});
@@ -70,7 +67,7 @@ $(document).ready(function() {
 
         fields: [ 
         { name: "id", visible: false }, 
-        { name: "materias_id", type: "text", visible:false }, 
+        { name: "products_id", type: "text", visible:false }, 
         { name: "name", title:"Item Name", type: "text", width: 150 }, 
 		{ name: "qty", title:"Qty", type: "number", width: 50 }, 
 		{ name: "symbol", title:"Unit", type: "text" },  
@@ -134,7 +131,7 @@ $(document).ready(function() {
         deferRender: true,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         ajax: {
-            url: site_url+'pickup_material/view_data',
+            url: site_url+'pickup_nonmaterial/view_data',
             type: "POST",
             dataSrc : 'data',
             data: function ( d ) {
@@ -193,9 +190,9 @@ $(document).ready(function() {
 		data.push({name: 'csrf_token',value: $("[name='csrf_token']").val()});
 		data.push({name: 'material_usages_id',value: $("[name='asd']").val()});
 		data.push({name: 'material',value: material});
-		var url = site_url+"pickup_material/update_detail";
+		var url = site_url+"pickup_nonmaterial/update_detail";
 		if(method != "Edit"){
-			url = site_url+"pickup_material/add_detail";
+			url = site_url+"pickup_nonmaterial/add_detail";
 		}
 		$.ajax({
 			url : url,
@@ -219,7 +216,7 @@ $(document).ready(function() {
 	 var get_pick_detail = function(data){
 		$('[name="details_id"]').val(data.id);
 		$('[name="item_name"]').val(data.name);
-		$('[name="item_id"]').val(data.materials_id);
+		$('[name="item_id"]').val(data.products_id);
 		$('[name="qty"]').val(data.qty);
 		$('[name="note"]').val(data.note);
 	 }
@@ -324,9 +321,9 @@ function edit(id){
 			type: "GET",
 			dataType: "JSON",
 			success: function(data)
-			{
+			{			
 				var temp = data.date.split(" ");
-				$('[name="date"]').val(temp[0]);		
+				$('[name="date"]').val(temp[0]);
 				$('#code').val(data.code_pick);			
 				$('#work_orders_code').val(data.work_orders_code);			
 				$('#work_orders_id').val(data.work_orders_id);			
@@ -413,7 +410,7 @@ function printEvidence(id){
 }
 
 function reset_material_choice(){
-	material = 1;
+	material = 0;
 	$('input[name="material"]').removeAttr('checked').iCheck('update');
 }
 

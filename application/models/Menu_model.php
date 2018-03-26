@@ -94,6 +94,12 @@ class Menu_model extends MY_Model {
 				'Return Material' => array(
 					'link' => 'return_material',
 				),
+				'Pickup Non Material' => array(
+					'link' => 'pickup_nonmaterial',
+				),
+				'Return Non Material' => array(
+					'link' => 'return_nonmaterial',
+				),
 				'Product Movement' => array(
 					'link' => 'product_movement',
 				),

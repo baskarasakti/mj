@@ -72,4 +72,5 @@ class Product_inventory_model extends MY_Model {
 		return $this->db->get()->row();
 	}
 
+
 }

@@ -16,7 +16,7 @@
 							<h3>BUKTI PENGAMBILAN MATERIAL <?= $material_usage->usage_categories ?></h3>
 							<h4>No: <?= $material_usage->code ?></h4>
 						</div>
-						<p class="pull-left">tanggal: <?= $material_usage->date ?></p>
+						<p class="pull-left">tanggal: <?= explode(" ", $material_usage->date)[0] ?></p>
 						<p class="pull-right">No. SPK: <?= $material_usage->wocode ?></p>
 					</div>
 					<div class="col-md-12">
@@ -25,10 +25,10 @@
 								<thead>
 									<tr>
 										<th class="text-center">No. </th>
-										<th>NAMA BARANG</th>
-										<th class="text-right">Qty</th>
-										<th class="text-right">Uom</th>
-										<th class="text-right">Keterangan</th>
+										<th class="text-center">NAMA BARANG</th>
+										<th class="text-center">Qty</th>
+										<th class="text-center">Uom</th>
+										<th class="text-center">Keterangan</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -39,9 +39,9 @@
 										 	<tr>
 												<td class="text-center"><?= $i ?></td>
 												<td><?= $q->name ?></td>
-												<td class="text-right"><?= $q->qty ?></td>
-												<td class="text-right"><?= $q->symbol ?></td>
-												<td class="text-right"></td>
+												<td class="text-right"><?=  number_format($q->qty, 0, ",", ".")  ?></td>
+												<td class="text-center"><?= $q->symbol ?></td>
+												<td class="text-left">><?= $q->note ?></td>
 											</tr>
 										 	<?php
 										$i++;}

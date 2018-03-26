@@ -1,19 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Material_return_model extends MY_Model {
+class Nonmaterial_usage_model extends MY_Model {
 
 	protected $_t = 'material_usages';
 		
 	var $table = 'material_usages';
-	var $column = array('mu.id','mu.date', 'code_pick', 'code_return', 'wo.code', 'p.name'); //set column field database for order and search
+	var $column = array('mu.id','mu.date', 'mu.code_pick', 'wo.code', 'p.name'); //set column field database for order and search
     var $order = array('mu.id' => 'asc'); // default order 
 	
 	protected function _get_datatables_query() {
          
-		$this->db->select('mu.id as id, mu.date as date, code_pick, code_return, wo.code as wocode, p.name as name');
+		$this->db->select('mu.id as id, mu.date as date, mu.code_pick as code, wo.code as wocode, p.name as name');
 		$this->db->from($this->_t.' mu');
-		$this->db->where('mu.material',1);
+		$this->db->where('mu.material',0);
 		$this->db->join('work_orders wo', 'mu.work_orders_id = wo.id', 'left');
 		$this->db->join('machine m', 'mu.machine_id = m.id', 'left');
 		$this->db->join('products p', 'mu.products_id = p.id', 'left');
@@ -52,40 +52,21 @@ class Material_return_model extends MY_Model {
 		}
 	}
 
-	public function have_material_return($a, $id)
-	{		
-		$this->db->select(array('id','return_date','code'));
-		$this->db->where($a, $id);
-        $result = $this->db->get($this->table);
-        $data = array();
-        if($result->result()){
-            $data = $result->row();
-        }
-        return $data;
+	public function get_data(){
+		return $this->db->get('roles')->result();
 	}
 
-	public function generate_id($id){
-		$this->db->select('material_usages_id');
-		$this->db->where('id', $id);
-		$row = $this->db->get('material_usages_detail')->row();
-
-		$this->db->select('code_return');
-		$this->db->where('id', $row->material_usages_id);
-		$row2 = $this->db->get('material_usages')->row();
-
-		if($row2->code_return == ""){
-			$this->db->select("MAX(`code_return`) as 'maxID'");
-			$result = $this->db->get($this->_t);
-			$code = $result->row(0)->maxID;
-			$code++; 
-			$this->db->where('id', $row->material_usages_id);
-			$this->db->update('material_usages', array('code_return' => sprintf("%08s", $code)));
-		}
+	public function generate_id(){
+		$this->db->select("MAX(`code_pick`) as 'maxID'");
+        $result = $this->db->get($this->_t);
+        $code = $result->row(0)->maxID;
+        $code++; 
+        return sprintf("%08s", $code);
 	}
 
-	public function get_material_return($id)
+	public function get_material_usage($id)
 	{
-		$this->db->select('mu.id as id, mu.date as date, code_pick, code_return, wo.code as wocode, p.name as name, uc.name as usage_categories');
+		$this->db->select('mu.id as id, mu.date as date, mu.code_pick as code, wo.code as wocode, p.name as name, uc.name as usage_categories');
 		$this->db->from($this->_t.' mu');
 		$this->db->join('work_orders wo', 'mu.work_orders_id = wo.id', 'left');
 		$this->db->join('machine m', 'mu.machine_id = m.id', 'left');

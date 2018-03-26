@@ -1,21 +1,17 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Return_material extends MY_Controller {
+class Return_nonmaterial extends MY_Controller {
 
 	function  __construct() {
 		parent::__construct();
 			$this->load->helper('tablefield');
-			$this->load->model('usage_cat_model', 'uc');
-			$this->load->model('material_cat_model', 'mcm');
 			$this->load->model('material_return_model', 'mu');
 			$this->load->model('material_usage_cat_model', 'muc');
 			$this->load->model('material_return_det_model', 'mrd');
 			$this->load->model('material_inventory_model', 'mi');
 			$this->load->model('materials_model', 'mtm');
 			$this->load->model('work_orders_model', 'wom');
-			$this->load->model('machine_model', 'mm');
-			$this->load->model('uom_model', 'uom');
 			$this->load->model('product_materials_model', 'pmm');
 	}
 	
@@ -33,19 +29,15 @@ class Return_material extends MY_Controller {
 	
 	public function index()
 	{
-		$data['title'] = "ERP | Return Materials";
-		$data['page_title'] = "Return Materials";
+		$data['title'] = "ERP | Return Non Materials";
+		$data['page_title'] = "Return Non Materials";
 		$data['table_title'] = "List Item";		
-		$data['breadcumb']  = array("Production", "Return Materials");
-		$data['page_view']  = "production/return";		
-		$data['js_asset']   = "return";	
+		$data['breadcumb']  = array("Production", "Return Non Materials");
+		$data['page_view']  = "production/returnnm";		
+		$data['js_asset']   = "returnnm";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;
-		$data['menu'] = $this->get_menu();	
-		$data['u_categories']    = $this->uc->get_all_data();	
-		$data['categories']    = $this->mcm->get_all_data();	
-		$data['machines']    = $this->mm->populate_select();					
-		$data['uom']    = $this->uom->get_all_data();		
+		$data['menu'] = $this->get_menu();		
 		$this->add_history($data['page_title']);			
 		$this->load->view('layouts/master', $data);
 	}

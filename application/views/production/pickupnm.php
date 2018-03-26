@@ -71,28 +71,6 @@
 								<option value="" selected="">Choose...</option>
 							</select>
 						</div>
-						<div class="form-group">
-							<label for="usage_categories_id" class="control-label">Usage Categories</label>
-							<select class="custom-select col-sm-12" id="usage_categories_id" name="usage_categories_id" >
-								<option value="" selected="">Choose...</option>
-								<?php
-									foreach($u_categories as $item){
-										echo '<option value="'.$item->id.'">'.$item->name.'</option>';
-									}
-								?>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="machine_id" class="control-label">Machine</label>
-							<select class="custom-select col-sm-12" id="machine_id" name="machine_id" >
-								<option value="" selected="">Choose...</option>
-								<?php
-									foreach($machines as $item){
-										echo '<option value="'.$item->id.'">'.$item->code."-".$item->name.'</option>';
-									}
-								?>
-							</select>
-						</div>
 						<div class="form-group text-right">
 							<button type="button" id="saveBtn" class="btn btn-success">Save</button>
 							<button type="button" id="cancelBtn" class="btn btn-danger">Cancel</button>

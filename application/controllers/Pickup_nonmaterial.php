@@ -1,18 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Pickup_material extends MY_Controller {
+class Pickup_nonmaterial extends MY_Controller {
 
 	function  __construct() {
 		parent::__construct();
 			$this->load->helper('tablefield');
 			$this->load->model('usage_cat_model', 'uc');
-			$this->load->model('material_usage_model', 'mu');
-			$this->load->model('material_usage_cat_model', 'muc');
-			$this->load->model('material_usage_det_model', 'mud');
-			$this->load->model('material_inventory_model', 'mi');
+			$this->load->model('nonmaterial_usage_model', 'mu');
+			$this->load->model('nonmaterial_usage_det_model', 'mud');
+			$this->load->model('unfinished_product_inventory_model', 'mi');
 			$this->load->model('work_orders_model', 'wom');
-			$this->load->model('machine_model', 'mm');
 	}
 	
 	private function get_column_attr(){
@@ -28,17 +26,15 @@ class Pickup_material extends MY_Controller {
 	
 	public function index()
 	{
-		$data['title'] = "ERP | Pickup Materials";
-		$data['page_title'] = "Pickup Materials";
+		$data['title'] = "ERP | Pickup Non Materials";
+		$data['page_title'] = "Pickup Non Materials";
 		$data['table_title'] = "List Item";		
-		$data['breadcumb']  = array("Production", "Pickup Materials");
-		$data['page_view']  = "production/pickup";		
-		$data['js_asset']   = "pickup";	
+		$data['breadcumb']  = array("Production", "Pickup Non Materials");
+		$data['page_view']  = "production/pickupnm";		
+		$data['js_asset']   = "pickupnm";	
 		$data['columns']    = $this->get_column_attr();	
 		$data['csrf'] = $this->csrf;					
-		$data['menu'] = $this->get_menu();		
-		$data['u_categories']    = $this->uc->get_all_data();		
-		$data['machines']    = $this->mm->populate_select();	
+		$data['menu'] = $this->get_menu();			
 		$this->add_history($data['page_title']);	
 		$this->load->view('layouts/master', $data);
 	}
@@ -136,7 +132,7 @@ class Pickup_material extends MY_Controller {
 			foreach($result as $value){
 				$row = array();
 				$row['id'] = $value->id;
-				$row['materials_id'] = $value->materials_id;
+				$row['products_id'] = $value->products_id;
 				$row['name'] = $value->name;
 				$row['qty'] = $value->qty;
 				$row['note'] = $value->note;
@@ -158,23 +154,18 @@ class Pickup_material extends MY_Controller {
 	}
 
 	public function add_detail(){
-		$stock_status = $this->mi->check_material_stock($this->input->post('item_id'), $this->input->post('qty'));
-		if($stock_status['status']){
-			$data = array(
-				'material_usages_id' => $this->input->post('material_usages_id'),
-				'materials_id' => $this->input->post('item_id'),
-				'pick_note' => $this->normalize_text($this->input->post('note')),
-				'qty_pick' => $this->input->post('qty')
-			);
-			$id = $this->mud->add_id($data);
-			$detail = $this->mud->get_by_id('id',$id);
-			if(isset($id)){
-				$status = $this->mi->material_usage_change($id, $this->input->post('item_id'), $detail, "out");
-			}
-			echo json_encode(array('id'=> $id));
-		}else{
-			echo json_encode($stock_status);
+		$data = array(
+			'material_usages_id' => $this->input->post('material_usages_id'),
+			'products_id' => $this->input->post('item_id'),
+			'pick_note' => $this->normalize_text($this->input->post('note')),
+			'qty_pick' => $this->input->post('qty')
+		);
+		$id = $this->mud->add_id($data);
+		$detail = $this->mud->get_by_id('id',$id);
+		if(isset($id)){
+			$status = $this->mi->material_usage_change($id, $this->input->post('item_id'), $detail, "out");
 		}
+		echo json_encode(array('id'=> $id));
 	}
 
 	public function update_detail(){
