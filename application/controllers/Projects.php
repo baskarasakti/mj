@@ -145,7 +145,7 @@ class Projects extends MY_Controller {
 	}
 
 	function get_by_id($id){
-		$detail = $this->pm->get_by_id('id', $id);
+		$detail = $this->pm->get_details('id', $id);
 		echo json_encode($detail);
 	}
 

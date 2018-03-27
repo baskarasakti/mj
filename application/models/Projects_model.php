@@ -70,4 +70,12 @@ class Projects_model extends MY_Model {
 		return $this->db->get($this->_t)->result();
 	}
 
+	public function get_details($id)
+	{
+		$this->db->select('p.id as id, p.code as code, vat, c.id as customers_id, c.name customer_name, p.description');
+		$this->db->join('customers c', 'p.customers_id = c.id', 'left' );
+		$result = $this->db->get($this->_t.' p' )->row();
+		return $result;
+	}
+
 }

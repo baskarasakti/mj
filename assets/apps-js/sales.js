@@ -264,6 +264,7 @@ function edit(id){
 			vat = data.vat;
 			$('#description').val(data.description);
 			$('#customers_id').val(data.customers_id);
+			$('#customer_name').val(data.customer_name);
 			$("#form").validator();
 			$('#form-title').text('Edit Form');
 			$('[name="asd"]').val(id);
